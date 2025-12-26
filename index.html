@@ -2,384 +2,277 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>GoodGame Store - Beta Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GOODGAME PLATFORM v7</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        
-        * { box-sizing: border-box; }
-        body { margin: 0; background: #0f0f12; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        
-        /* === UI ПЛАТФОРМЫ === */
-        .page { display: none; padding: 20px; min-height: 100vh; }
-        .page.active { display: block; }
-
-        /* ВХОД */
-        #login-page { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: radial-gradient(circle, #1a202c, #000); }
-        .auth-box { background: #1e1e24; padding: 40px; border-radius: 12px; border: 1px solid #333; width: 300px; text-align: center; }
-        input { width: 100%; padding: 10px; margin: 10px 0; background: #0f0f12; border: 1px solid #444; color: white; border-radius: 5px; }
-        
-        /* ГЛАВНАЯ */
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; background: #16161a; border-bottom: 1px solid #333; }
-        .logo { font-weight: 900; font-size: 24px; color: #fff; letter-spacing: -1px; }
-        .logo span { color: #00e5ff; }
-        
-        .nav-btn { background: none; border: none; color: #aaa; font-weight: bold; cursor: pointer; font-size: 16px; margin-left: 20px; }
-        .nav-btn:hover { color: #fff; }
-        .nav-btn.active { color: #00e5ff; }
-
-        .dev-badge { background: #00ff00; color: #000; padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; vertical-align: middle; }
-
-        /* ИГРЫ */
-        .games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; padding: 40px; }
-        .game-card { background: #1e1e24; border-radius: 10px; overflow: hidden; transition: 0.2s; border: 1px solid #333; position: relative; }
-        .game-card:hover { transform: translateY(-5px); border-color: #00e5ff; }
-        .card-img { height: 140px; background: #333; display: flex; align-items: center; justify-content: center; font-size: 40px; }
-        .card-info { padding: 15px; }
-        .card-title { font-weight: bold; font-size: 18px; margin-bottom: 5px; }
-        .card-status { font-size: 12px; color: #aaa; margin-bottom: 10px; }
-        
-        .btn { width: 100%; padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        .btn-primary { background: #0077ff; color: white; }
-        .btn-primary:hover { background: #0055ff; }
-        .btn-beta { background: #ffaa00; color: #000; }
-        .btn-success { background: #00e5ff; color: #000; box-shadow: 0 0 10px rgba(0,229,255,0.3); }
-        .btn-disabled { background: #333; color: #666; cursor: not-allowed; }
-
-        /* АДМИН ПАНЕЛЬ */
-        .admin-panel { background: #112211; border: 1px solid #00ff00; padding: 20px; margin: 20px; border-radius: 8px; }
-        .admin-h { color: #00ff00; font-family: monospace; margin-bottom: 15px; }
-        .req-item { display: flex; justify-content: space-between; background: rgba(0,255,0,0.1); padding: 10px; margin-bottom: 5px; border-radius: 4px; }
-
-        /* ИГРОВОЙ КОНТЕЙНЕР (Скрыт по умолчанию) */
-        #game-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; display: none; }
-        #close-game { position: absolute; top: 20px; right: 20px; z-index: 1001; background: red; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        :root { --bg: #0d1117; --panel: #161b22; --accent: #238636; }
+        body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; }
+        .sidebar { width: 260px; background: var(--panel); height: 100vh; position: fixed; border-right: 1px solid #30363d; z-index: 100; transition: 0.3s; }
+        .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; }
+        .card { background: var(--panel); border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        input, select, textarea { background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .btn-green { background: var(--accent); color: white; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; border: none; }
+        .btn-admin { background: #8957e5; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+        .hidden { display: none !important; }
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main { margin-left: 0; } }
+        #toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+        .toast { background: #1f2937; border-left: 4px solid var(--accent); color: white; padding: 12px; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 
-    <div id="login-page" class="page active">
-        <div class="auth-box">
-            <h2 style="margin-top:0">GOODGAME <span style="color:#00e5ff">ID</span></h2>
-            <input type="text" id="login-user" placeholder="Логин">
-            <input type="password" id="login-pass" placeholder="Пароль">
-            <button class="btn btn-primary" onclick="tryLogin()">ВОЙТИ</button>
-            <p style="font-size:12px; color:#666; margin-top:10px;">Для админа: vlad01032014v / GOODGAME</p>
-        </div>
+<div id="toast-container"></div>
+
+<aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
+    <div>
+        <div class="text-green-500 font-black text-2xl mb-8 italic uppercase">GOODGAME</div>
+        <nav class="space-y-2">
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
+            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-headset"></i> Поддержка</button>
+            <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
+                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 flex items-center gap-3 font-bold"><i class="fas fa-user-shield"></i> Админка</button>
+                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 flex items-center gap-3"><i class="fas fa-plus"></i> Создать игру</button>
+            </div>
+        </nav>
     </div>
-
-    <div id="main-interface" class="page">
-        <header>
-            <div class="logo">GOOD<span>GAME</span></div>
-            <nav>
-                <button class="nav-btn active" onclick="showTab('store')">МАГАЗИН</button>
-                <button class="nav-btn" onclick="showTab('library')">БИБЛИОТЕКА</button>
-                <button id="dev-btn" class="nav-btn" style="display:none; color:#00ff00" onclick="showTab('dev')">РАЗРАБОТКА</button>
-                <button class="nav-btn" onclick="logout()">ВЫХОД</button>
-            </nav>
-            <div id="user-display" style="font-size:14px; font-weight:bold;"></div>
-        </header>
-
-        <div id="tab-store" class="tab-content">
-            <div class="games-grid">
-                <div class="game-card">
-                    <div class="card-img" style="background: linear-gradient(45deg, #1a202c, #2d3748);">🔫</div>
-                    <div class="card-info">
-                        <div class="card-title">PolyStrike: EVOLUTION</div>
-                        <div class="card-status">Статус: <span style="color:#ffaa00">ЗАКРЫТАЯ БЕТА</span></div>
-                        <div id="ps-action-area">
-                            </div>
-                    </div>
-                </div>
-                 <div class="game-card">
-                    <div class="card-img" style="background: linear-gradient(45deg, #2c1a1a, #482d2d);">🦟</div>
-                    <div class="card-info">
-                        <div class="card-title">Mosquito Simulator</div>
-                        <div class="card-status">Статус: <span style="color:#aaa">В РАЗРАБОТКЕ</span></div>
-                        <button class="btn btn-disabled">НЕДОСТУПНО</button>
-                    </div>
-                </div>
-            </div>
-
-            <div style="padding: 0 40px;">
-                <h3>Отзывы игроков</h3>
-                <div style="background:#1e1e24; padding:15px; margin-bottom:10px; border-radius:8px;">
-                    <div style="color:#00e5ff; font-weight:bold; font-size:12px;">X_Gamer_X</div>
-                    <div>Игра топ! Жду когда админ даст доступ к полной версии.</div>
-                </div>
-                <div style="background:#1e1e24; padding:15px; margin-bottom:10px; border-radius:8px;">
-                    <div style="color:#00e5ff; font-weight:bold; font-size:12px;">AlexShooter</div>
-                    <div>Графика огонь для браузера.</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="tab-library" class="tab-content" style="display:none">
-            <h2 style="padding:0 40px">Мои игры</h2>
-            <div id="lib-grid" class="games-grid">
-                <div style="color:#666">Здесь пусто...</div>
-            </div>
-        </div>
-
-        <div id="tab-dev" class="tab-content" style="display:none">
-            <div class="admin-panel">
-                <h3 class="admin-h">CMD: ПАНЕЛЬ УПРАВЛЕНИЯ BЕТА-ТЕСТОМ</h3>
-                <p>Добро пожаловать, Создатель.</p>
-                
-                <h4>ЗАЯВКИ НА ДОСТУП (INBOX)</h4>
-                <div id="admin-requests-list">
-                    <div style="color:#666; font-style:italic">Нет новых заявок</div>
-                </div>
-            </div>
-        </div>
+    <div class="border-t border-gray-700 pt-4">
+        <div id="u-name" class="font-bold text-white mb-1">...</div>
+        <div id="u-bal" class="text-yellow-500 text-sm font-bold">Баланс: 0$</div>
+        <button onclick="logout()" class="text-xs text-gray-500 hover:text-red-500 mt-2">Выйти</button>
     </div>
+</aside>
 
-    <div id="game-container">
-        <button id="close-game" onclick="closeGame()">❌ ВЕРНУТЬСЯ В GOODGAME</button>
-        <iframe id="game-frame" style="width:100%; height:100%; border:none;" src="about:blank"></iframe>
+<main class="main">
+    <section id="market">
+        <h2 class="text-2xl font-bold mb-6 italic">Игры и Сообщество</h2>
+        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </section>
+
+    <section id="support" class="hidden">
+        <h2 class="text-2xl font-bold mb-6">Поддержка</h2>
+        
+        <div id="admin-reply-area" class="hidden mb-10 p-4 border border-purple-500 rounded-xl bg-purple-900/10">
+            <h3 class="text-purple-500 font-bold mb-4">Тикеты пользователей:</h3>
+            <div id="admin-tickets-list" class="space-y-4"></div>
+        </div>
+
+        <div class="card max-w-lg">
+            <h3 class="mb-4 font-bold">Задать вопрос</h3>
+            <textarea id="supp-msg" placeholder="Опишите проблему..."></textarea>
+            <button onclick="sendTicket()" class="btn-green">Отправить</button>
+        </div>
+        
+        <div id="user-tickets-list" class="mt-8 space-y-4">
+            <h3 class="font-bold text-gray-400">Мои обращения:</h3>
+            <div id="my-tickets-cont"></div>
+        </div>
+    </section>
+
+    <section id="admin-center" class="hidden">
+        <h2 class="text-2xl font-bold mb-6 text-red-500">Управление пользователями</h2>
+        <div id="admin-user-list" class="space-y-4"></div>
+    </section>
+
+    <section id="publish" class="hidden">
+        <h2 class="text-2xl font-bold mb-6">Новый проект</h2>
+        <div class="card max-w-lg">
+            <input id="p-name" placeholder="Название">
+            <textarea id="p-desc" placeholder="Описание"></textarea>
+            <input id="p-price" type="number" placeholder="Цена">
+            <select id="p-mode">
+                <option value="public">Релиз</option>
+                <option value="beta">Бета-тест</option>
+            </select>
+            <button onclick="publishGame()" class="btn-green">Опубликовать</button>
+        </div>
+    </section>
+</main>
+
+<div id="login-modal" class="fixed inset-0 bg-black flex items-center justify-center p-4 z-[500]">
+    <div class="card w-full max-w-sm text-center">
+        <h2 class="text-2xl font-black text-green-500 mb-6 italic">GOODGAME</h2>
+        <input id="auth-nick" placeholder="Никнейм">
+        <input id="auth-email" placeholder="Email">
+        <input id="auth-pass" type="password" placeholder="Пароль">
+        <button onclick="handleAuth()" class="btn-green">ВОЙТИ</button>
     </div>
+</div>
 
-    <script>
-        /* === БАЗА ДАННЫХ (LOCALSTORAGE) === */
-        const DB = {
-            user: localStorage.getItem('gg_user'),
-            isAdmin: false,
-            // Загружаем запросы
-            getRequests: () => JSON.parse(localStorage.getItem('gg_requests') || '[]'),
-            addRequest: (user) => {
-                let reqs = DB.getRequests();
-                if(!reqs.includes(user)) {
-                    reqs.push(user);
-                    localStorage.setItem('gg_requests', JSON.stringify(reqs));
-                }
-            },
-            removeRequest: (user) => {
-                let reqs = DB.getRequests().filter(u => u !== user);
-                localStorage.setItem('gg_requests', JSON.stringify(reqs));
-            },
-            // Загружаем доступы (белый список)
-            getAccessList: () => JSON.parse(localStorage.getItem('gg_access') || '[]'),
-            grantAccess: (user) => {
-                let acc = DB.getAccessList();
-                acc.push(user);
-                localStorage.setItem('gg_access', JSON.stringify(acc));
-            },
-            hasAccess: (user) => DB.getAccessList().includes(user)
-        };
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, arrayRemove, increment, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        /* === СИСТЕМА ВХОДА === */
-        const ADMIN_LOGIN = "vlad01032014v";
-        const ADMIN_PASS = "GOODGAME";
+    const firebaseConfig = {
+        apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI",
+        authDomain: "flutter-ai-playground-caf0d.firebaseapp.com",
+        projectId: "flutter-ai-playground-caf0d",
+        storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app",
+        messagingSenderId: "155816311480",
+        appId: "1:155816311480:web:a0456fcc4681e62837924d"
+    };
 
-        function tryLogin() {
-            const u = document.getElementById('login-user').value;
-            const p = document.getElementById('login-pass').value;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let user = null;
 
-            if(u === ADMIN_LOGIN && p === ADMIN_PASS) {
-                DB.user = u;
-                DB.isAdmin = true;
-                loginSuccess();
-            } else if (u && u !== ADMIN_LOGIN) {
-                // Обычный юзер
-                DB.user = u;
-                DB.isAdmin = false;
-                loginSuccess();
-            } else {
-                alert("Неверный логин или ник занят администратором!");
-            }
+    function notify(t) {
+        const div = document.createElement('div'); div.className = 'toast'; div.innerText = t;
+        document.getElementById('toast-container').appendChild(div);
+        setTimeout(() => div.remove(), 3000);
+    }
+
+    window.handleAuth = async () => {
+        const n = document.getElementById('auth-nick').value.trim();
+        const e = document.getElementById('auth-email').value.trim();
+        const p = document.getElementById('auth-pass').value;
+        try {
+            await signInWithEmailAndPassword(auth, e, p);
+        } catch {
+            const res = await createUserWithEmailAndPassword(auth, e, p);
+            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), likedGames: [] });
         }
+    };
 
-        function loginSuccess() {
-            localStorage.setItem('gg_user', DB.user);
-            document.getElementById('login-page').classList.remove('active');
-            document.getElementById('main-interface').classList.add('active');
-            
-            const userDisplay = document.getElementById('user-display');
-            userDisplay.innerHTML = `👤 ${DB.user} ${DB.isAdmin ? '<span class="dev-badge">DEV</span>' : ''}`;
-            
-            if(DB.isAdmin) {
-                document.getElementById('dev-btn').style.display = 'inline-block';
-                renderAdminPanel();
+    onAuthStateChanged(auth, async (u) => {
+        if (u) {
+            const snap = await getDoc(doc(db, "users", u.uid));
+            user = snap.data();
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('u-name').innerText = user.nickname;
+            document.getElementById('u-bal').innerText = `Баланс: ${user.balance || 0}$`;
+            if (user.nickname === 'GOODGAME') {
+                document.getElementById('admin-tools').classList.remove('hidden');
+                document.getElementById('admin-reply-area').classList.remove('hidden');
             }
-
-            renderStore();
-            renderLibrary();
+            loadMarket(); loadTickets(); loadAdminUsers();
+        } else {
+            document.getElementById('login-modal').classList.remove('hidden');
         }
+    });
 
-        function logout() {
-            localStorage.removeItem('gg_user');
-            location.reload();
-        }
+    // --- SUPPORT SYSTEM (FIXED) ---
+    window.sendTicket = async () => {
+        const m = document.getElementById('supp-msg').value;
+        if (!m) return;
+        await addDoc(collection(db, "tickets"), {
+            uid: auth.currentUser.uid,
+            nick: user.nickname,
+            msg: m,
+            reply: "",
+            status: "open",
+            time: Date.now()
+        });
+        document.getElementById('supp-msg').value = '';
+        notify("Отправлено!"); loadTickets();
+    };
 
-        /* === ЛОГИКА МАГАЗИНА === */
-        function renderStore() {
-            const actionArea = document.getElementById('ps-action-area');
-            actionArea.innerHTML = '';
-
-            // Если Админ - всегда играть
-            if(DB.isAdmin) {
-                actionArea.innerHTML = `<button class="btn btn-success" onclick="launchGame()">ЗАПУСТИТЬ ТЕСТ (DEV)</button>`;
-                return;
-            }
-
-            // Если есть доступ
-            if(DB.hasAccess(DB.user)) {
-                actionArea.innerHTML = `<button class="btn btn-success" onclick="launchGame()">ИГРАТЬ</button>`;
-            } 
-            // Если заявка уже подана
-            else if(DB.getRequests().includes(DB.user)) {
-                actionArea.innerHTML = `<button class="btn btn-disabled">ЗАЯВКА ОТПРАВЛЕНА...</button><div style="font-size:10px; color:#aaa; margin-top:5px">Ожидайте одобрения разработчика</div>`;
-            } 
-            // Иначе - подать заявку
-            else {
-                actionArea.innerHTML = `<button class="btn btn-beta" onclick="sendBetaRequest()">ПОДАТЬ ЗАЯВКУ НА БЕТУ</button>`;
-            }
-        }
-
-        function sendBetaRequest() {
-            DB.addRequest(DB.user);
-            renderStore(); // Обновить кнопку
-            alert("Заявка отправлена разработчику (vlad01032014v)!");
-        }
-
-        /* === ЛОГИКА АДМИНА === */
-        function renderAdminPanel() {
-            const list = document.getElementById('admin-requests-list');
-            const reqs = DB.getRequests();
-            
-            if(reqs.length === 0) {
-                list.innerHTML = '<div style="color:#666">Нет новых заявок</div>';
-                return;
-            }
-
+    async function loadTickets() {
+        // Загрузка для админа
+        if (user.nickname === 'GOODGAME') {
+            const list = document.getElementById('admin-tickets-list');
+            const snap = await getDocs(collection(db, "tickets"));
             list.innerHTML = '';
-            reqs.forEach(user => {
-                const item = document.createElement('div');
-                item.className = 'req-item';
-                item.innerHTML = `
-                    <span style="color:#fff">Пользователь: <b>${user}</b> просит доступ</span>
-                    <div>
-                        <button style="background:green; color:white; border:none; cursor:pointer;" onclick="adminApprove('${user}')">ПРИНЯТЬ</button>
-                        <button style="background:red; color:white; border:none; cursor:pointer;" onclick="adminReject('${user}')">ОТКЛОНИТЬ</button>
-                    </div>
-                `;
-                list.appendChild(item);
+            snap.forEach(d => {
+                const t = d.data();
+                if (t.status === "open") {
+                    list.innerHTML += `<div class="card bg-gray-800">
+                        <p><b>${t.nick}:</b> ${t.msg}</p>
+                        <input id="rep-${d.id}" placeholder="Ваш ответ..." class="mt-2 text-sm">
+                        <button onclick="replyTicket('${d.id}')" class="btn-admin">Ответить</button>
+                    </div>`;
+                }
             });
         }
+        // Загрузка для юзера
+        const myCont = document.getElementById('my-tickets-cont');
+        const q = query(collection(db, "tickets"), where("uid", "==", auth.currentUser.uid));
+        const qSnap = await getDocs(q);
+        myCont.innerHTML = '';
+        qSnap.forEach(d => {
+            const t = d.data();
+            myCont.innerHTML += `<div class="card border-l-4 ${t.reply ? 'border-green-500' : 'border-yellow-500'}">
+                <p class="text-sm"><b>Вы:</b> ${t.msg}</p>
+                ${t.reply ? `<p class="text-sm text-green-400 mt-2"><b>Админ:</b> ${t.reply}</p>` : `<p class="text-xs text-yellow-500 mt-1 italic">Ожидание ответа...</p>`}
+            </div>`;
+        });
+    }
 
-        function adminApprove(user) {
-            DB.removeRequest(user);
-            DB.grantAccess(user);
-            renderAdminPanel();
-            alert(`Доступ выдан пользователю ${user}. Он получил код доступа.`);
+    window.replyTicket = async (id) => {
+        const r = document.getElementById(`rep-${id}`).value;
+        if (!r) return;
+        await updateDoc(doc(db, "tickets", id), { reply: r, status: "closed" });
+        notify("Ответ отправлен!"); loadTickets();
+    };
+
+    // --- MARKET & LIKES ---
+    async function loadMarket() {
+        const list = document.getElementById('market-list');
+        const snap = await getDocs(collection(db, "games"));
+        list.innerHTML = '';
+        snap.forEach(d => {
+            const g = d.data();
+            const liked = user.likedGames && user.likedGames.includes(d.id);
+            list.innerHTML += `<div class="card">
+                <div class="flex justify-between font-bold"><span>${g.name} ${g.mode==='beta'?'[BETA]':''}</span><span>${g.price}$</span></div>
+                <p class="text-xs text-gray-500 my-2">${g.desc}</p>
+                <div class="flex justify-between items-center mt-4">
+                    <button onclick="like('${d.id}')" class="${liked?'text-red-500':'text-gray-500'}"><i class="fas fa-heart"></i> ${g.likes||0}</button>
+                    <button class="bg-green-600 px-4 py-1 rounded text-xs font-bold uppercase">Купить</button>
+                </div>
+            </div>`;
+        });
+    }
+
+    window.like = async (id) => {
+        const uRef = doc(db, "users", auth.currentUser.uid);
+        const gRef = doc(db, "games", id);
+        if (user.likedGames && user.likedGames.includes(id)) {
+            await updateDoc(uRef, { likedGames: arrayRemove(id) });
+            await updateDoc(gRef, { likes: increment(-1) });
+        } else {
+            await updateDoc(uRef, { likedGames: arrayUnion(id) });
+            await updateDoc(gRef, { likes: increment(1) });
         }
+        const s = await getDoc(uRef); user = s.data(); loadMarket();
+    };
 
-        function adminReject(user) {
-            DB.removeRequest(user);
-            renderAdminPanel();
-        }
+    // --- ADMIN PANEL ---
+    async function loadAdminUsers() {
+        if(user.nickname !== 'GOODGAME') return;
+        const list = document.getElementById('admin-user-list');
+        const snap = await getDocs(collection(db, "users"));
+        list.innerHTML = '';
+        snap.forEach(d => {
+            const u = d.data();
+            list.innerHTML += `<div class="card flex justify-between">
+                <span><b>${u.nickname}</b></span>
+                <button onclick="addMoney('${d.id}', ${u.balance || 0})" class="btn-admin">+100$</button>
+            </div>`;
+        });
+    }
 
-        /* === БИБЛИОТЕКА === */
-        function renderLibrary() {
-            const grid = document.getElementById('lib-grid');
-            if(DB.hasAccess(DB.user) || DB.isAdmin) {
-                grid.innerHTML = `
-                <div class="game-card">
-                    <div class="card-img" style="background: linear-gradient(45deg, #0077ff, #00e5ff);">⚡</div>
-                    <div class="card-info">
-                        <div class="card-title">PolyStrike</div>
-                        <div class="card-status">В библиотеке</div>
-                        <button class="btn btn-success" onclick="launchGame()">ЗАПУСТИТЬ</button>
-                    </div>
-                </div>`;
-            } else {
-                grid.innerHTML = '<div style="color:#666">Ваша библиотека пуста.</div>';
-            }
-        }
+    window.addMoney = async (id, b) => { await updateDoc(doc(db, "users", id), { balance: Number(b) + 100 }); loadAdminUsers(); notify("Баланс обновлен"); };
 
-        /* === ТАБЫ === */
-        function showTab(name) {
-            document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('tab-' + name).style.display = 'block';
-            
-            if(name === 'dev') renderAdminPanel();
-        }
+    window.publishGame = async () => {
+        await addDoc(collection(db, "games"), {
+            name: document.getElementById('p-name').value,
+            desc: document.getElementById('p-desc').value,
+            price: Number(document.getElementById('p-price').value) || 0,
+            mode: document.getElementById('p-mode').value,
+            likes: 0
+        });
+        notify("Опубликовано!"); nav('market');
+    };
 
-        /* === ЗАПУСК ИГРЫ === */
-        // Сюда мы вставляем код игры
-        function launchGame() {
-            document.getElementById('game-container').style.display = 'block';
-            const frame = document.getElementById('game-frame');
-            
-            // ГЕНЕРАЦИЯ ИГРЫ "НА ЛЕТУ" ВНУТРИ IFRAME
-            const gameCode = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <style>body{margin:0; overflow:hidden; background:black; color:white; font-family:sans-serif; text-align:center;}</style>
-                    <title>PolyStrike Game</title>
-                </head>
-                <body>
-                    <h2 style="position:absolute; z-index:10; color:white; top:10px; left:10px;">PolyStrike Beta</h2>
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>
-                    <script>
-                        // ПРОСТОЙ ПРИМЕР ИГРЫ ДЛЯ ТЕСТА (Чтобы не дублировать огромный код)
-                        // В РЕАЛЬНОСТИ СЮДА МОЖНО ВСТАВИТЬ ВЕСЬ КОД POLYSTRIKE
-                        
-                        const scene = new THREE.Scene();
-                        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-                        const renderer = new THREE.WebGLRenderer();
-                        renderer.setSize(window.innerWidth, window.innerHeight);
-                        document.body.appendChild(renderer.domElement);
-
-                        const geometry = new THREE.BoxGeometry();
-                        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
-                        const cube = new THREE.Mesh(geometry, material);
-                        scene.add(cube);
-                        camera.position.z = 5;
-
-                        function animate() {
-                            requestAnimationFrame(animate);
-                            cube.rotation.x += 0.01;
-                            cube.rotation.y += 0.01;
-                            renderer.render(scene, camera);
-                        }
-                        animate();
-                        
-                        // Эмуляция управления
-                        document.body.onclick = () => document.body.requestPointerLock();
-                    <\/script>
-                </body>
-                </html>
-            `;
-            
-            // Вставляем код игры в iframe
-            frame.contentWindow.document.open();
-            frame.contentWindow.document.write(gameCode);
-            frame.contentWindow.document.close();
-        }
-
-        function closeGame() {
-            document.getElementById('game-container').style.display = 'none';
-            document.getElementById('game-frame').src = 'about:blank'; // Очистка
-        }
-
-        // Авто-логин если обновляли страницу
-        if(localStorage.getItem('gg_user')) {
-            DB.user = localStorage.getItem('gg_user');
-            DB.isAdmin = (DB.user === ADMIN_LOGIN);
-            document.getElementById('login-page').classList.remove('active');
-            document.getElementById('main-interface').classList.add('active');
-            
-            const userDisplay = document.getElementById('user-display');
-            userDisplay.innerHTML = `👤 ${DB.user} ${DB.isAdmin ? '<span class="dev-badge">DEV</span>' : ''}`;
-            
-            if(DB.isAdmin) {
-                document.getElementById('dev-btn').style.display = 'inline-block';
-            }
-            renderStore();
-            renderLibrary();
-        }
-    </script>
+    window.nav = (id) => {
+        ['market', 'support', 'admin-center', 'publish'].forEach(s => document.getElementById(s).classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    };
+    window.logout = () => signOut(auth).then(() => location.reload());
+</script>
 </body>
 </html>
