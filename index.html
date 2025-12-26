@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | GOD MODE</title>
+    <title>GOODGAME | HIERARCHY UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -17,19 +17,24 @@
         .card { background: var(--panel); border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         input, select, textarea { background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
         
-        .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; }
+        .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 5px; }
         .btn-green { background: var(--accent); color: white; }
         .btn-red { background: var(--danger); color: white; }
-        .btn-blue { background: #1f6feb; color: white; }
+        .btn-purple { background: #8957e5; color: white; }
         
         .hidden { display: none !important; }
 
         /* MODALS */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; display: none; align-items: center; justify-content: center; p-4; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 10px; }
         .modal-box { background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         
-        /* PLAYER */
         iframe { width: 100%; height: 100%; border: none; }
+        
+        /* Roles Colors */
+        .role-admin { color: #ff7b72; font-weight: bold; }
+        .role-mod { color: #79c0ff; font-weight: bold; }
+        .role-dev { color: #7ee787; font-weight: bold; }
+        .role-user { color: #8b949e; }
     </style>
 </head>
 <body>
@@ -45,38 +50,49 @@
 <div id="user-modal" class="modal-overlay">
     <div class="modal-box">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-black text-red-500 italic">УПРАВЛЕНИЕ ИГРОКОМ</h2>
+            <h2 class="text-2xl font-black text-red-500 italic">УПРАВЛЕНИЕ</h2>
             <button onclick="closeUserModal()" class="text-gray-500 hover:text-white text-xl"><i class="fas fa-times"></i></button>
         </div>
         
         <div id="um-info" class="mb-6 text-center">Loading...</div>
 
+        <div class="card border-purple-500">
+            <h3 class="font-bold text-purple-400 mb-2">Назначить должность</h3>
+            <select id="um-role">
+                <option value="user">👤 Игрок (Обычный)</option>
+                <option value="developer">🛠️ Создатель игр</option>
+                <option value="jr_mod">🛡️ Мл. Модератор</option>
+                <option value="sr_mod">🛡️ Ст. Модератор</option>
+                <option value="jr_admin">👑 Мл. Админ</option>
+                <option value="sr_admin">👑 Ст. Админ</option>
+            </select>
+            <button onclick="setRole()" class="btn btn-purple">ВЫДАТЬ РОЛЬ</button>
+        </div>
+
         <div class="card border-blue-900">
             <h3 class="font-bold text-blue-400 mb-2">Финансы</h3>
-            <input type="number" id="um-amount" placeholder="Сумма (например: 500)">
+            <input type="number" id="um-amount" placeholder="Сумма">
             <div class="flex gap-2">
-                <button onclick="modMoney('add')" class="btn btn-green">+ ВЫДАТЬ</button>
+                <button onclick="modMoney('add')" class="btn btn-green">+ ДАТЬ</button>
                 <button onclick="modMoney('take')" class="btn btn-red">- ЗАБРАТЬ</button>
             </div>
         </div>
 
         <div class="card border-red-900">
-            <h3 class="font-bold text-red-500 mb-2">Наказание (BAN)</h3>
+            <h3 class="font-bold text-red-500 mb-2">Наказание</h3>
             <select id="ban-duration">
                 <option value="forever">НАВСЕГДА</option>
                 <option value="ip">ПО IP (ЖЕЛЕЗО)</option>
-                <option value="1h">На 1 час</option>
-                <option value="24h">На 24 часа</option>
-                <option value="7d">На 7 дней</option>
+                <option value="1h">1 час</option>
             </select>
             <div class="flex gap-2">
-                <button onclick="applyBan(true)" class="btn btn-red">ЗАБАНИТЬ</button>
-                <button onclick="applyBan(false)" class="btn btn-green">РАЗБАНИТЬ</button>
+                <button onclick="applyBan(true)" class="btn btn-red">BAN</button>
+                <button onclick="applyBan(false)" class="btn btn-green">UNBAN</button>
             </div>
         </div>
 
         <div class="card">
-            <h3 class="font-bold text-yellow-500 mb-2">Игры игрока (Удаление)</h3>
+            <h3 class="font-bold text-yellow-500 mb-2">Игры (Удалить)</h3>
             <div id="um-library" class="space-y-2 max-h-40 overflow-y-auto"></div>
         </div>
     </div>
@@ -88,17 +104,16 @@
         <nav class="space-y-2">
             <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Библиотека</button>
-            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-headset"></i> Поддержка</button>
-            
             <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
                 <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 font-bold flex items-center gap-3"><i class="fas fa-plus"></i> Создать Игру</button>
                 <button onclick="nav('requests')" class="w-full text-left p-3 text-yellow-500 font-bold flex items-center gap-3"><i class="fas fa-list"></i> Заявки Бета</button>
-                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/20 rounded-xl"><i class="fas fa-user-shield"></i> АДМИН-ЦЕНТР</button>
+                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/20 rounded-xl"><i class="fas fa-crown"></i> АДМИНКА</button>
             </div>
         </nav>
     </div>
     <div class="border-t border-gray-700 pt-4">
         <div id="u-name" class="font-bold text-white mb-1">...</div>
+        <div id="u-role-display" class="text-xs font-bold mb-1"></div>
         <div id="u-bal" class="text-yellow-500 text-sm font-bold">0$</div>
         <button onclick="logout()" class="text-xs text-gray-500 mt-2 hover:text-white">ВЫЙТИ</button>
     </div>
@@ -110,17 +125,13 @@
         <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </section>
 
-    <section id="library" class="hidden">
-        <h2 class="text-3xl font-black mb-8 italic text-green-500">БИБЛИОТЕКА</h2>
-        <div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-    </section>
-
     <section id="admin-center" class="hidden">
         <h2 class="text-3xl font-black mb-8 italic text-red-500">СПИСОК ИГРОКОВ</h2>
-        <p class="mb-4 text-gray-400">Нажми на игрока, чтобы открыть меню управления.</p>
         <div id="admin-users" class="grid grid-cols-1 gap-4"></div>
     </section>
 
+    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500">БИБЛИОТЕКА</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
+    
     <section id="publish" class="hidden">
         <div class="card max-w-lg">
             <h3 class="font-bold mb-4">Опубликовать игру</h3>
@@ -133,7 +144,7 @@
         </div>
     </section>
     
-    <section id="requests" class="hidden"><div id="req-list" class="space-y-4"></div></section>
+    <section id="requests" class="hidden"><h2 class="text-3xl font-bold mb-6 text-yellow-500">ЗАЯВКИ</h2><div id="req-list" class="space-y-4"></div></section>
     
     <section id="support" class="hidden">
         <div id="adm-tickets" class="hidden mb-6 space-y-2"></div>
@@ -163,12 +174,20 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
     let user = null;
-    let selectedUser = null; // ID выбранного для админки юзера
+    let selectedUser = null; 
 
-    // --- AUTH & IP CHECK ---
-    async function getIP() {
-        try { const r = await fetch('https://api.ipify.org?format=json'); const d = await r.json(); return d.ip; } catch { return "0.0.0.0"; }
-    }
+    // --- CONFIG ---
+    const roleLabels = {
+        'admin': '<span class="role-admin">👑 ВЛАДЕЛЕЦ</span>',
+        'sr_admin': '<span class="role-admin">👑 СТ. АДМИН</span>',
+        'jr_admin': '<span class="role-admin">👑 МЛ. АДМИН</span>',
+        'sr_mod': '<span class="role-mod">🛡️ СТ. МОДЕРАТОР</span>',
+        'jr_mod': '<span class="role-mod">🛡️ МЛ. МОДЕРАТОР</span>',
+        'developer': '<span class="role-dev">🛠️ СОЗДАТЕЛЬ ИГР</span>',
+        'user': '<span class="role-user">👤 ИГРОК</span>'
+    };
+
+    async function getIP() { try { const r = await fetch('https://api.ipify.org?format=json'); const d = await r.json(); return d.ip; } catch { return "0.0.0.0"; } }
 
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
@@ -176,19 +195,13 @@
         const p = document.getElementById('auth-pass').value;
         const ip = await getIP();
 
-        // Проверка IP Бана перед входом
         const ipBanSnap = await getDoc(doc(db, "banned_ips", ip.replace(/\./g, '_')));
-        if (ipBanSnap.exists()) {
-            document.getElementById('ban-msg').innerText = "ВАШ IP ЗАБЛОКИРОВАН НАВСЕГДА!";
-            document.getElementById('ban-msg').classList.remove('hidden');
-            return;
-        }
+        if (ipBanSnap.exists()) { document.getElementById('ban-msg').innerText = "IP ЗАБАНЕН!"; document.getElementById('ban-msg').classList.remove('hidden'); return; }
 
-        try {
-            await signInWithEmailAndPassword(auth, e, p);
-        } catch {
+        try { await signInWithEmailAndPassword(auth, e, p); } 
+        catch { 
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, library: [], ip: ip });
+            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, library: [], ip: ip, role: (n==='GOODGAME'?'admin':'user') });
         }
     };
 
@@ -197,53 +210,38 @@
             const snap = await getDoc(doc(db, "users", u.uid));
             user = snap.data();
             
-            // Проверка Аккаунт Бана
-            if (user.banExpires && user.banExpires > Date.now()) {
-                document.getElementById('ban-msg').innerText = `БАН ДО: ${new Date(user.banExpires).toLocaleString()}`;
-                document.getElementById('ban-msg').classList.remove('hidden');
-                await signOut(auth);
-                return;
-            }
-            if (user.isBanned) {
-                document.getElementById('ban-msg').innerText = "АККАУНТ ЗАБЛОКИРОВАН НАВСЕГДА";
-                document.getElementById('ban-msg').classList.remove('hidden');
-                await signOut(auth);
-                return;
-            }
-
-            // Обновляем IP при входе
-            const currentIp = await getIP();
-            await updateDoc(doc(db, "users", u.uid), { ip: currentIp });
+            if (user.isBanned) { document.getElementById('ban-msg').innerText = "АККАУНТ ЗАБАНЕН"; document.getElementById('ban-msg').classList.remove('hidden'); await signOut(auth); return; }
+            await updateDoc(doc(db, "users", u.uid), { ip: await getIP() });
 
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = `${user.balance}$`;
+            document.getElementById('u-role-display').innerHTML = roleLabels[user.role] || roleLabels['user'];
 
-            if (user.nickname === 'GOODGAME') {
+            if (user.role === 'admin' || user.role === 'sr_admin' || user.role === 'jr_admin') {
                 document.getElementById('admin-tools').classList.remove('hidden');
-                document.getElementById('adm-tickets').classList.remove('hidden');
             }
             
-            loadMarket(); loadLibrary(); loadAdminList(); loadRequests(); loadTickets();
-        } else {
-            document.getElementById('login-modal').style.display = 'flex';
-        }
+            loadMarket(); loadLibrary(); loadAdminList(); loadRequests();
+        } else { document.getElementById('login-modal').style.display = 'flex'; }
     });
 
-    // --- ADMIN GOD MODE ---
+    // --- GOD MODE (ROLES) ---
     async function loadAdminList() {
-        if(user.nickname !== 'GOODGAME') return;
+        if(!['admin','sr_admin','jr_admin'].includes(user.role)) return;
         const list = document.getElementById('admin-users');
         const snap = await getDocs(collection(db, "users"));
         list.innerHTML = '';
         snap.forEach(d => {
             const u = d.data();
-            const status = u.isBanned ? '<span class="text-red-500 font-bold">BANNED</span>' : '<span class="text-green-500">ACTIVE</span>';
+            const roleHTML = roleLabels[u.role] || roleLabels['user'];
+            const status = u.isBanned ? '<span class="text-red-500 font-bold">BAN</span>' : '<span class="text-green-500">OK</span>';
             list.innerHTML += `
-                <div onclick="openUserModal('${d.id}')" class="card flex justify-between items-center cursor-pointer hover:border-red-500 transition">
-                    <div class="flex flex-col">
-                        <span class="font-bold text-lg text-white">${u.nickname}</span>
-                        <span class="text-xs text-gray-500">IP: ${u.ip || 'Нет данных'}</span>
+                <div onclick="openUserModal('${d.id}')" class="card flex justify-between items-center cursor-pointer hover:border-purple-500 transition">
+                    <div>
+                        <div class="font-bold text-lg text-white">${u.nickname}</div>
+                        <div class="text-xs">${roleHTML}</div>
+                        <div class="text-xs text-gray-600">${u.ip || 'No IP'}</div>
                     </div>
                     <div class="text-right">
                         <div class="text-yellow-500 font-bold">${u.balance}$</div>
@@ -259,42 +257,36 @@
         const u = snap.data();
         
         document.getElementById('user-modal').style.display = 'flex';
-        document.getElementById('um-info').innerHTML = `
-            <div class="text-3xl font-black">${u.nickname}</div>
-            <div class="text-gray-400 text-sm">ID: ${uid}</div>
-            <div class="text-gray-400 text-sm">IP: ${u.ip}</div>
-        `;
+        document.getElementById('um-info').innerHTML = `<div class="text-3xl font-black">${u.nickname}</div><div class="text-gray-400">${roleLabels[u.role]||'User'}</div>`;
+        document.getElementById('um-role').value = u.role || 'user'; // Установить текущую роль в селект
 
-        // Load User Library for Deletion
-        const libDiv = document.getElementById('um-library');
-        libDiv.innerHTML = '';
-        if(u.library) {
-            for(let gid of u.library) {
-                const gSnap = await getDoc(doc(db, "games", gid));
-                const gName = gSnap.exists() ? gSnap.data().name : "Unknown Game";
-                libDiv.innerHTML += `
-                    <div class="flex justify-between bg-gray-800 p-2 rounded">
-                        <span>${gName}</span>
-                        <button onclick="kickGame('${uid}', '${gid}')" class="text-red-500 font-bold">УДАЛИТЬ</button>
-                    </div>`;
-            }
+        // Library
+        const libDiv = document.getElementById('um-library'); libDiv.innerHTML = '';
+        if(u.library) for(let gid of u.library) {
+            const gSnap = await getDoc(doc(db, "games", gid));
+            const gName = gSnap.exists() ? gSnap.data().name : "Unknown";
+            libDiv.innerHTML += `<div class="flex justify-between bg-gray-800 p-2 rounded"><span>${gName}</span><button onclick="kickGame('${uid}', '${gid}')" class="text-red-500 font-bold">X</button></div>`;
         }
+    };
+
+    window.setRole = async () => {
+        const newRole = document.getElementById('um-role').value;
+        await updateDoc(doc(db, "users", selectedUser), { role: newRole });
+        alert("Роль выдана!"); openUserModal(selectedUser); loadAdminList();
     };
 
     window.closeUserModal = () => { document.getElementById('user-modal').style.display = 'none'; selectedUser = null; };
 
-    // 1. Управление деньгами
-    window.modMoney = async (action) => {
+    // --- MONEY & BAN ---
+    window.modMoney = async (act) => {
         const amt = Number(document.getElementById('um-amount').value);
-        if(!amt) return;
         const ref = doc(db, "users", selectedUser);
         const snap = await getDoc(ref);
         const cur = Number(snap.data().balance) || 0;
-        await updateDoc(ref, { balance: action === 'add' ? cur + amt : Math.max(0, cur - amt) });
-        alert("Баланс изменен!"); openUserModal(selectedUser); loadAdminList();
+        await updateDoc(ref, { balance: act === 'add' ? cur + amt : Math.max(0, cur - amt) });
+        alert("Баланс изменен"); openUserModal(selectedUser); loadAdminList();
     };
 
-    // 2. Управление Баном
     window.applyBan = async (state) => {
         const type = document.getElementById('ban-duration').value;
         const ref = doc(db, "users", selectedUser);
@@ -302,42 +294,24 @@
         const targetIp = snap.data().ip;
 
         if (!state) {
-            // UNBAN
-            await updateDoc(ref, { isBanned: false, banExpires: 0 });
+            await updateDoc(ref, { isBanned: false });
             if(targetIp) await deleteDoc(doc(db, "banned_ips", targetIp.replace(/\./g, '_')));
-            alert("Пользователь разбанен!");
+            alert("Разбанен");
         } else {
-            // BAN
-            if (type === 'ip') {
-                if(targetIp) {
-                    await setDoc(doc(db, "banned_ips", targetIp.replace(/\./g, '_')), { uid: selectedUser, time: Date.now() });
-                    await updateDoc(ref, { isBanned: true });
-                    alert(`IP ${targetIp} заблокирован навсегда!`);
-                } else { alert("У пользователя нет IP адреса"); }
-            } else if (type === 'forever') {
+            if (type === 'ip' && targetIp) {
+                await setDoc(doc(db, "banned_ips", targetIp.replace(/\./g, '_')), { uid: selectedUser });
                 await updateDoc(ref, { isBanned: true });
-                alert("Вечный бан выдан!");
+                alert("IP BAN!");
             } else {
-                let ms = 0;
-                if(type==='1h') ms = 3600000;
-                if(type==='24h') ms = 86400000;
-                if(type==='7d') ms = 604800000;
-                await updateDoc(ref, { banExpires: Date.now() + ms });
-                alert("Временный бан выдан!");
+                await updateDoc(ref, { isBanned: true });
+                alert("Аккаунт забанен");
             }
         }
         openUserModal(selectedUser); loadAdminList();
     };
 
-    // 3. Удаление игры у юзера
-    window.kickGame = async (uid, gid) => {
-        if(confirm("Забрать игру у игрока?")) {
-            await updateDoc(doc(db, "users", uid), { library: arrayRemove(gid) });
-            openUserModal(uid);
-        }
-    };
-
-    // --- STANDARD FUNCTIONS (Market, Player, Support) ---
+    // --- STANDARD ---
+    window.kickGame = async (uid, gid) => { if(confirm("Удалить?")) { await updateDoc(doc(db, "users", uid), { library: arrayRemove(gid) }); openUserModal(uid); } };
     window.openGame = (url) => { document.getElementById('game-frame').src = url; document.getElementById('game-overlay').style.display = 'flex'; };
     window.closeGame = () => { document.getElementById('game-frame').src = ''; document.getElementById('game-overlay').style.display = 'none'; };
     
@@ -346,57 +320,31 @@
         const s = await getDocs(collection(db, "games"));
         s.forEach(d => {
             const g = d.data();
-            // Кнопка удаления для админа
-            const delBtn = (user.nickname === 'GOODGAME') ? `<button onclick="delG('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : '';
-            l.innerHTML += `<div class="card">
-                <div class="flex justify-between font-bold"><span>${g.name}</span> <span class="text-yellow-500">${g.price}$</span></div>
-                <div class="flex justify-between mt-4">
-                    ${delBtn}
-                    <button onclick="buy('${d.id}', ${g.price})" class="btn btn-green text-xs w-24">КУПИТЬ</button>
-                </div>
-            </div>`;
+            const delBtn = (user.role === 'admin' || user.role === 'sr_admin' || g.ownerId === auth.currentUser.uid) ? `<button onclick="delG('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : '';
+            l.innerHTML += `<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span class="text-yellow-500">${g.price}$</span></div><div class="flex justify-between mt-4">${delBtn}<button onclick="buy('${d.id}', ${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`;
         });
     }
     
-    window.buy = async(id, p) => {
-        if(user.balance < p) return alert("Нет денег");
-        await updateDoc(doc(db,"users",auth.currentUser.uid), {balance: user.balance-p, library: arrayUnion(id)});
-        location.reload();
-    };
-
-    window.delG = async(id) => { if(confirm("DEL?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); } };
+    window.buy = async(id, p) => { if(user.balance < p) return alert("Мало денег"); await updateDoc(doc(db,"users",auth.currentUser.uid), {balance: user.balance-p, library: arrayUnion(id)}); location.reload(); };
+    window.delG = async(id) => { if(confirm("Удалить игру?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); } };
+    
     window.pubGame = async() => {
         await addDoc(collection(db,"games"), {
             name:document.getElementById('p-name').value, price:Number(document.getElementById('p-price').value),
-            url:document.getElementById('p-url').value, desc:document.getElementById('p-desc').value, mode:document.getElementById('p-mode').value
+            url:document.getElementById('p-url').value, desc:document.getElementById('p-desc').value, mode:document.getElementById('p-mode').value, ownerId: auth.currentUser.uid
         }); alert("OK"); nav('market');
     };
 
-    // Simple Support & Requests loaders
     async function loadRequests() {
-        if(user.nickname!=='GOODGAME') return;
+        if(!['admin','sr_admin','jr_admin','developer'].includes(user.role)) return; // Видят все стаффы
         const l=document.getElementById('req-list'); const s=await getDocs(collection(db,"beta_req")); l.innerHTML='';
-        s.forEach(d=>{ const r=d.data(); l.innerHTML+=`<div class="card flex justify-between"><span>${r.nick}</span><button onclick="accB('${d.id}','${r.uid}','${r.gid}')">OK</button></div>`; });
+        s.forEach(d=>{ const r=d.data(); l.innerHTML+=`<div class="card flex justify-between"><span>${r.nick}</span><button onclick="accB('${d.id}','${r.uid}','${r.gid}')">ПРИНЯТЬ</button></div>`; });
     }
     window.accB = async(rid,uid,gid) => { await updateDoc(doc(db,"users",uid),{library:arrayUnion(gid)}); await deleteDoc(doc(db,"beta_req",rid)); loadRequests(); };
     
-    async function loadTickets() {
-        // ... (standard logic from v8) ...
-        const mt=document.getElementById('my-tickets'); const q=query(collection(db,"support"),where("uid","==",auth.currentUser.uid)); 
-        const snap=await getDocs(q); mt.innerHTML=''; snap.forEach(d=>{mt.innerHTML+=`<div class="card">${d.data().msg} <span class="text-green-500">${d.data().reply||''}</span></div>`});
-        if(user.nickname==='GOODGAME'){
-            const at=document.getElementById('adm-tickets'); at.innerHTML=''; at.classList.remove('hidden');
-            const all=await getDocs(collection(db,"support")); all.forEach(d=>{ if(!d.data().reply) at.innerHTML+=`<div class="card">${d.data().nick}: ${d.data().msg} <button onclick="rep('${d.id}')">Rep</button></div>`; });
-        }
-    }
-    window.sendSupp = async() => { await addDoc(collection(db,"support"),{uid:auth.currentUser.uid,nick:user.nickname,msg:document.getElementById('supp-msg').value,reply:""}); loadTickets(); };
-    window.rep = async(id) => { const r=prompt("Otvet:"); if(r) await updateDoc(doc(db,"support",id),{reply:r}); loadTickets(); };
-
-    // Navigation
     window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
     window.logout = () => signOut(auth).then(()=>location.reload());
     
-    // Library Load
     async function loadLibrary() {
         const l=document.getElementById('library-list'); l.innerHTML='';
         if(user.library) for(let id of user.library) { const g=await getDoc(doc(db,"games",id)); if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`; }
