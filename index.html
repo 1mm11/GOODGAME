@@ -3,97 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameStore PRO | Steam Analog</title>
+    <title>GameStore ULTIMATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --bg: #0b0e14; --card: #1a1f29; --accent: #22c55e; }
-        body { background: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; }
+        :root { --bg: #0b0e14; --card: #151921; --green: #22c55e; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; }
         .sidebar { width: 260px; background: var(--card); height: 100vh; position: fixed; border-right: 1px solid #2d3748; z-index: 50; }
-        .main { margin-left: 260px; padding: 25px; }
-        .card { background: var(--card); border-radius: 12px; border: 1px solid #334155; padding: 20px; transition: 0.3s; }
-        .btn { padding: 10px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; text-align: center; }
-        .btn-green { background: #22c55e; color: white; }
-        .btn-blue { background: #3b82f6; color: white; }
+        .content { margin-left: 260px; padding: 30px; }
+        .card { background: var(--card); border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+        input, select, textarea { background: #1f2937; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 12px; }
+        .btn-green { background: #22c55e; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; transition: 0.2s; }
+        .btn-green:hover { opacity: 0.8; }
         .hidden { display: none !important; }
-        input, select, textarea { background: #1f2937; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
-        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; } }
     </style>
 </head>
 <body>
 
 <aside class="sidebar p-6 flex flex-col justify-between">
     <div>
-        <div class="text-green-500 font-black text-2xl italic mb-8">GAMESTORE PRO</div>
+        <div class="text-green-500 font-black text-2xl mb-8 italic">GAMESTORE</div>
         <nav class="space-y-4">
             <button onclick="nav('market')" class="w-full text-left flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
-            <button onclick="nav('library')" class="w-full text-left flex items-center gap-3"><i class="fas fa-layer-group"></i> Бібліотека</button>
-            <button onclick="nav('profile')" class="w-full text-left flex items-center gap-3"><i class="fas fa-user-circle"></i> Профіль</button>
-            <div id="dev-menu" class="hidden pt-4 border-t border-gray-700">
-                <button onclick="nav('publish')" class="w-full text-left flex items-center gap-3 text-green-400"><i class="fas fa-plus"></i> Опублікувати</button>
-                <button onclick="nav('dev-requests')" class="w-full text-left flex items-center gap-3 text-yellow-400"><i class="fas fa-envelope"></i> Заявки бета</button>
+            <button onclick="nav('library')" class="w-full text-left flex items-center gap-3"><i class="fas fa-book"></i> Бібліотека</button>
+            <button onclick="nav('support')" class="w-full text-left flex items-center gap-3"><i class="fas fa-headset text-blue-400"></i> Підтримка</button>
+            
+            <div id="dev-section" class="hidden pt-4 border-t border-gray-700">
+                <button onclick="nav('publish')" class="w-full text-left flex items-center gap-3 text-green-400"><i class="fas fa-upload"></i> Опублікувати</button>
+                <button onclick="nav('requests')" class="w-full text-left flex items-center gap-3 text-yellow-400"><i class="fas fa-tasks"></i> Заявки Бета</button>
             </div>
-            <div id="admin-menu" class="hidden pt-4 border-t border-gray-700">
-                <button onclick="nav('admin-users')" class="w-full text-left flex items-center gap-3 text-red-500"><i class="fas fa-users-cog"></i> Керування Юзерами</button>
+
+            <div id="admin-section" class="hidden pt-4 border-t border-gray-700">
+                <button onclick="nav('admin-panel')" class="w-full text-left flex items-center gap-3 text-red-500 font-bold"><i class="fas fa-user-shield"></i> АДМІН-ЦЕНТР</button>
             </div>
         </nav>
     </div>
     <div class="border-t border-gray-700 pt-4">
-        <div class="flex items-center gap-2 mb-2">
-            <span id="nick-sidebar" class="font-bold text-sm"></span>
-            <span id="wallet-sidebar" class="text-xs text-yellow-500 font-bold">0$</span>
+        <div id="user-info" class="mb-4">
+            <div id="u-nick" class="font-bold text-green-500 text-lg">Гість</div>
+            <div id="u-wallet" class="text-yellow-500 font-bold">Баланс: 0$</div>
         </div>
-        <button onclick="logout()" class="text-xs text-gray-500 hover:text-red-500">Вийти</button>
+        <button onclick="logout()" class="text-red-500 text-xs uppercase font-bold">Вийти</button>
     </div>
 </aside>
 
-<main class="main">
+<main class="content">
     <section id="market">
-        <h2 class="text-3xl font-bold mb-6 italic">Магазин ігор</h2>
-        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <h2 class="text-3xl font-bold mb-6">Магазин</h2>
+        <div id="market-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
     </section>
 
     <section id="library" class="hidden">
-        <h2 class="text-3xl font-bold mb-6">Моя Бібліотека</h2>
-        <div id="library-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        <h2 class="text-3xl font-bold mb-6">Мої ігри</h2>
+        <div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </section>
+
+    <section id="support" class="hidden">
+        <h2 class="text-3xl font-bold mb-6">Підтримка</h2>
+        <div id="admin-tickets-area" class="hidden mb-10">
+            <h3 class="text-red-500 font-bold mb-4 uppercase">Всі звернення (Адмін)</h3>
+            <div id="all-tickets" class="space-y-4 mb-10"></div>
+        </div>
+        <div class="card max-w-lg">
+            <textarea id="support-msg" placeholder="Опишіть вашу проблему..."></textarea>
+            <button onclick="sendTicket()" class="btn-green">Надіслати</button>
+        </div>
     </section>
 
     <section id="publish" class="hidden">
-        <h2 class="text-3xl font-bold mb-6 text-green-500">Додати гру на платформу</h2>
-        <div class="card max-w-xl">
-            <input type="text" id="g-name" placeholder="Назва">
+        <h2 class="text-3xl font-bold mb-6">Публікація гри</h2>
+        <div class="card max-w-lg">
+            <input type="text" id="g-name" placeholder="Назва гри">
             <textarea id="g-desc" placeholder="Опис"></textarea>
-            <input type="text" id="g-url" placeholder="Посилання на гру (https://...)">
-            <input type="number" id="g-price" placeholder="Ціна (0 для безкоштовної)">
-            <select id="g-mode">
-                <option value="public">Публічна (одразу грати)</option>
-                <option value="beta">Закритий Бета-тест</option>
+            <input type="text" id="g-url" placeholder="URL (https://...)">
+            <input type="number" id="g-price" placeholder="Ціна (0 для безкоштовних)">
+            <select id="g-type">
+                <option value="public">Публічна</option>
+                <option value="beta">Закрита Бета</option>
             </select>
-            <button onclick="addGame()" class="btn btn-green w-full">Виставити на продаж</button>
+            <button onclick="saveGame()" class="btn-green">Опублікувати</button>
         </div>
     </section>
 
-    <section id="admin-users" class="hidden">
+    <section id="admin-panel" class="hidden">
         <h2 class="text-3xl font-bold mb-6 text-red-500">Керування користувачами</h2>
-        <div id="users-list" class="space-y-4"></div>
+        <div id="admin-users-list" class="space-y-4"></div>
     </section>
 
-    <section id="dev-requests" class="hidden">
-        <h2 class="text-3xl font-bold mb-6 text-yellow-400">Заявки на бета-тест</h2>
-        <div id="requests-list" class="space-y-4"></div>
+    <section id="requests" class="hidden">
+        <h2 class="text-3xl font-bold mb-6">Заявки на тести</h2>
+        <div id="dev-req-list" class="space-y-4"></div>
     </section>
 </main>
 
-<div id="auth-modal" class="modal">
-    <div class="card max-w-sm w-full">
+<div id="auth-screen" class="fixed inset-0 bg-black flex items-center justify-center p-4 z-[100]">
+    <div class="card w-full max-w-sm">
         <h2 class="text-2xl font-bold mb-6 text-center text-green-500">GameStore Login</h2>
-        <input type="text" id="a-nick" placeholder="Нікнейм">
-        <input type="email" id="a-email" placeholder="Email">
-        <input type="password" id="a-pass" placeholder="Пароль">
-        <div class="flex items-center gap-2 mb-4 text-sm">
-            <input type="checkbox" id="a-is-dev" style="width: auto; margin:0"> Я розробник ігор
+        <input type="text" id="auth-nick" placeholder="Нікнейм">
+        <input type="email" id="auth-email" placeholder="Email">
+        <input type="password" id="auth-pass" placeholder="Пароль">
+        <div class="flex items-center gap-2 mb-4">
+            <input type="checkbox" id="auth-isdev" style="width: auto; margin:0"> Я розробник
         </div>
-        <button onclick="auth()" class="btn btn-green w-full text-lg">УВІЙТИ / РЕЄСТРАЦІЯ</button>
+        <button onclick="handleAuth()" class="btn-green">УВІЙТИ / РЕЄСТРАЦІЯ</button>
     </div>
 </div>
 
@@ -112,214 +125,513 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const authManager = getAuth(app);
+    const auth = getAuth(app);
     const db = getFirestore(app);
 
-    let profile = null;
+    let userProfile = null;
 
-    // --- АВТОРИЗАЦІЯ ---
-    window.auth = async () => {
-        const nick = document.getElementById('a-nick').value;
-        const email = document.getElementById('a-email').value;
-        const pass = document.getElementById('a-pass').value;
-        const isDev = document.getElementById('a-is-dev').checked;
+    window.handleAuth = async () => {
+        const nick = document.getElementById('auth-nick').value;
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-pass').value;
+        const isDev = document.getElementById('auth-isdev').checked;
 
-        if (nick === 'GOODGAME' && pass !== 'vlad01032014v') return alert("Помилка GOODGAME!");
+        if (nick === 'GOODGAME' && pass !== 'vlad01032014v') return alert("Невірний пароль для GOODGAME!");
 
         try {
-            await signInWithEmailAndPassword(authManager, email, pass);
+            await signInWithEmailAndPassword(auth, email, pass);
         } catch (e) {
             try {
-                const res = await createUserWithEmailAndPassword(authManager, email, pass);
+                const res = await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users", res.user.uid), {
                     nickname: nick,
-                    role: (nick === 'GOODGAME') ? 'admin' : (isDev ? 'developer' : 'user'),
-                    balance: 100, // Початковий бонус
-                    library: [],
-                    avatar: "https://via.placeholder.com/150"
+                    role: (nick === 'GOODGAME' ? 'admin' : (isDev ? 'developer' : 'user')),
+                    balance: 100,
+                    library: []
                 });
             } catch (err) { alert(err.message); }
         }
     };
 
-    onAuthStateChanged(authManager, async (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
             const snap = await getDoc(doc(db, "users", user.uid));
-            profile = snap.data();
+            userProfile = snap.data();
             
-            document.getElementById('auth-modal').classList.add('hidden');
-            document.getElementById('nick-sidebar').innerText = profile.nickname;
-            document.getElementById('wallet-sidebar').innerText = profile.balance + "$";
+            // ПЕРЕВІРКА ПРАВ
+            document.getElementById('u-nick').innerText = userProfile.nickname;
+            document.getElementById('u-wallet').innerText = "Баланс: " + userProfile.balance + "$";
+            document.getElementById('auth-screen').classList.add('hidden');
 
-            if (profile.role === 'developer' || profile.role === 'admin') document.getElementById('dev-menu').classList.remove('hidden');
-            if (profile.role === 'admin') document.getElementById('admin-menu').classList.remove('hidden');
+            if (userProfile.nickname === 'GOODGAME' || userProfile.role === 'admin') {
+                document.getElementById('admin-section').classList.remove('hidden');
+                document.getElementById('dev-section').classList.remove('hidden');
+                document.getElementById('admin-tickets-area').classList.remove('hidden');
+            } else if (userProfile.role === 'developer') {
+                document.getElementById('dev-section').classList.remove('hidden');
+            }
 
             loadMarket();
             loadLibrary();
+            loadTickets();
             loadAdminUsers();
             loadDevRequests();
         } else {
-            document.getElementById('auth-modal').classList.remove('hidden');
+            document.getElementById('auth-screen').classList.remove('hidden');
         }
     });
 
-    // --- МАГАЗИН ---
+    // --- МАГАЗИН І БІБЛІОТЕКА ---
     async function loadMarket() {
-        const grid = document.getElementById('market-list');
-        grid.innerHTML = '';
+        const list = document.getElementById('market-list');
+        list.innerHTML = '';
         const snap = await getDocs(collection(db, "games"));
         snap.forEach(d => {
-            const g = { id: d.id, ...d.data() };
-            const isOwned = profile.library.includes(g.id);
-            grid.innerHTML += `
-                <div class="card flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-xl font-bold text-green-400 mb-2">${g.name}</h3>
-                        <p class="text-xs text-gray-400 mb-4 h-12 overflow-hidden">${g.desc}</p>
-                        <span class="text-sm font-bold text-yellow-500">${g.price > 0 ? g.price + '$' : 'БЕЗКОШТОВНО'}</span>
-                    </div>
-                    <div class="mt-4">
-                        ${isOwned ? '<span class="text-green-500 text-sm font-bold">ВЖЕ В БІБЛІОТЕЦІ</span>' : 
-                          (g.mode === 'beta' ? `<button onclick="sendBetaRequest('${g.id}', '${g.ownerId}')" class="btn btn-blue w-full">ПОДАТИ ЗАЯВКУ НА БЕТА</button>` : 
-                          `<button onclick="buyGame('${g.id}', ${g.price})" class="btn btn-green w-full">КУПИТИ</button>`)
-                        }
-                    </div>
-                </div>
-            `;
+            const g = d.data();
+            const id = d.id;
+            const isOwned = userProfile.library.includes(id);
+            list.innerHTML += `
+                <div class="card">
+                    <h3 class="text-xl font-bold text-green-500">${g.name}</h3>
+                    <p class="text-xs text-gray-400 my-2">${g.desc}</p>
+                    <div class="font-bold text-yellow-500 mb-4">${g.price} $</div>
+                    ${isOwned ? '<button class="bg-gray-700 w-full p-2 rounded" disabled>В бібліотеці</button>' : 
+                     (g.type === 'beta' ? `<button onclick="requestBeta('${id}', '${g.devId}')" class="btn-green bg-blue-600">Подати заявку</button>` : 
+                     `<button onclick="buyGame('${id}', ${g.price})" class="btn-green">Купити</button>`)}
+                </div>`;
         });
     }
 
-    // --- БЕТА ТЕСТИ ---
-    window.sendBetaRequest = async (gameId, ownerId) => {
-        const realName = prompt("Введіть ваше справжнє ім'я для заявки:");
-        if(!realName) return;
+    window.buyGame = async (id, price) => {
+        if (userProfile.balance < price) return alert("Недостатньо грошей!");
+        await updateDoc(doc(db, "users", auth.currentUser.uid), {
+            balance: userProfile.balance - price,
+            library: arrayUnion(id)
+        });
+        alert("Гру додано!"); location.reload();
+    };
+
+    window.requestBeta = async (gameId, devId) => {
+        const name = prompt("Ваше справжнє ім'я:");
+        if (!name) return;
         await addDoc(collection(db, "requests"), {
-            gameId,
-            devId: ownerId,
-            userId: authManager.currentUser.uid,
-            userName: profile.nickname,
-            realName: realName,
-            status: "pending"
+            gameId, devId, userId: auth.currentUser.uid, nick: userProfile.nickname, realName: name, status: "pending"
         });
         alert("Заявку відправлено!");
     };
 
-    async function loadDevRequests() {
-        const list = document.getElementById('requests-list');
-        list.innerHTML = '';
-        const q = query(collection(db, "requests"), where("devId", "==", authManager.currentUser.uid), where("status", "==", "pending"));
-        const snap = await getDocs(q);
-        snap.forEach(d => {
-            const r = { id: d.id, ...d.data() };
-            list.innerHTML += `
-                <div class="card flex justify-between items-center">
-                    <div><b>${r.userName}</b> (${r.realName}) хоче пограти в вашу бета-гру</div>
-                    <div class="flex gap-2">
-                        <button onclick="handleRequest('${r.id}', '${r.userId}', '${r.gameId}', 'accept')" class="bg-green-600 p-2 rounded">Прийняти</button>
-                        <button onclick="handleRequest('${r.id}', '${r.userId}', '${r.gameId}', 'reject')" class="bg-red-600 p-2 rounded">Відхилити</button>
-                    </div>
-                </div>
-            `;
+    // --- ПІДТРИМКА ---
+    window.sendTicket = async () => {
+        const msg = document.getElementById('support-msg').value;
+        await addDoc(collection(db, "support"), {
+            uid: auth.currentUser.uid, nick: userProfile.nickname, msg: msg, time: Date.now()
         });
+        alert("Надіслано!"); loadTickets();
+    };
+
+    async function loadTickets() {
+        const allList = document.getElementById('all-tickets');
+        if (userProfile.nickname === 'GOODGAME') {
+            allList.innerHTML = '';
+            const snap = await getDocs(collection(db, "support"));
+            snap.forEach(d => {
+                const t = d.data();
+                allList.innerHTML += `<div class="bg-gray-800 p-3 rounded text-sm"><b>${t.nick}:</b> ${t.msg} <button onclick="delDoc('support','${d.id}')" class="text-red-500 ml-2">❌</button></div>`;
+            });
+        }
     }
 
-    window.handleRequest = async (reqId, userId, gameId, action) => {
-        if(action === 'accept') {
-            await updateDoc(doc(db, "users", userId), { library: arrayUnion(gameId) });
-            alert("Користувача додано до тесту!");
-        } else {
-            alert("Заявку відхилено");
-        }
-        await deleteDoc(doc(db, "requests", reqId));
-        loadDevRequests();
-    };
-
-    // --- КУПІВЛЯ ---
-    window.buyGame = async (gameId, price) => {
-        if (profile.balance < price) return alert("Недостатньо грошей!");
-        await updateDoc(doc(db, "users", authManager.currentUser.uid), {
-            balance: profile.balance - price,
-            library: arrayUnion(gameId)
+    // --- ПУБЛІКАЦІЯ ---
+    window.saveGame = async () => {
+        await addDoc(collection(db, "games"), {
+            name: document.getElementById('g-name').value,
+            desc: document.getElementById('g-desc').value,
+            url: document.getElementById('g-url').value,
+            price: parseInt(document.getElementById('g-price').value) || 0,
+            type: document.getElementById('g-type').value,
+            devId: auth.currentUser.uid
         });
-        alert("Гру куплено!");
-        location.reload();
+        alert("Готово!"); nav('market');
     };
 
-    // --- АДМІНКА (GOODGAME) ---
+    // --- АДМІН-ФУНКЦІЇ ---
     async function loadAdminUsers() {
-        if(profile.role !== 'admin') return;
-        const list = document.getElementById('users-list');
+        const list = document.getElementById('admin-users-list');
+        if (userProfile.nickname !== 'GOODGAME') return;
         list.innerHTML = '';
         const snap = await getDocs(collection(db, "users"));
         snap.forEach(d => {
-            const u = { id: d.id, ...d.data() };
-            list.innerHTML += `
-                <div class="card flex justify-between items-center">
-                    <div><b>${u.nickname}</b> | Баланс: ${u.balance}$</div>
-                    <div class="flex gap-2">
-                        <button onclick="adminAddMoney('${u.id}', ${u.balance})" class="bg-blue-600 p-1 text-xs">Нарахувати 50$</button>
-                        <button onclick="adminBanUser('${u.id}')" class="bg-red-600 p-1 text-xs">БАН</button>
-                    </div>
-                </div>
-            `;
+            const u = d.data();
+            list.innerHTML += `<div class="card flex justify-between">
+                <span>${u.nickname} (${u.balance}$)</span>
+                <button onclick="addMoney('${d.id}', ${u.balance})" class="text-blue-400">+50$</button>
+            </div>`;
         });
     }
 
-    window.adminAddMoney = async (uid, current) => {
-        await updateDoc(doc(db, "users", uid), { balance: current + 50 });
-        loadAdminUsers();
-    };
+    window.addMoney = async (uid, bal) => { await updateDoc(doc(db, "users", uid), { balance: bal + 50 }); loadAdminUsers(); };
+    window.delDoc = async (col, id) => { await deleteDoc(doc(db, col, id)); location.reload(); };
 
     // --- ІНШЕ ---
-    window.addGame = async () => {
-        const name = document.getElementById('g-name').value;
-        const url = document.getElementById('g-url').value;
-        const price = parseInt(document.getElementById('g-price').value) || 0;
-        const mode = document.getElementById('g-mode').value;
-        
-        await addDoc(collection(db, "games"), {
-            name, url, desc: document.getElementById('g-desc').value,
-            price, mode, ownerId: authManager.currentUser.uid, devNick: profile.nickname
-        });
-        alert("Гру опубліковано!");
-        nav('market');
-    };
-
     async function loadLibrary() {
-        const grid = document.getElementById('library-list');
-        grid.innerHTML = '';
-        if(!profile.library.length) return grid.innerHTML = "<p>Бібліотека порожня</p>";
-        
-        for(let gameId of profile.library) {
-            const gSnap = await getDoc(doc(db, "games", gameId));
-            if(gSnap.exists()) {
-                const g = gSnap.data();
-                grid.innerHTML += `
-                    <div class="card">
-                        <h3 class="text-xl font-bold text-green-500">${g.name}</h3>
-                        <button onclick="playGame('${g.url}')" class="btn btn-green w-full mt-4">ЗАПУСТИТИ ГРУ</button>
-                    </div>
-                `;
+        const list = document.getElementById('library-list');
+        list.innerHTML = '';
+        for (let id of userProfile.library) {
+            const g = await getDoc(doc(db, "games", id));
+            if (g.exists()) {
+                list.innerHTML += `<div class="card"><h3 class="font-bold">${g.data().name}</h3><button onclick="play('${g.data().url}')" class="btn-green mt-4">ГРАТИ</button></div>`;
             }
         }
     }
 
-    window.playGame = (url) => {
-        const overlay = document.createElement('div');
-        overlay.className = "modal"; overlay.style.background = "#000";
-        overlay.innerHTML = `<div class="flex flex-col w-full h-full">
-            <button onclick="this.parentElement.parentElement.remove()" class="bg-red-600 p-2 font-bold">ЗАКРИТИ ГРУ [X]</button>
-            <iframe src="${url}" class="flex-grow border-none"></iframe>
-        </div>`;
-        document.body.appendChild(overlay);
+    window.play = (url) => {
+        const win = window.open(url, '_blank');
+        if (!win) alert("Будь ласка, дозвольте спливаючі вікна");
+    };
+
+    async function loadDevRequests() {
+        const list = document.getElementById('dev-req-list');
+        list.innerHTML = '';
+        const q = query(collection(db, "requests"), where("devId", "==", auth.currentUser.uid));
+        const snap = await getDocs(q);
+        snap.forEach(d => {
+            const r = d.data();
+            list.innerHTML += `<div class="card flex justify-between">
+                <span>${r.nick} (${r.realName})</span>
+                <button onclick="approve('${d.id}','${r.userId}','${r.gameId}')" class="text-green-500">Прийняти</button>
+            </div>`;
+        });
+    }
+
+    window.approve = async (rid, uid, gid) => {
+        await updateDoc(doc(db, "users", uid), { library: arrayUnion(gid) });
+        await deleteDoc(doc(db, "requests", rid));
+        alert("Прийнято!"); loadDevRequests();
     };
 
     window.nav = (id) => {
-        ['market', 'library', 'publish', 'admin-users', 'dev-requests'].forEach(s => document.getElementById(s).classList.add('hidden'));
+        ['market', 'library', 'support', 'publish', 'admin-panel', 'requests'].forEach(s => document.getElementById(s).classList.add('hidden'));
         document.getElementById(id).classList.remove('hidden');
     };
+    window.logout = () => signOut(auth).then(() => location.reload());
+</script>
+</body>
+</html><!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStore ULTIMATE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --bg: #0b0e14; --card: #151921; --green: #22c55e; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; }
+        .sidebar { width: 260px; background: var(--card); height: 100vh; position: fixed; border-right: 1px solid #2d3748; z-index: 50; }
+        .content { margin-left: 260px; padding: 30px; }
+        .card { background: var(--card); border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+        input, select, textarea { background: #1f2937; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 12px; }
+        .btn-green { background: #22c55e; padding: 10px; border-radius: 8px; font-weight: bold; width: 100%; transition: 0.2s; }
+        .btn-green:hover { opacity: 0.8; }
+        .hidden { display: none !important; }
+        @media (max-width: 768px) { .sidebar { display: none; } .content { margin-left: 0; } }
+    </style>
+</head>
+<body>
 
-    window.logout = () => signOut(authManager).then(() => location.reload());
+<aside class="sidebar p-6 flex flex-col justify-between">
+    <div>
+        <div class="text-green-500 font-black text-2xl mb-8 italic">GAMESTORE</div>
+        <nav class="space-y-4">
+            <button onclick="nav('market')" class="w-full text-left flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
+            <button onclick="nav('library')" class="w-full text-left flex items-center gap-3"><i class="fas fa-book"></i> Бібліотека</button>
+            <button onclick="nav('support')" class="w-full text-left flex items-center gap-3"><i class="fas fa-headset text-blue-400"></i> Підтримка</button>
+            
+            <div id="dev-section" class="hidden pt-4 border-t border-gray-700">
+                <button onclick="nav('publish')" class="w-full text-left flex items-center gap-3 text-green-400"><i class="fas fa-upload"></i> Опублікувати</button>
+                <button onclick="nav('requests')" class="w-full text-left flex items-center gap-3 text-yellow-400"><i class="fas fa-tasks"></i> Заявки Бета</button>
+            </div>
+
+            <div id="admin-section" class="hidden pt-4 border-t border-gray-700">
+                <button onclick="nav('admin-panel')" class="w-full text-left flex items-center gap-3 text-red-500 font-bold"><i class="fas fa-user-shield"></i> АДМІН-ЦЕНТР</button>
+            </div>
+        </nav>
+    </div>
+    <div class="border-t border-gray-700 pt-4">
+        <div id="user-info" class="mb-4">
+            <div id="u-nick" class="font-bold text-green-500 text-lg">Гість</div>
+            <div id="u-wallet" class="text-yellow-500 font-bold">Баланс: 0$</div>
+        </div>
+        <button onclick="logout()" class="text-red-500 text-xs uppercase font-bold">Вийти</button>
+    </div>
+</aside>
+
+<main class="content">
+    <section id="market">
+        <h2 class="text-3xl font-bold mb-6">Магазин</h2>
+        <div id="market-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </section>
+
+    <section id="library" class="hidden">
+        <h2 class="text-3xl font-bold mb-6">Мої ігри</h2>
+        <div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+    </section>
+
+    <section id="support" class="hidden">
+        <h2 class="text-3xl font-bold mb-6">Підтримка</h2>
+        <div id="admin-tickets-area" class="hidden mb-10">
+            <h3 class="text-red-500 font-bold mb-4 uppercase">Всі звернення (Адмін)</h3>
+            <div id="all-tickets" class="space-y-4 mb-10"></div>
+        </div>
+        <div class="card max-w-lg">
+            <textarea id="support-msg" placeholder="Опишіть вашу проблему..."></textarea>
+            <button onclick="sendTicket()" class="btn-green">Надіслати</button>
+        </div>
+    </section>
+
+    <section id="publish" class="hidden">
+        <h2 class="text-3xl font-bold mb-6">Публікація гри</h2>
+        <div class="card max-w-lg">
+            <input type="text" id="g-name" placeholder="Назва гри">
+            <textarea id="g-desc" placeholder="Опис"></textarea>
+            <input type="text" id="g-url" placeholder="URL (https://...)">
+            <input type="number" id="g-price" placeholder="Ціна (0 для безкоштовних)">
+            <select id="g-type">
+                <option value="public">Публічна</option>
+                <option value="beta">Закрита Бета</option>
+            </select>
+            <button onclick="saveGame()" class="btn-green">Опублікувати</button>
+        </div>
+    </section>
+
+    <section id="admin-panel" class="hidden">
+        <h2 class="text-3xl font-bold mb-6 text-red-500">Керування користувачами</h2>
+        <div id="admin-users-list" class="space-y-4"></div>
+    </section>
+
+    <section id="requests" class="hidden">
+        <h2 class="text-3xl font-bold mb-6">Заявки на тести</h2>
+        <div id="dev-req-list" class="space-y-4"></div>
+    </section>
+</main>
+
+<div id="auth-screen" class="fixed inset-0 bg-black flex items-center justify-center p-4 z-[100]">
+    <div class="card w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-6 text-center text-green-500">GameStore Login</h2>
+        <input type="text" id="auth-nick" placeholder="Нікнейм">
+        <input type="email" id="auth-email" placeholder="Email">
+        <input type="password" id="auth-pass" placeholder="Пароль">
+        <div class="flex items-center gap-2 mb-4">
+            <input type="checkbox" id="auth-isdev" style="width: auto; margin:0"> Я розробник
+        </div>
+        <button onclick="handleAuth()" class="btn-green">УВІЙТИ / РЕЄСТРАЦІЯ</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, updateDoc, deleteDoc, query, where, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI",
+        authDomain: "flutter-ai-playground-caf0d.firebaseapp.com",
+        projectId: "flutter-ai-playground-caf0d",
+        storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app",
+        messagingSenderId: "155816311480",
+        appId: "1:155816311480:web:a0456fcc4681e62837924d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    let userProfile = null;
+
+    window.handleAuth = async () => {
+        const nick = document.getElementById('auth-nick').value;
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-pass').value;
+        const isDev = document.getElementById('auth-isdev').checked;
+
+        if (nick === 'GOODGAME' && pass !== 'vlad01032014v') return alert("Невірний пароль для GOODGAME!");
+
+        try {
+            await signInWithEmailAndPassword(auth, email, pass);
+        } catch (e) {
+            try {
+                const res = await createUserWithEmailAndPassword(auth, email, pass);
+                await setDoc(doc(db, "users", res.user.uid), {
+                    nickname: nick,
+                    role: (nick === 'GOODGAME' ? 'admin' : (isDev ? 'developer' : 'user')),
+                    balance: 100,
+                    library: []
+                });
+            } catch (err) { alert(err.message); }
+        }
+    };
+
+    onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            userProfile = snap.data();
+            
+            // ПЕРЕВІРКА ПРАВ
+            document.getElementById('u-nick').innerText = userProfile.nickname;
+            document.getElementById('u-wallet').innerText = "Баланс: " + userProfile.balance + "$";
+            document.getElementById('auth-screen').classList.add('hidden');
+
+            if (userProfile.nickname === 'GOODGAME' || userProfile.role === 'admin') {
+                document.getElementById('admin-section').classList.remove('hidden');
+                document.getElementById('dev-section').classList.remove('hidden');
+                document.getElementById('admin-tickets-area').classList.remove('hidden');
+            } else if (userProfile.role === 'developer') {
+                document.getElementById('dev-section').classList.remove('hidden');
+            }
+
+            loadMarket();
+            loadLibrary();
+            loadTickets();
+            loadAdminUsers();
+            loadDevRequests();
+        } else {
+            document.getElementById('auth-screen').classList.remove('hidden');
+        }
+    });
+
+    // --- МАГАЗИН І БІБЛІОТЕКА ---
+    async function loadMarket() {
+        const list = document.getElementById('market-list');
+        list.innerHTML = '';
+        const snap = await getDocs(collection(db, "games"));
+        snap.forEach(d => {
+            const g = d.data();
+            const id = d.id;
+            const isOwned = userProfile.library.includes(id);
+            list.innerHTML += `
+                <div class="card">
+                    <h3 class="text-xl font-bold text-green-500">${g.name}</h3>
+                    <p class="text-xs text-gray-400 my-2">${g.desc}</p>
+                    <div class="font-bold text-yellow-500 mb-4">${g.price} $</div>
+                    ${isOwned ? '<button class="bg-gray-700 w-full p-2 rounded" disabled>В бібліотеці</button>' : 
+                     (g.type === 'beta' ? `<button onclick="requestBeta('${id}', '${g.devId}')" class="btn-green bg-blue-600">Подати заявку</button>` : 
+                     `<button onclick="buyGame('${id}', ${g.price})" class="btn-green">Купити</button>`)}
+                </div>`;
+        });
+    }
+
+    window.buyGame = async (id, price) => {
+        if (userProfile.balance < price) return alert("Недостатньо грошей!");
+        await updateDoc(doc(db, "users", auth.currentUser.uid), {
+            balance: userProfile.balance - price,
+            library: arrayUnion(id)
+        });
+        alert("Гру додано!"); location.reload();
+    };
+
+    window.requestBeta = async (gameId, devId) => {
+        const name = prompt("Ваше справжнє ім'я:");
+        if (!name) return;
+        await addDoc(collection(db, "requests"), {
+            gameId, devId, userId: auth.currentUser.uid, nick: userProfile.nickname, realName: name, status: "pending"
+        });
+        alert("Заявку відправлено!");
+    };
+
+    // --- ПІДТРИМКА ---
+    window.sendTicket = async () => {
+        const msg = document.getElementById('support-msg').value;
+        await addDoc(collection(db, "support"), {
+            uid: auth.currentUser.uid, nick: userProfile.nickname, msg: msg, time: Date.now()
+        });
+        alert("Надіслано!"); loadTickets();
+    };
+
+    async function loadTickets() {
+        const allList = document.getElementById('all-tickets');
+        if (userProfile.nickname === 'GOODGAME') {
+            allList.innerHTML = '';
+            const snap = await getDocs(collection(db, "support"));
+            snap.forEach(d => {
+                const t = d.data();
+                allList.innerHTML += `<div class="bg-gray-800 p-3 rounded text-sm"><b>${t.nick}:</b> ${t.msg} <button onclick="delDoc('support','${d.id}')" class="text-red-500 ml-2">❌</button></div>`;
+            });
+        }
+    }
+
+    // --- ПУБЛІКАЦІЯ ---
+    window.saveGame = async () => {
+        await addDoc(collection(db, "games"), {
+            name: document.getElementById('g-name').value,
+            desc: document.getElementById('g-desc').value,
+            url: document.getElementById('g-url').value,
+            price: parseInt(document.getElementById('g-price').value) || 0,
+            type: document.getElementById('g-type').value,
+            devId: auth.currentUser.uid
+        });
+        alert("Готово!"); nav('market');
+    };
+
+    // --- АДМІН-ФУНКЦІЇ ---
+    async function loadAdminUsers() {
+        const list = document.getElementById('admin-users-list');
+        if (userProfile.nickname !== 'GOODGAME') return;
+        list.innerHTML = '';
+        const snap = await getDocs(collection(db, "users"));
+        snap.forEach(d => {
+            const u = d.data();
+            list.innerHTML += `<div class="card flex justify-between">
+                <span>${u.nickname} (${u.balance}$)</span>
+                <button onclick="addMoney('${d.id}', ${u.balance})" class="text-blue-400">+50$</button>
+            </div>`;
+        });
+    }
+
+    window.addMoney = async (uid, bal) => { await updateDoc(doc(db, "users", uid), { balance: bal + 50 }); loadAdminUsers(); };
+    window.delDoc = async (col, id) => { await deleteDoc(doc(db, col, id)); location.reload(); };
+
+    // --- ІНШЕ ---
+    async function loadLibrary() {
+        const list = document.getElementById('library-list');
+        list.innerHTML = '';
+        for (let id of userProfile.library) {
+            const g = await getDoc(doc(db, "games", id));
+            if (g.exists()) {
+                list.innerHTML += `<div class="card"><h3 class="font-bold">${g.data().name}</h3><button onclick="play('${g.data().url}')" class="btn-green mt-4">ГРАТИ</button></div>`;
+            }
+        }
+    }
+
+    window.play = (url) => {
+        const win = window.open(url, '_blank');
+        if (!win) alert("Будь ласка, дозвольте спливаючі вікна");
+    };
+
+    async function loadDevRequests() {
+        const list = document.getElementById('dev-req-list');
+        list.innerHTML = '';
+        const q = query(collection(db, "requests"), where("devId", "==", auth.currentUser.uid));
+        const snap = await getDocs(q);
+        snap.forEach(d => {
+            const r = d.data();
+            list.innerHTML += `<div class="card flex justify-between">
+                <span>${r.nick} (${r.realName})</span>
+                <button onclick="approve('${d.id}','${r.userId}','${r.gameId}')" class="text-green-500">Прийняти</button>
+            </div>`;
+        });
+    }
+
+    window.approve = async (rid, uid, gid) => {
+        await updateDoc(doc(db, "users", uid), { library: arrayUnion(gid) });
+        await deleteDoc(doc(db, "requests", rid));
+        alert("Прийнято!"); loadDevRequests();
+    };
+
+    window.nav = (id) => {
+        ['market', 'library', 'support', 'publish', 'admin-panel', 'requests'].forEach(s => document.getElementById(s).classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+    };
+    window.logout = () => signOut(auth).then(() => location.reload());
 </script>
 </body>
 </html>
