@@ -1,30 +1,252 @@
-window.playGame = (url) => {
-    // Перевірка, чи посилання починається з http
-    if (!url.startsWith('http')) {
-        alert("Помилка: Посилання на гру має починатися з http:// або https://");
-        return;
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GameStore | GOODGAME Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root { --bg: #0b0e14; --card: #151921; --green: #22c55e; }
+        body { background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; }
+        
+        /* Адаптивне меню */
+        .sidebar { 
+            width: 260px; background: var(--card); border-right: 1px solid #2d3748; 
+            height: 100vh; position: fixed; z-index: 100; transition: 0.3s;
+        }
+        .content { margin-left: 260px; padding: 20px; min-height: 100vh; }
+        
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); width: 100%; }
+            .sidebar.active { transform: translateX(0); }
+            .content { margin-left: 0; padding-top: 70px; }
+            .mobile-header { display: flex; }
+        }
+
+        .mobile-header { 
+            display: none; position: fixed; top: 0; width: 100%; 
+            background: var(--card); padding: 15px; z-index: 90; 
+            border-bottom: 1px solid #2d3748; justify-content: space-between; 
+        }
+
+        .game-card { background: var(--card); border-radius: 12px; padding: 15px; border: 1px solid #2d3748; }
+        .btn-play { background: #2563eb; width: 100%; padding: 10px; border-radius: 8px; font-weight: bold; margin-top: 10px; }
+        .admin-badge { background: #ef4444; color: white; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        
+        input, textarea { background: #1f2937; border: 1px solid #374151; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+<div class="mobile-header">
+    <span class="text-green-500 font-bold italic text-xl">GAMESTORE</span>
+    <button onclick="toggleSidebar()" class="text-white text-2xl"><i class="fas fa-bars"></i></button>
+</div>
+
+<aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
+    <div>
+        <div class="text-green-500 font-black text-2xl mb-10 hidden md:block italic">GAMESTORE</div>
+        <nav class="space-y-4">
+            <button onclick="nav('market')" class="w-full text-left flex items-center gap-3 hover:text-green-500"><i class="fas fa-gamepad"></i> Магазин</button>
+            <button onclick="nav('support')" class="w-full text-left flex items-center gap-3 hover:text-green-500"><i class="fas fa-headset"></i> Підтримка</button>
+            <div id="admin-area" class="hidden pt-6 border-t border-gray-700">
+                <p class="text-[10px] text-gray-500 uppercase mb-2">Адмін</p>
+                <button onclick="nav('publish')" class="w-full text-left flex items-center gap-3 text-green-500 font-bold mb-3"><i class="fas fa-plus-circle"></i> Додати гру</button>
+            </div>
+        </nav>
+    </div>
+    <div class="border-t border-gray-700 pt-4">
+        <div class="flex items-center gap-2 mb-1">
+            <span id="display-nick" class="font-bold"></span>
+            <span id="display-badge"></span>
+        </div>
+        <button onclick="logout()" class="text-red-500 text-xs">Вийти з акаунта</button>
+    </div>
+</aside>
+
+<main class="content">
+    <section id="market">
+        <h2 class="text-2xl font-bold mb-6">Магазин ігор</h2>
+        <div id="game-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <section id="support" class="hidden">
+        <h2 class="text-2xl font-bold mb-6 italic">Служба підтримки</h2>
+        <div id="admin-tickets" class="hidden mb-10 bg-orange-900/10 p-4 border border-orange-800 rounded-xl">
+            <h3 class="text-orange-500 font-bold text-sm mb-4 uppercase">Всі звернення (Тільки Адмін)</h3>
+            <div id="all-tickets-list" class="space-y-3"></div>
+        </div>
+        <div class="bg-gray-800 p-6 rounded-xl">
+            <textarea id="support-text" placeholder="Опишіть вашу проблему..." class="h-32"></textarea>
+            <button onclick="sendTicket()" class="w-full bg-green-600 font-bold p-3 rounded-lg mt-2 shadow-lg shadow-green-900/20">НАДІСЛАТИ</button>
+        </div>
+    </section>
+
+    <section id="publish" class="hidden">
+        <h2 class="text-2xl font-bold mb-6 text-green-500">Додати нову гру</h2>
+        <div class="bg-gray-800 p-6 rounded-xl max-w-lg">
+            <input type="text" id="new-g-name" placeholder="Назва гри">
+            <textarea id="new-g-desc" placeholder="Опис" class="h-20"></textarea>
+            <input type="text" id="new-g-url" placeholder="Пряме посилання (https://...)">
+            <button onclick="addGame()" class="w-full bg-green-600 font-bold p-3 rounded-lg">ОПУБЛІКУВАТИ</button>
+        </div>
+    </section>
+</main>
+
+<div id="auth-modal" class="fixed inset-0 bg-black flex items-center justify-center p-4 z-[200]">
+    <div class="bg-[#151921] p-8 rounded-2xl w-full max-w-sm border border-gray-800 shadow-2xl">
+        <h2 class="text-2xl font-bold mb-6 text-center text-green-500 italic">Вхід в GameStore</h2>
+        <input type="text" id="auth-nick" placeholder="Нікнейм">
+        <input type="email" id="auth-email" placeholder="Email">
+        <input type="password" id="auth-pass" placeholder="Пароль">
+        <button onclick="auth()" class="w-full bg-green-600 p-3 rounded-xl font-bold text-lg hover:bg-green-500 transition shadow-lg shadow-green-900/40">ПРОДОВЖИТИ</button>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI",
+        authDomain: "flutter-ai-playground-caf0d.firebaseapp.com",
+        projectId: "flutter-ai-playground-caf0d",
+        storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app",
+        messagingSenderId: "155816311480",
+        appId: "1:155816311480:web:a0456fcc4681e62837924d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const authManager = getAuth(app);
+    const db = getFirestore(app);
+
+    let currentProfile = null;
+
+    // --- ФУНКЦІЯ АВТОРИЗАЦІЇ ---
+    window.auth = async () => {
+        const nick = document.getElementById('auth-nick').value;
+        const email = document.getElementById('auth-email').value;
+        const pass = document.getElementById('auth-pass').value;
+
+        if(nick === 'GOODGAME' && pass !== 'vlad01032014v') return alert("Невірний пароль для GOODGAME!");
+
+        try {
+            await signInWithEmailAndPassword(authManager, email, pass);
+        } catch (e) {
+            try {
+                const res = await createUserWithEmailAndPassword(authManager, email, pass);
+                await setDoc(doc(db, "users", res.user.uid), { nickname: nick, role: "user" });
+            } catch (err) { alert("Помилка: " + err.message); }
+        }
+    };
+
+    onAuthStateChanged(authManager, async (user) => {
+        if (user) {
+            const snap = await getDoc(doc(db, "users", user.uid));
+            currentProfile = snap.data();
+            
+            if (currentProfile.nickname === 'GOODGAME') {
+                currentProfile.role = 'admin';
+                document.getElementById('admin-area').classList.remove('hidden');
+                document.getElementById('admin-tickets').classList.remove('hidden');
+                document.getElementById('display-badge').innerHTML = '<span class="admin-badge">СУПЕР-АДМІН</span>';
+            }
+
+            document.getElementById('auth-modal').classList.add('hidden');
+            document.getElementById('display-nick').innerText = currentProfile.nickname;
+            loadMarket();
+            loadTickets();
+        } else {
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+    });
+
+    // --- ПІДТРИМКА ---
+    window.sendTicket = async () => {
+        const msg = document.getElementById('support-text').value;
+        if(!msg) return;
+        await addDoc(collection(db, "support"), {
+            nick: currentProfile.nickname,
+            userId: authManager.currentUser.uid,
+            msg: msg,
+            time: Date.now()
+        });
+        alert("Повідомлення надіслано!");
+        document.getElementById('support-text').value = '';
+        loadTickets();
+    };
+
+    async function loadTickets() {
+        if(currentProfile.role === 'admin') {
+            const list = document.getElementById('all-tickets-list');
+            list.innerHTML = '';
+            const snap = await getDocs(collection(db, "support"));
+            snap.forEach(d => {
+                const t = d.data();
+                list.innerHTML += `<div class="bg-gray-800 p-3 rounded border border-gray-700 text-xs">
+                    <b class="text-green-500">${t.nick}:</b> ${t.msg} 
+                    <button onclick="deleteTicket('${d.id}')" class="text-red-500 ml-2">[X]</button>
+                </div>`;
+            });
+        }
     }
 
-    // Створюємо вікно плеєра
-    const overlay = document.createElement('div');
-    overlay.id = "game-overlay";
-    overlay.className = "fixed inset-0 bg-black z-[1000] flex flex-col";
-    overlay.innerHTML = `
-        <div class="p-4 bg-gray-900 flex justify-between items-center border-b border-gray-700">
-            <div class="flex items-center gap-3">
-                <span class="text-green-500 font-bold text-xs">GAMESTORE PLAYER</span>
-                <a href="${url}" target="_blank" class="text-[10px] bg-gray-700 px-2 py-1 rounded text-white">Відкрити в новій вкладці ↗</a>
+    window.deleteTicket = async (id) => { await deleteDoc(doc(db, "support", id)); loadTickets(); };
+
+    // --- МАГАЗИН І ГРИ ---
+    window.addGame = async () => {
+        const name = document.getElementById('new-g-name').value;
+        const url = document.getElementById('new-g-url').value;
+        if(!name || !url) return alert("Заповніть назву та URL!");
+        await addDoc(collection(db, "games"), { name, url, desc: document.getElementById('new-g-desc').value });
+        alert("Готово!");
+        nav('market');
+        loadMarket();
+    };
+
+    async function loadMarket() {
+        const list = document.getElementById('game-list');
+        list.innerHTML = '';
+        const snap = await getDocs(collection(db, "games"));
+        snap.forEach(d => {
+            const g = d.data();
+            list.innerHTML += `
+                <div class="game-card">
+                    <h3 class="text-xl font-bold text-green-500">${g.name}</h3>
+                    <p class="text-xs text-gray-400 mt-2 h-10 overflow-hidden">${g.desc}</p>
+                    <button onclick="playGame('${g.url}')" class="btn-play">ГРАТИ</button>
+                    ${currentProfile.role === 'admin' ? `<button onclick="delGame('${d.id}')" class="text-[10px] text-red-500 mt-3 block">ВИДАЛИТИ ГРУ</button>` : ''}
+                </div>
+            `;
+        });
+    }
+
+    window.playGame = (url) => {
+        const over = document.createElement('div');
+        over.id = "player-overlay";
+        over.className = "fixed inset-0 bg-black z-[1000] flex flex-col";
+        over.innerHTML = `
+            <div class="p-4 bg-gray-900 flex justify-between items-center border-b border-gray-700">
+                <span class="text-green-500 font-bold text-xs uppercase">GameStore Player</span>
+                <button onclick="document.getElementById('player-overlay').remove()" class="bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold font-black">ЗАКРИТИ [X]</button>
             </div>
-            <button onclick="document.getElementById('game-overlay').remove()" class="bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold">ЗАКРИТИ [X]</button>
-        </div>
-        <div class="relative flex-grow bg-black">
-            <iframe 
-                src="${url}" 
-                class="absolute inset-0 w-full h-full border-none" 
-                allow="autoplay; fullscreen; keyboard; gamepad" 
-                sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-scripts allow-same-origin">
-            </iframe>
-        </div>
-    `;
-    document.body.appendChild(overlay);
-};
+            <iframe src="${url}" class="flex-grow w-full h-full border-none" allow="autoplay; fullscreen; keyboard"></iframe>
+        `;
+        document.body.appendChild(over);
+    };
+
+    window.delGame = async (id) => { if(confirm("Видалити?")) { await deleteDoc(doc(db, "games", id)); loadMarket(); } };
+    window.nav = (id) => {
+        ['market', 'support', 'publish'].forEach(s => document.getElementById(s).classList.add('hidden'));
+        document.getElementById(id).classList.remove('hidden');
+        if(window.innerWidth < 768) toggleSidebar();
+    };
+    window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('active');
+    window.logout = () => signOut(authManager).then(() => location.reload());
+
+</script>
+</body>
+</html>
