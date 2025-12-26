@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | HIERARCHY UPDATE</title>
+    <title>GOODGAME | COMMUNITY UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -19,22 +19,20 @@
         
         .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 5px; }
         .btn-green { background: var(--accent); color: white; }
-        .btn-red { background: var(--danger); color: white; }
-        .btn-purple { background: #8957e5; color: white; }
-        
         .hidden { display: none !important; }
 
         /* MODALS */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 10px; }
         .modal-box { background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        
         iframe { width: 100%; height: 100%; border: none; }
         
-        /* Roles Colors */
-        .role-admin { color: #ff7b72; font-weight: bold; }
-        .role-mod { color: #79c0ff; font-weight: bold; }
-        .role-dev { color: #7ee787; font-weight: bold; }
-        .role-user { color: #8b949e; }
+        /* CHAT STYLES */
+        #chat-container { height: 60vh; overflow-y: auto; border: 1px solid #30363d; border-radius: 8px; padding: 10px; background: #0d1117; display: flex; flex-direction: column-reverse; }
+        .msg-row { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: #1f2428; }
+        .msg-admin { color: #ff7b72; font-weight: bold; }
+        .msg-mod { color: #79c0ff; font-weight: bold; }
+        .msg-dev { color: #7ee787; font-weight: bold; }
+        .msg-time { font-size: 10px; color: #8b949e; float: right; }
     </style>
 </head>
 <body>
@@ -50,50 +48,37 @@
 <div id="user-modal" class="modal-overlay">
     <div class="modal-box">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-black text-red-500 italic">УПРАВЛЕНИЕ</h2>
+            <h2 class="text-2xl font-black text-red-500 italic">АДМИН МЕНЮ</h2>
             <button onclick="closeUserModal()" class="text-gray-500 hover:text-white text-xl"><i class="fas fa-times"></i></button>
         </div>
-        
         <div id="um-info" class="mb-6 text-center">Loading...</div>
-
+        
         <div class="card border-purple-500">
-            <h3 class="font-bold text-purple-400 mb-2">Назначить должность</h3>
+            <h3 class="font-bold text-purple-400 mb-2">Роль</h3>
             <select id="um-role">
-                <option value="user">👤 Игрок (Обычный)</option>
-                <option value="developer">🛠️ Создатель игр</option>
-                <option value="jr_mod">🛡️ Мл. Модератор</option>
-                <option value="sr_mod">🛡️ Ст. Модератор</option>
-                <option value="jr_admin">👑 Мл. Админ</option>
-                <option value="sr_admin">👑 Ст. Админ</option>
+                <option value="user">Игрок</option>
+                <option value="developer">Разработчик</option>
+                <option value="mod">Модератор</option>
+                <option value="admin">Администратор</option>
             </select>
-            <button onclick="setRole()" class="btn btn-purple">ВЫДАТЬ РОЛЬ</button>
+            <button onclick="setRole()" class="btn" style="background:#8957e5;color:white">Сохранить Роль</button>
         </div>
 
         <div class="card border-blue-900">
-            <h3 class="font-bold text-blue-400 mb-2">Финансы</h3>
+            <h3 class="font-bold text-blue-400 mb-2">Деньги</h3>
             <input type="number" id="um-amount" placeholder="Сумма">
             <div class="flex gap-2">
-                <button onclick="modMoney('add')" class="btn btn-green">+ ДАТЬ</button>
-                <button onclick="modMoney('take')" class="btn btn-red">- ЗАБРАТЬ</button>
+                <button onclick="modMoney('add')" class="btn btn-green">+ Дать</button>
+                <button onclick="modMoney('take')" class="btn" style="background:#da3633;color:white">- Забрать</button>
             </div>
         </div>
 
         <div class="card border-red-900">
-            <h3 class="font-bold text-red-500 mb-2">Наказание</h3>
-            <select id="ban-duration">
-                <option value="forever">НАВСЕГДА</option>
-                <option value="ip">ПО IP (ЖЕЛЕЗО)</option>
-                <option value="1h">1 час</option>
-            </select>
+            <h3 class="font-bold text-red-500 mb-2">БАН</h3>
             <div class="flex gap-2">
-                <button onclick="applyBan(true)" class="btn btn-red">BAN</button>
-                <button onclick="applyBan(false)" class="btn btn-green">UNBAN</button>
+                <button onclick="applyBan(true)" class="btn" style="background:#da3633;color:white">ЗАБАНИТЬ</button>
+                <button onclick="applyBan(false)" class="btn btn-green">РАЗБАНИТЬ</button>
             </div>
-        </div>
-
-        <div class="card">
-            <h3 class="font-bold text-yellow-500 mb-2">Игры (Удалить)</h3>
-            <div id="um-library" class="space-y-2 max-h-40 overflow-y-auto"></div>
         </div>
     </div>
 </div>
@@ -104,16 +89,16 @@
         <nav class="space-y-2">
             <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Библиотека</button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments text-blue-400"></i> ЧАТ</button>
+            
             <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
                 <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 font-bold flex items-center gap-3"><i class="fas fa-plus"></i> Создать Игру</button>
-                <button onclick="nav('requests')" class="w-full text-left p-3 text-yellow-500 font-bold flex items-center gap-3"><i class="fas fa-list"></i> Заявки Бета</button>
                 <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/20 rounded-xl"><i class="fas fa-crown"></i> АДМИНКА</button>
             </div>
         </nav>
     </div>
     <div class="border-t border-gray-700 pt-4">
         <div id="u-name" class="font-bold text-white mb-1">...</div>
-        <div id="u-role-display" class="text-xs font-bold mb-1"></div>
         <div id="u-bal" class="text-yellow-500 text-sm font-bold">0$</div>
         <button onclick="logout()" class="text-xs text-gray-500 mt-2 hover:text-white">ВЫЙТИ</button>
     </div>
@@ -123,6 +108,17 @@
     <section id="market">
         <h2 class="text-3xl font-black mb-8 italic">МАГАЗИН</h2>
         <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </section>
+
+    <section id="chat" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-blue-400">ОБЩЕНИЕ</h2>
+        <div class="card">
+            <div id="chat-container"></div>
+            <div class="flex gap-2 mt-4">
+                <input id="chat-msg" placeholder="Написать сообщение..." class="m-0">
+                <button onclick="sendChat()" class="btn btn-green w-32 m-0"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
     </section>
 
     <section id="admin-center" class="hidden">
@@ -139,17 +135,8 @@
             <textarea id="p-desc" placeholder="Описание"></textarea>
             <input id="p-url" placeholder="URL игры">
             <input id="p-price" type="number" placeholder="Цена">
-            <select id="p-mode"><option value="public">Публично</option><option value="beta">Бета</option></select>
             <button onclick="pubGame()" class="btn btn-green">ГОТОВО</button>
         </div>
-    </section>
-    
-    <section id="requests" class="hidden"><h2 class="text-3xl font-bold mb-6 text-yellow-500">ЗАЯВКИ</h2><div id="req-list" class="space-y-4"></div></section>
-    
-    <section id="support" class="hidden">
-        <div id="adm-tickets" class="hidden mb-6 space-y-2"></div>
-        <div class="card max-w-lg"><textarea id="supp-msg" placeholder="Проблема..."></textarea><button onclick="sendSupp()" class="btn btn-green mt-2">ОТПРАВИТЬ</button></div>
-        <div id="my-tickets" class="mt-6 space-y-2"></div>
     </section>
 </main>
 
@@ -167,7 +154,7 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, arrayRemove, increment, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, arrayRemove, increment, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
     const app = initializeApp(firebaseConfig);
@@ -176,32 +163,15 @@
     let user = null;
     let selectedUser = null; 
 
-    // --- CONFIG ---
-    const roleLabels = {
-        'admin': '<span class="role-admin">👑 ВЛАДЕЛЕЦ</span>',
-        'sr_admin': '<span class="role-admin">👑 СТ. АДМИН</span>',
-        'jr_admin': '<span class="role-admin">👑 МЛ. АДМИН</span>',
-        'sr_mod': '<span class="role-mod">🛡️ СТ. МОДЕРАТОР</span>',
-        'jr_mod': '<span class="role-mod">🛡️ МЛ. МОДЕРАТОР</span>',
-        'developer': '<span class="role-dev">🛠️ СОЗДАТЕЛЬ ИГР</span>',
-        'user': '<span class="role-user">👤 ИГРОК</span>'
-    };
-
-    async function getIP() { try { const r = await fetch('https://api.ipify.org?format=json'); const d = await r.json(); return d.ip; } catch { return "0.0.0.0"; } }
-
+    // --- AUTH FIX FOR ADMIN ---
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
         const e = document.getElementById('auth-email').value.trim();
         const p = document.getElementById('auth-pass').value;
-        const ip = await getIP();
-
-        const ipBanSnap = await getDoc(doc(db, "banned_ips", ip.replace(/\./g, '_')));
-        if (ipBanSnap.exists()) { document.getElementById('ban-msg').innerText = "IP ЗАБАНЕН!"; document.getElementById('ban-msg').classList.remove('hidden'); return; }
-
         try { await signInWithEmailAndPassword(auth, e, p); } 
         catch { 
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, library: [], ip: ip, role: (n==='GOODGAME'?'admin':'user') });
+            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user') });
         }
     };
 
@@ -210,145 +180,108 @@
             const snap = await getDoc(doc(db, "users", u.uid));
             user = snap.data();
             
-            if (user.isBanned) { document.getElementById('ban-msg').innerText = "АККАУНТ ЗАБАНЕН"; document.getElementById('ban-msg').classList.remove('hidden'); await signOut(auth); return; }
-            await updateDoc(doc(db, "users", u.uid), { ip: await getIP() });
+            // ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ ПРАВ ДЛЯ ВЛАДЕЛЬЦА
+            if (user.nickname === 'GOODGAME' && user.role !== 'admin') {
+                await updateDoc(doc(db, "users", u.uid), { role: 'admin' });
+                user.role = 'admin';
+            }
+
+            if (user.isBanned) { document.getElementById('ban-msg').innerText = "БАН!"; document.getElementById('ban-msg').classList.remove('hidden'); await signOut(auth); return; }
 
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = `${user.balance}$`;
-            document.getElementById('u-role-display').innerHTML = roleLabels[user.role] || roleLabels['user'];
 
-            if (user.role === 'admin' || user.role === 'sr_admin' || user.role === 'jr_admin') {
+            // ПРОВЕРКА ПРАВ НА ПОКАЗ АДМИНКИ
+            if (['admin', 'mod', 'developer'].includes(user.role)) {
                 document.getElementById('admin-tools').classList.remove('hidden');
             }
             
-            loadMarket(); loadLibrary(); loadAdminList(); loadRequests();
+            loadMarket(); loadLibrary(); loadAdminList(); initChat();
         } else { document.getElementById('login-modal').style.display = 'flex'; }
     });
 
-    // --- GOD MODE (ROLES) ---
+    // --- CHAT SYSTEM (REALTIME) ---
+    function initChat() {
+        const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50));
+        onSnapshot(q, (snapshot) => {
+            const div = document.getElementById('chat-container');
+            div.innerHTML = '';
+            snapshot.forEach(d => {
+                const m = d.data();
+                let colorClass = '';
+                if(m.role === 'admin') colorClass = 'msg-admin';
+                else if(m.role === 'mod') colorClass = 'msg-mod';
+                else if(m.role === 'developer') colorClass = 'msg-dev';
+                
+                div.innerHTML += `
+                    <div class="msg-row">
+                        <span class="${colorClass}">${m.nick}</span>: ${m.msg}
+                        <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span>
+                    </div>`;
+            });
+        });
+    }
+
+    window.sendChat = async () => {
+        const txt = document.getElementById('chat-msg').value;
+        if(!txt) return;
+        await addDoc(collection(db, "chat"), {
+            nick: user.nickname,
+            role: user.role,
+            msg: txt,
+            time: Date.now()
+        });
+        document.getElementById('chat-msg').value = '';
+    };
+
+    // --- ADMIN ---
     async function loadAdminList() {
-        if(!['admin','sr_admin','jr_admin'].includes(user.role)) return;
+        if(user.role !== 'admin' && user.role !== 'mod') return;
         const list = document.getElementById('admin-users');
         const snap = await getDocs(collection(db, "users"));
         list.innerHTML = '';
         snap.forEach(d => {
             const u = d.data();
-            const roleHTML = roleLabels[u.role] || roleLabels['user'];
-            const status = u.isBanned ? '<span class="text-red-500 font-bold">BAN</span>' : '<span class="text-green-500">OK</span>';
-            list.innerHTML += `
-                <div onclick="openUserModal('${d.id}')" class="card flex justify-between items-center cursor-pointer hover:border-purple-500 transition">
-                    <div>
-                        <div class="font-bold text-lg text-white">${u.nickname}</div>
-                        <div class="text-xs">${roleHTML}</div>
-                        <div class="text-xs text-gray-600">${u.ip || 'No IP'}</div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-yellow-500 font-bold">${u.balance}$</div>
-                        <div class="text-xs">${status}</div>
-                    </div>
-                </div>`;
+            list.innerHTML += `<div onclick="openUserModal('${d.id}')" class="card cursor-pointer hover:border-blue-500">
+                <div class="flex justify-between font-bold"><span>${u.nickname}</span> <span class="text-yellow-500">${u.balance}$</span></div>
+                <div class="text-xs text-gray-500">${u.role}</div>
+            </div>`;
         });
     }
 
     window.openUserModal = async (uid) => {
         selectedUser = uid;
-        const snap = await getDoc(doc(db, "users", uid));
-        const u = snap.data();
-        
+        const s = await getDoc(doc(db, "users", uid));
+        const u = s.data();
         document.getElementById('user-modal').style.display = 'flex';
-        document.getElementById('um-info').innerHTML = `<div class="text-3xl font-black">${u.nickname}</div><div class="text-gray-400">${roleLabels[u.role]||'User'}</div>`;
-        document.getElementById('um-role').value = u.role || 'user'; // Установить текущую роль в селект
-
-        // Library
-        const libDiv = document.getElementById('um-library'); libDiv.innerHTML = '';
-        if(u.library) for(let gid of u.library) {
-            const gSnap = await getDoc(doc(db, "games", gid));
-            const gName = gSnap.exists() ? gSnap.data().name : "Unknown";
-            libDiv.innerHTML += `<div class="flex justify-between bg-gray-800 p-2 rounded"><span>${gName}</span><button onclick="kickGame('${uid}', '${gid}')" class="text-red-500 font-bold">X</button></div>`;
-        }
+        document.getElementById('um-info').innerHTML = `<h2 class="text-2xl font-bold">${u.nickname}</h2>`;
+        document.getElementById('um-role').value = u.role || 'user';
     };
 
-    window.setRole = async () => {
-        const newRole = document.getElementById('um-role').value;
-        await updateDoc(doc(db, "users", selectedUser), { role: newRole });
-        alert("Роль выдана!"); openUserModal(selectedUser); loadAdminList();
-    };
-
-    window.closeUserModal = () => { document.getElementById('user-modal').style.display = 'none'; selectedUser = null; };
-
-    // --- MONEY & BAN ---
-    window.modMoney = async (act) => {
-        const amt = Number(document.getElementById('um-amount').value);
-        const ref = doc(db, "users", selectedUser);
-        const snap = await getDoc(ref);
-        const cur = Number(snap.data().balance) || 0;
-        await updateDoc(ref, { balance: act === 'add' ? cur + amt : Math.max(0, cur - amt) });
-        alert("Баланс изменен"); openUserModal(selectedUser); loadAdminList();
-    };
-
-    window.applyBan = async (state) => {
-        const type = document.getElementById('ban-duration').value;
-        const ref = doc(db, "users", selectedUser);
-        const snap = await getDoc(ref);
-        const targetIp = snap.data().ip;
-
-        if (!state) {
-            await updateDoc(ref, { isBanned: false });
-            if(targetIp) await deleteDoc(doc(db, "banned_ips", targetIp.replace(/\./g, '_')));
-            alert("Разбанен");
-        } else {
-            if (type === 'ip' && targetIp) {
-                await setDoc(doc(db, "banned_ips", targetIp.replace(/\./g, '_')), { uid: selectedUser });
-                await updateDoc(ref, { isBanned: true });
-                alert("IP BAN!");
-            } else {
-                await updateDoc(ref, { isBanned: true });
-                alert("Аккаунт забанен");
-            }
-        }
-        openUserModal(selectedUser); loadAdminList();
-    };
+    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUser),{role:document.getElementById('um-role').value}); alert("Saved"); openUserModal(selectedUser); loadAdminList(); };
+    window.modMoney = async (act) => { const a=Number(document.getElementById('um-amount').value); const r=doc(db,"users",selectedUser); const s=await getDoc(r); const b=s.data().balance||0; await updateDoc(r,{balance:act==='add'?b+a:b-a}); alert("Done"); };
+    window.applyBan = async (s) => { await updateDoc(doc(db,"users",selectedUser),{isBanned:s}); alert(s?"Banned":"Unbanned"); };
+    window.closeUserModal = () => { document.getElementById('user-modal').style.display = 'none'; };
 
     // --- STANDARD ---
-    window.kickGame = async (uid, gid) => { if(confirm("Удалить?")) { await updateDoc(doc(db, "users", uid), { library: arrayRemove(gid) }); openUserModal(uid); } };
-    window.openGame = (url) => { document.getElementById('game-frame').src = url; document.getElementById('game-overlay').style.display = 'flex'; };
-    window.closeGame = () => { document.getElementById('game-frame').src = ''; document.getElementById('game-overlay').style.display = 'none'; };
+    window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex'};
+    window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none'};
     
     async function loadMarket() {
-        const l = document.getElementById('market-list'); l.innerHTML = '';
-        const s = await getDocs(collection(db, "games"));
-        s.forEach(d => {
-            const g = d.data();
-            const delBtn = (user.role === 'admin' || user.role === 'sr_admin' || g.ownerId === auth.currentUser.uid) ? `<button onclick="delG('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : '';
-            l.innerHTML += `<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span class="text-yellow-500">${g.price}$</span></div><div class="flex justify-between mt-4">${delBtn}<button onclick="buy('${d.id}', ${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`;
+        const l=document.getElementById('market-list'); l.innerHTML='';
+        const s=await getDocs(collection(db,"games"));
+        s.forEach(d=>{ const g=d.data();
+            const delBtn = (user.role==='admin'||g.ownerId===auth.currentUser.uid) ? `<button onclick="delG('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : '';
+            l.innerHTML+=`<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span>${g.price}$</span></div><div class="flex justify-between mt-4">${delBtn}<button onclick="buy('${d.id}',${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`;
         });
     }
-    
-    window.buy = async(id, p) => { if(user.balance < p) return alert("Мало денег"); await updateDoc(doc(db,"users",auth.currentUser.uid), {balance: user.balance-p, library: arrayUnion(id)}); location.reload(); };
-    window.delG = async(id) => { if(confirm("Удалить игру?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); } };
-    
-    window.pubGame = async() => {
-        await addDoc(collection(db,"games"), {
-            name:document.getElementById('p-name').value, price:Number(document.getElementById('p-price').value),
-            url:document.getElementById('p-url').value, desc:document.getElementById('p-desc').value, mode:document.getElementById('p-mode').value, ownerId: auth.currentUser.uid
-        }); alert("OK"); nav('market');
-    };
-
-    async function loadRequests() {
-        if(!['admin','sr_admin','jr_admin','developer'].includes(user.role)) return; // Видят все стаффы
-        const l=document.getElementById('req-list'); const s=await getDocs(collection(db,"beta_req")); l.innerHTML='';
-        s.forEach(d=>{ const r=d.data(); l.innerHTML+=`<div class="card flex justify-between"><span>${r.nick}</span><button onclick="accB('${d.id}','${r.uid}','${r.gid}')">ПРИНЯТЬ</button></div>`; });
-    }
-    window.accB = async(rid,uid,gid) => { await updateDoc(doc(db,"users",uid),{library:arrayUnion(gid)}); await deleteDoc(doc(db,"beta_req",rid)); loadRequests(); };
-    
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
-    window.logout = () => signOut(auth).then(()=>location.reload());
-    
-    async function loadLibrary() {
-        const l=document.getElementById('library-list'); l.innerHTML='';
-        if(user.library) for(let id of user.library) { const g=await getDoc(doc(db,"games",id)); if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`; }
-    }
+    window.buy = async(id,p)=>{ if(user.balance<p)return alert("$$$"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p,library:arrayUnion(id)}); location.reload(); };
+    window.delG = async(id)=>{ if(confirm("Del?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); }};
+    window.pubGame = async()=>{ await addDoc(collection(db,"games"),{name:document.getElementById('p-name').value,price:Number(document.getElementById('p-price').value),url:document.getElementById('p-url').value,desc:document.getElementById('p-desc').value,ownerId:auth.currentUser.uid}); alert("OK"); nav('market'); };
+    window.nav = (id)=>{ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
+    window.logout = ()=>signOut(auth).then(()=>location.reload());
+    async function loadLibrary(){ const l=document.getElementById('library-list'); l.innerHTML=''; if(user.library) for(let i of user.library){ const g=await getDoc(doc(db,"games",i)); if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`; } }
 </script>
 </body>
 </html>
