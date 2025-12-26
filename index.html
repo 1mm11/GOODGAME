@@ -1,203 +1,30 @@
-<!DOCTYPE html>
-<html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GameStore Admin Panel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root { --bg: #0b0e14; --card: #151921; --accent: #22c55e; }
-        body { background-color: var(--bg); color: white; font-family: 'Inter', sans-serif; }
-        .sidebar { width: 260px; background: var(--card); border-right: 1px solid #2d3748; height: 100vh; position: fixed; }
-        .content { margin-left: 260px; padding: 30px; }
-        .admin-badge { background: #ef4444; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
-        input, textarea, select { background: #1f2937 !important; border: 1px solid #374151 !important; color: white !important; padding: 10px; border-radius: 6px; width: 100%; }
-        .hidden { display: none !important; }
-    </style>
-</head>
-<body>
-
-<div id="app-interface" class="hidden">
-    <aside class="sidebar p-6 flex flex-col justify-between">
-        <div>
-            <div class="flex items-center gap-2 mb-8 text-green-500 font-black text-2xl tracking-tighter">
-                <i class="fas fa-bolt"></i> GAMESTORE
-            </div>
-            <nav class="space-y-2">
-                <button onclick="nav('market')" class="flex items-center w-full p-3 hover:bg-gray-800 rounded-lg"><i class="fas fa-th-large mr-3"></i> Магазин</button>
-                <button onclick="nav('support')" class="flex items-center w-full p-3 hover:bg-gray-800 rounded-lg"><i class="fas fa-headset mr-2 text-blue-400"></i> Підтримка</button>
-                <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-gray-700">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-2">Адмін Панель</p>
-                    <button onclick="nav('publish')" class="flex items-center w-full p-3 bg-green-600/10 text-green-500 rounded-lg mb-2"><i class="fas fa-plus mr-3"></i> Створити гру</button>
-                    <button onclick="nav('admin-panel')" class="flex items-center w-full p-3 hover:bg-gray-800 rounded-lg"><i class="fas fa-user-shield mr-3"></i> Керування</button>
-                </div>
-            </nav>
-        </div>
-        <div class="border-t border-gray-700 pt-4">
-            <div class="flex items-center gap-2 mb-2">
-                <span id="user-nick" class="font-bold"></span>
-                <span id="badge-area"></span>
-            </div>
-            <button onclick="handleLogout()" class="text-red-500 text-sm hover:underline">Вийти з системи</button>
-        </div>
-    </aside>
-
-    <main class="content">
-        <section id="market">
-            <h2 class="text-3xl font-bold mb-6">Всі ігри</h2>
-            <div id="game-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-        </section>
-
-        <section id="publish" class="hidden">
-            <h2 class="text-3xl font-bold mb-6">Додати нову гру</h2>
-            <div class="bg-gray-800 p-6 rounded-xl max-w-xl">
-                <input type="text" id="g-name" placeholder="Назва" class="mb-4">
-                <textarea id="g-desc" placeholder="Опис" class="mb-4 h-24"></textarea>
-                <input type="text" id="g-url" placeholder="URL ігри (iframe)" class="mb-4">
-                <select id="g-type" class="mb-4">
-                    <option value="public">Публічна</option>
-                    <option value="beta">Закритий Бета-тест</option>
-                </select>
-                <button onclick="uploadGame()" class="w-full bg-green-600 p-3 rounded-lg font-bold">ОПУБЛІКУВАТИ</button>
-            </div>
-        </section>
-
-        <section id="support" class="hidden">
-            <h2 class="text-3xl font-bold mb-6">Центр підтримки</h2>
-            <div id="support-content" class="space-y-4">
-                <div class="bg-gray-800 p-4 rounded-lg">
-                    <textarea id="support-msg" placeholder="Опишіть вашу проблему..." class="mb-2"></textarea>
-                    <button onclick="sendTicket()" class="bg-blue-600 px-4 py-2 rounded">Надіслати</button>
-                </div>
-                <div id="my-tickets" class="mt-6"></div>
-            </div>
-        </section>
-    </main>
-</div>
-
-<div id="auth-screen" class="fixed inset-0 bg-black flex items-center justify-center p-4">
-    <div class="bg-[#151921] p-8 rounded-2xl w-full max-w-sm shadow-2xl border border-gray-800">
-        <h2 class="text-2xl font-bold mb-6 text-center text-green-500">Вхід в акаунт</h2>
-        <input type="text" id="log-nick" placeholder="Ваш нікнейм" class="mb-3">
-        <input type="email" id="log-email" placeholder="Email" class="mb-3">
-        <input type="password" id="log-pass" placeholder="Пароль" class="mb-6">
-        <button onclick="handleAuth()" class="w-full bg-green-600 p-3 rounded-xl font-bold text-lg shadow-lg shadow-green-900/20">ПРОДОВЖИТИ</button>
-    </div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, addDoc, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI",
-        authDomain: "flutter-ai-playground-caf0d.firebaseapp.com",
-        projectId: "flutter-ai-playground-caf0d",
-        storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app",
-        messagingSenderId: "155816311480",
-        appId: "1:155816311480:web:a0456fcc4681e62837924d"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-
-    let userData = null;
-
-    // ОБРОБКА ВХОДУ / РЕЄСТРАЦІЇ
-    window.handleAuth = async () => {
-        const nick = document.getElementById('log-nick').value;
-        const email = document.getElementById('log-email').value;
-        const pass = document.getElementById('log-pass').value;
-
-        if (nick === 'GOODGAME' && pass !== 'vlad01032014v') {
-            return alert("Невірний пароль для GOODGAME!");
-        }
-
-        try {
-            // Пробуємо увійти, якщо не вийде — реєструємо
-            await signInWithEmailAndPassword(auth, email, pass);
-        } catch (e) {
-            try {
-                const res = await createUserWithEmailAndPassword(auth, email, pass);
-                await setDoc(doc(db, "users", res.user.uid), { nickname: nick, role: "user" });
-            } catch (err) { alert("Помилка: " + err.message); }
-        }
-    };
-
-    // СЛУХАЧ СТАНУ
-    onAuthStateChanged(auth, async (user) => {
-        if (user) {
-            const snap = await getDoc(doc(db, "users", user.uid));
-            userData = snap.data();
-            
-            // ВАША СПЕЦІАЛЬНА ПЕРЕВІРКА (СУПЕР-АДМІН)
-            if (userData.nickname === 'GOODGAME') {
-                userData.role = 'admin';
-                document.getElementById('admin-tools').classList.remove('hidden');
-                document.getElementById('badge-area').innerHTML = '<span class="admin-badge">СУПЕР-АДМІН</span>';
-            }
-
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('app-interface').classList.remove('hidden');
-            document.getElementById('user-nick').innerText = userData.nickname;
-            loadGames();
-        } else {
-            document.getElementById('app-interface').classList.add('hidden');
-            document.getElementById('auth-screen').classList.remove('hidden');
-        }
-    });
-
-    // ФУНКЦІЇ ДЛЯ ІГОР
-    window.uploadGame = async () => {
-        await addDoc(collection(db, "games"), {
-            name: document.getElementById('g-name').value,
-            desc: document.getElementById('g-desc').value,
-            url: document.getElementById('g-url').value,
-            type: document.getElementById('g-type').value,
-            owner: userData.nickname
-        });
-        alert("Гра додана!");
-        nav('market');
-        loadGames();
-    };
-
-    async function loadGames() {
-        const list = document.getElementById('game-list');
-        list.innerHTML = '';
-        const snap = await getDocs(collection(db, "games"));
-        snap.forEach(d => {
-            const g = d.data();
-            const div = document.createElement('div');
-            div.className = "bg-[#151921] p-5 rounded-xl border border-gray-800";
-            div.innerHTML = `
-                <h3 class="text-xl font-bold mb-2">${g.name}</h3>
-                <p class="text-sm text-gray-400 mb-4 h-10 overflow-hidden">${g.desc}</p>
-                <div class="flex justify-between items-center">
-                    <button class="bg-blue-600 px-4 py-2 rounded-lg text-sm">Грати</button>
-                    ${userData.role === 'admin' ? `<button onclick="deleteGame('${d.id}')" class="text-red-500 text-xs"><i class="fas fa-trash"></i> Видалити</button>` : ''}
-                </div>
-            `;
-            list.appendChild(div);
-        });
+window.playGame = (url) => {
+    // Перевірка, чи посилання починається з http
+    if (!url.startsWith('http')) {
+        alert("Помилка: Посилання на гру має починатися з http:// або https://");
+        return;
     }
 
-    window.deleteGame = async (id) => {
-        if (confirm("Видалити цю гру?")) {
-            await deleteDoc(doc(db, "games", id));
-            loadGames();
-        }
-    }
-
-    window.nav = (id) => {
-        ['market', 'publish', 'support'].forEach(s => document.getElementById(s).classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-    };
-
-    window.handleLogout = () => signOut(auth);
-
-</script>
-</body>
-</html>
+    // Створюємо вікно плеєра
+    const overlay = document.createElement('div');
+    overlay.id = "game-overlay";
+    overlay.className = "fixed inset-0 bg-black z-[1000] flex flex-col";
+    overlay.innerHTML = `
+        <div class="p-4 bg-gray-900 flex justify-between items-center border-b border-gray-700">
+            <div class="flex items-center gap-3">
+                <span class="text-green-500 font-bold text-xs">GAMESTORE PLAYER</span>
+                <a href="${url}" target="_blank" class="text-[10px] bg-gray-700 px-2 py-1 rounded text-white">Відкрити в новій вкладці ↗</a>
+            </div>
+            <button onclick="document.getElementById('game-overlay').remove()" class="bg-red-600 text-white px-4 py-1 rounded-full text-xs font-bold">ЗАКРИТИ [X]</button>
+        </div>
+        <div class="relative flex-grow bg-black">
+            <iframe 
+                src="${url}" 
+                class="absolute inset-0 w-full h-full border-none" 
+                allow="autoplay; fullscreen; keyboard; gamepad" 
+                sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-scripts allow-same-origin">
+            </iframe>
+        </div>
+    `;
+    document.body.appendChild(overlay);
+};
