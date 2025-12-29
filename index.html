@@ -2,149 +2,238 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GOODGAME | SYSTEM CHECK</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GOODGAME | RELEASE</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
-        #status-box { border: 2px solid #0f0; padding: 20px; width: 100%; max-width: 600px; background: #001100; box-shadow: 0 0 20px #0f0; }
-        .step { margin: 10px 0; opacity: 0.5; }
-        .step.done { opacity: 1; color: #0f0; font-weight: bold; }
-        .step.error { opacity: 1; color: #f00; font-weight: bold; animation: flash 1s infinite; }
-        .step.working { color: yellow; }
-        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
-        #login-form { display: none; margin-top: 20px; width: 100%; }
-        input { background: #002200; border: 1px solid #0f0; color: #0f0; width: 100%; padding: 10px; margin-bottom: 10px; font-family: monospace; }
-        button { background: #0f0; color: #000; border: none; padding: 10px; width: 100%; font-weight: bold; cursor: pointer; }
-        button:hover { background: #fff; }
+        /* THEME VARIABLES */
+        :root { --bg: #0d1117; --panel: #161b22; --accent: #238636; --danger: #da3633; --text: #c9d1d9; --border: #30363d; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; transition: 0.3s; }
+        .sidebar { width: 260px; background: var(--panel); height: 100vh; position: fixed; top: 0; left: 0; border-right: 1px solid var(--border); z-index: 100; transition: 0.3s; transform: translateX(0); overflow-y: auto; padding-bottom: 80px; }
+        .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; padding-top: 60px; }
+        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 90; align-items: center; padding: 0 15px; justify-content: space-between; }
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); z-index: 200; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } .sidebar.active { transform: translateX(0); } .main { margin-left: 0; padding-top: 70px; } .mobile-header { display: flex; } }
+        ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: var(--bg); } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 5px; border: none; }
+        .btn-green { background: var(--accent); color: white; }
+        .hidden { display: none !important; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 10px; }
+        .friend-code-box { font-family: monospace; font-size: 24px; letter-spacing: 2px; color: var(--accent); background: #000; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 10px; user-select: all; }
     </style>
+    
+    <script>
+        window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('active'); };
+        window.nav = (id) => { try { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.getElementById('sidebar').classList.remove('active'); } catch(e){} };
+        window.forceLogout = () => { localStorage.clear(); location.reload(); }
+    </script>
 </head>
 <body>
 
-<div id="status-box">
-    <h1 class="text-2xl font-black mb-4 text-center">SYSTEM DIAGNOSTIC V33</h1>
-    <div id="step-1" class="step working">> INITIALIZING APP...</div>
-    <div id="step-2" class="step">> CONNECTING FIREBASE...</div>
-    <div id="step-3" class="step">> CHECKING AUTH...</div>
-    <div id="step-4" class="step">> CONNECTING DB...</div>
-    <div id="step-5" class="step">> WAITING FOR USER...</div>
-    
-    <div id="error-log" class="mt-4 text-red-500 text-xs border-t border-red-900 pt-2 hidden"></div>
-
-    <div id="login-form">
-        <hr class="border-green-900 my-4">
-        <p class="mb-2 text-center text-white">LOGIN REQUIRED</p>
-        <input id="email" placeholder="Email" value="">
-        <input id="pass" placeholder="Password (vlad01032014v)" type="password">
-        <button onclick="tryLogin()">LOGIN / REGISTER</button>
-    </div>
-    
-    <button onclick="forceReset()" class="mt-4 bg-red-900 text-white text-xs">FORCE RESET (CLEAR CACHE)</button>
+<div class="mobile-header">
+    <button onclick="toggleMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
+    <span class="font-black italic" style="color:var(--accent)">GOODGAME</span>
+    <div id="mob-bal" class="font-bold text-sm" style="color: gold">...</div>
 </div>
 
-<script type="module">
-    // LOGGING HELPER
-    function logStep(id, status, text) {
-        const el = document.getElementById(id);
-        el.className = 'step ' + status;
-        if(text) el.innerText = '> ' + text;
-    }
-    function fatalError(msg) {
-        document.getElementById('error-log').classList.remove('hidden');
-        document.getElementById('error-log').innerText = "FATAL ERROR:\n" + msg;
-        console.error(msg);
-    }
+<aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
+    <div>
+        <div class="flex justify-between items-center mb-8">
+            <div class="font-black text-2xl italic tracking-tighter" style="color:var(--accent)">GOODGAME</div>
+            <button onclick="toggleMenu()" class="md:hidden text-xl opacity-50"><i class="fas fa-times"></i></button>
+        </div>
+        <nav class="space-y-2">
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> <span>Market</span></button>
+            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> <span>Library</span></button>
+            <button onclick="nav('friends')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-blue-400 font-bold"><i class="fas fa-user-friends"></i> <span>Friends</span></button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> <span>Chat</span></button>
+            
+            <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
+                <div class="text-xs font-bold px-3 opacity-50">ADMIN TOOLS</div>
+                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 font-bold flex items-center gap-3"><i class="fas fa-plus"></i> Add Game</button>
+            </div>
+        </nav>
+    </div>
+    <div class="border-t border-gray-700 pt-4 mt-4">
+        <div class="flex items-center gap-2"><div id="u-name" class="font-bold mb-1">...</div></div>
+        <div id="u-bal" class="text-sm font-bold" style="color:gold">...</div>
+        <button onclick="forceLogout()" class="text-xs opacity-50 mt-2 hover:opacity-100 text-red-500">Log Out</button>
+    </div>
+</aside>
 
+<main class="main">
+    <section id="market">
+        <h2 class="text-3xl font-black mb-8 italic">MARKET</h2>
+        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="col-span-2 text-center opacity-50 animate-pulse">Loading games...</div>
+        </div>
+    </section>
+    
+    <section id="friends" class="hidden">
+        <h2 class="text-3xl font-black mb-8 italic text-blue-400">FRIENDS</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="card"><h3 class="font-bold text-xl mb-4 text-center">My Code</h3><div id="my-friend-code" class="friend-code-box">...</div><div class="flex gap-2 mt-4"><input id="friend-input" placeholder="Friend Code"><button onclick="addFriend()" class="btn btn-green w-32">ADD</button></div></div>
+            <div class="card"><h3 class="font-bold text-xl mb-4">List</h3><div id="friends-list" class="space-y-2"></div></div>
+        </div>
+    </section>
+
+    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
+    <section id="chat" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-blue-400">CHAT</h2><div class="card"><div id="chat-container" class="h-64 overflow-y-auto mb-2 bg-black/20 p-2 rounded"></div><div class="flex gap-2"><input id="chat-msg"><button onclick="sendChat()" class="btn btn-green w-20">SEND</button></div></div></section>
+    <section id="publish" class="hidden"><div class="card max-w-lg"><h3 class="font-bold mb-4">Publish</h3><input id="p-name" placeholder="Name"><textarea id="p-desc" placeholder="Desc"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price"><button onclick="pubGame()" class="btn btn-green">DONE</button></div></section>
+</main>
+
+<div id="game-overlay" class="modal-overlay" style="display:none; flex-direction:column;"><div class="bg-gray-900 p-2 flex justify-between items-center w-full"><span class="text-green-500 font-bold">GAME</span><button onclick="closeGame()" class="bg-red-600 text-white px-4 py-1 rounded font-bold">X</button></div><iframe id="game-frame" class="bg-white"></iframe></div>
+
+<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card max-w-sm w-full text-center shadow-2xl"><h2 class="text-3xl font-black italic mb-6" style="color:var(--accent)">GOODGAME</h2><input id="auth-nick" placeholder="Nickname (Any for login)"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><div id="ban-msg" class="text-red-500 font-bold mb-4 text-xs hidden"></div><button onclick="authHandler()" class="btn btn-green">LOGIN / REGISTER</button></div></div>
+
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, query, where, orderBy, limit, onSnapshot, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    logStep('step-1', 'done', 'APP INIT OK');
+    const firebaseConfig = { apiKey: "AIzaSyCRuH9VBPZNrmMwhr-rtYBELjKOPxwOt-Y", authDomain: "goodgame-88620.firebaseapp.com", projectId: "goodgame-88620", storageBucket: "goodgame-88620.firebasestorage.app", messagingSenderId: "1083203224860", appId: "1:1083203224860:web:ed69a751888e1ebf81a6d9", measurementId: "G-JEW9VW980B" };
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCRuH9VBPZNrmMwhr-rtYBELjKOPxwOt-Y",
-      authDomain: "goodgame-88620.firebaseapp.com",
-      projectId: "goodgame-88620",
-      storageBucket: "goodgame-88620.firebasestorage.app",
-      messagingSenderId: "1083203224860",
-      appId: "1:1083203224860:web:ed69a751888e1ebf81a6d9",
-      measurementId: "G-JEW9VW980B"
-    };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let user = null;
 
-    let app, auth, db;
-
-    try {
-        logStep('step-2', 'working', 'CONNECTING FIREBASE...');
-        app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        db = getFirestore(app);
-        logStep('step-2', 'done', 'FIREBASE CONNECTED');
-    } catch(e) {
-        logStep('step-2', 'error', 'FIREBASE FAILED');
-        fatalError(e.message);
-    }
-
-    if(auth) {
-        logStep('step-3', 'working', 'LISTENING AUTH...');
-        onAuthStateChanged(auth, async (user) => {
-            logStep('step-3', 'done', 'AUTH LISTENER ACTIVE');
-            
-            if (user) {
-                logStep('step-5', 'done', 'USER FOUND: ' + user.email);
-                logStep('step-4', 'working', 'READING DATABASE...');
-                
-                try {
-                    const snap = await getDoc(doc(db, "users", user.uid));
-                    if (snap.exists()) {
-                        logStep('step-4', 'done', 'DATABASE READ OK');
-                        alert("SUCCESS! SYSTEM IS WORKING. RELOADING TO GAME...");
-                        // HERE WE WOULD LOAD THE GAME, BUT FOR NOW WE JUST REPORT SUCCESS
-                        document.body.innerHTML = '<h1 style="color:white;text-align:center">SYSTEM GREEN. YOU CAN INSTALL THE GAME CODE NOW.</h1>';
-                    } else {
-                        logStep('step-4', 'error', 'USER NOT IN DB (GHOST)');
-                        await signOut(auth);
-                        location.reload();
-                    }
-                } catch(e) {
-                    logStep('step-4', 'error', 'DB ERROR (Check Rules!)');
-                    fatalError(e.message);
-                }
-            } else {
-                logStep('step-5', 'working', 'NO USER - SHOWING LOGIN');
-                document.getElementById('login-form').style.display = 'block';
-            }
-        });
-    }
-
-    window.tryLogin = async () => {
-        const e = document.getElementById('email').value;
-        const p = document.getElementById('pass').value;
-        if(!e || !p) return alert("Enter details");
-        
-        try {
-            await signInWithEmailAndPassword(auth, e, p);
-        } catch(err) {
-            console.log("Login failed, trying reg...", err.code);
+    // AUTH
+    window.authHandler = async () => {
+        const n = document.getElementById('auth-nick').value.trim();
+        const e = document.getElementById('auth-email').value.trim();
+        const p = document.getElementById('auth-pass').value;
+        if (!n || !e || !p) return alert("Fill all fields");
+        try { 
+            await signInWithEmailAndPassword(auth, e, p); 
+        } catch (err) {
             try {
                 const res = await createUserWithEmailAndPassword(auth, e, p);
-                // Create DB Doc
-                await setDoc(doc(db, "users", res.user.uid), {
-                    nickname: "GOODGAME",
-                    balance: 1000,
-                    role: "admin",
-                    email: e
+                await setDoc(doc(db, "users", res.user.uid), { 
+                    nickname: n, balance: 1000, role: (n==='GOODGAME'?'admin':'user'), 
+                    email: e, friendCode: Math.floor(100000000+Math.random()*900000000).toString(), friends: [] 
                 });
-                alert("REGISTERED & DB CREATED!");
-            } catch(regErr) {
-                fatalError(regErr.message);
-            }
+                alert("Registered!");
+            } catch(re) { alert(re.message); }
         }
     };
 
-    window.forceReset = () => {
-        localStorage.clear();
-        location.reload();
+    onAuthStateChanged(auth, async (u) => {
+        if (u) {
+            const snap = await getDoc(doc(db, "users", u.uid));
+            if (!snap.exists()) { await signOut(auth); location.reload(); return; }
+            user = snap.data();
+            
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('u-name').innerText = user.nickname;
+            document.getElementById('u-bal').innerText = user.balance + "$";
+            document.getElementById('mob-bal').innerText = user.balance + "$";
+            document.getElementById('my-friend-code').innerText = user.friendCode || '...';
+            if(user.role === 'admin') document.getElementById('admin-tools').classList.remove('hidden');
+
+            loadMarket();
+            loadLibrary();
+            loadFriends();
+            initChat();
+        } else {
+            document.getElementById('login-modal').style.display = 'flex';
+        }
+    });
+
+    // MARKET & AUTO-GENERATOR
+    async function loadMarket(){
+        const l=document.getElementById('market-list');
+        const s=await getDocs(collection(db,"games"));
+        l.innerHTML='';
+        
+        if (s.empty) {
+            l.innerHTML = '<div class="col-span-2 text-center text-yellow-500 font-bold">Creating Starter Game...</div>';
+            // AUTO CREATE A GAME IF EMPTY
+            if(user.role === 'admin') {
+                await addDoc(collection(db,"games"), {
+                    name: "Minecraft Classic", price: 0, 
+                    desc: "Classic web version", 
+                    url: "https://classic.minecraft.net" 
+                });
+                setTimeout(loadMarket, 1000);
+            } else {
+                l.innerHTML = '<div class="col-span-2 text-center opacity-50">Market is empty. Ask Admin to add games.</div>';
+            }
+            return;
+        }
+
+        s.forEach(d=>{
+            const g=d.data();
+            l.innerHTML+=`<div class="card flex justify-between items-center"><div><b class="text-lg">${g.name}</b><br><span class="text-xs opacity-50">${g.desc}</span></div><div><span class="mr-3 font-bold text-yellow-500">${g.price}$</span><button onclick="buy('${d.id}',${g.price})" class="btn btn-green w-auto px-4">BUY</button></div></div>`;
+        });
+    }
+
+    window.buy=async(id,p)=>{
+        if(user.balance<p)return alert("No money");
+        if(user.library && user.library.includes(id)) return alert("Already owned");
+        await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p, library: arrayUnion(id)});
+        alert("Bought!"); loadLibrary();
     };
+
+    async function loadLibrary(){
+        const l=document.getElementById('library-list'); l.innerHTML='';
+        if(!user.library) return;
+        for(let id of user.library){
+            const g=await getDoc(doc(db,"games",id));
+            if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green mt-2">PLAY</button></div>`;
+        }
+    }
+
+    // OTHER
+    window.pubGame=async()=>{
+        await addDoc(collection(db,"games"),{
+            name:document.getElementById('p-name').value,
+            price:Number(document.getElementById('p-price').value),
+            url:document.getElementById('p-url').value,
+            desc:document.getElementById('p-desc').value
+        });
+        alert("Published"); nav('market'); loadMarket();
+    };
+    window.addFriend = async () => {
+        const code = document.getElementById('friend-input').value.trim();
+        const q = query(collection(db, "users"), where("friendCode", "==", code));
+        const snap = await getDocs(q);
+        if(snap.empty) return alert("Not found");
+        const fid = snap.docs[0].id;
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayUnion(fid) });
+        await updateDoc(doc(db, "users", fid), { friends: arrayUnion(auth.currentUser.uid) });
+        loadFriends();
+    };
+    async function loadFriends() {
+        const list = document.getElementById('friends-list'); list.innerHTML='';
+        if(!user.friends) return;
+        for(let fid of user.friends) {
+            const s = await getDoc(doc(db,"users",fid));
+            if(s.exists()) list.innerHTML += `<div class="bg-gray-800 p-2 rounded flex justify-between"><span>${s.data().nickname}</span><button onclick="removeFriend('${fid}')" class="text-red-500 text-xs">X</button></div>`;
+        }
+    }
+    window.removeFriend = async (fid) => {
+        if(!confirm("Remove?")) return;
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayRemove(fid) });
+        loadFriends();
+    }
+    function initChat() {
+        const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(20));
+        onSnapshot(q, (s) => {
+            const d = document.getElementById('chat-container'); d.innerHTML = '';
+            s.forEach(doc => { const m = doc.data(); d.innerHTML += `<div class="mb-1"><span class="font-bold text-${m.role==='admin'?'red':'blue'}-400">${m.nick}:</span> ${m.msg}</div>`; });
+        });
+    }
+    window.sendChat = async () => {
+        const txt = document.getElementById('chat-msg').value; if(!txt) return;
+        await addDoc(collection(db, "chat"), { uid: auth.currentUser.uid, nick: user.nickname, role: user.role, msg: txt, time: Date.now() });
+        document.getElementById('chat-msg').value = '';
+    };
+
+    window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex';};
+    window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none';};
 </script>
 </body>
 </html>
