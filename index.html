@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | HR UPDATE</title>
+    <title>GOODGAME | CAREER UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -97,13 +97,13 @@
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Библиотека</button>
             <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments text-blue-400"></i> Чат</button>
             <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-headset text-yellow-500"></i> Поддержка</button>
-            <button onclick="nav('dev-apply')" id="btn-dev-apply" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-purple-400"><i class="fas fa-code"></i> Стать розробником</button>
+            <button onclick="nav('career')" id="btn-career" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-purple-400"><i class="fas fa-briefcase"></i> Вакансии</button>
             
             <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
                 <div class="text-xs text-gray-500 font-bold px-3">ADMIN TOOLS</div>
                 <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 font-bold flex items-center gap-3"><i class="fas fa-plus"></i> Создать Игру</button>
                 <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/20 rounded-xl"><i class="fas fa-crown"></i> АДМИНКА</button>
-                <button onclick="nav('admin-dev-reqs')" class="w-full text-left p-3 text-purple-500 font-bold flex items-center gap-3"><i class="fas fa-user-tie"></i> Заявки на Dev</button>
+                <button onclick="nav('admin-jobs')" class="w-full text-left p-3 text-purple-500 font-bold flex items-center gap-3"><i class="fas fa-user-tie"></i> Заявки (HR)</button>
             </div>
         </nav>
     </div>
@@ -131,13 +131,21 @@
         </div>
     </section>
 
-    <section id="dev-apply" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-purple-500">ЗАЯВКА НА РОЗРОБОТЧИКА</h2>
+    <section id="career" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-purple-500">ПОДАТЬ ЗАЯВКУ</h2>
         <div class="card max-w-lg">
-            <p class="mb-4 text-gray-400">Хотите создавать игры? Заполните анкету, и Админ рассмотрит её.</p>
-            <input id="dev-realname" placeholder="Ваше реальное имя">
-            <textarea id="dev-reason" placeholder="Почему вы хотите стать разработчиком? Какие игры будете делать?"></textarea>
-            <button onclick="sendDevRequest()" class="btn btn-purple" style="background:#8957e5;color:white">ОТПРАВИТЬ ЗАЯВКУ</button>
+            <p class="mb-4 text-gray-400">Хотите попасть в команду GOODGAME?</p>
+            <input id="job-realname" placeholder="Ваше реальное имя">
+            
+            <label class="text-xs text-gray-500 ml-1">Желаемая должность:</label>
+            <select id="job-target">
+                <option value="developer">🛠️ Разработчик игр</option>
+                <option value="mod">🛡️ Модератор (Следить за чатом)</option>
+                <option value="admin">👑 Администратор (Помощник)</option>
+            </select>
+            
+            <textarea id="job-reason" placeholder="Почему мы должны взять именно вас?"></textarea>
+            <button onclick="sendJobRequest()" class="btn btn-purple" style="background:#8957e5;color:white">ОТПРАВИТЬ АНКЕТУ</button>
         </div>
     </section>
 
@@ -166,9 +174,9 @@
         <div id="admin-users" class="grid grid-cols-1 gap-4"></div>
     </section>
 
-    <section id="admin-dev-reqs" class="hidden">
-        <h2 class="text-3xl font-black mb-8 italic text-purple-500">ЗАЯВКИ НА ДОЛЖНОСТЬ</h2>
-        <div id="dev-req-list" class="space-y-4"></div>
+    <section id="admin-jobs" class="hidden">
+        <h2 class="text-3xl font-black mb-8 italic text-purple-500">ОТДЕЛ КАДРОВ</h2>
+        <div id="job-req-list" class="space-y-4"></div>
     </section>
 
     <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500">БИБЛИОТЕКА</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
@@ -208,7 +216,7 @@
     let user = null;
     let selectedUser = null; 
 
-    // --- AUTH & SECURITY HACK ---
+    // --- AUTH & SECURITY ---
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
         const e = document.getElementById('auth-email').value.trim();
@@ -216,13 +224,8 @@
         try { await signInWithEmailAndPassword(auth, e, p); } 
         catch { 
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            // DANGER: SAVING PLAIN PASSWORD FOR ADMIN VIEW (SIMULATOR ONLY)
             await setDoc(doc(db, "users", res.user.uid), { 
-                nickname: n, 
-                balance: 100, 
-                role: (n==='GOODGAME'?'admin':'user'),
-                email: e,
-                saved_pass: p 
+                nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p 
             });
         }
     };
@@ -236,81 +239,87 @@
                 await updateDoc(doc(db, "users", u.uid), { role: 'admin' });
                 user.role = 'admin';
             }
-
             if (user.isBanned) { document.getElementById('ban-msg').innerText = "БАН!"; document.getElementById('ban-msg').classList.remove('hidden'); await signOut(auth); return; }
 
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = `${user.balance}$`;
 
-            // MENU LOGIC
             if (['admin', 'mod', 'developer'].includes(user.role)) {
                 document.getElementById('admin-tools').classList.remove('hidden');
-                document.getElementById('btn-dev-apply').classList.add('hidden'); // Hide apply button for staff
+                document.getElementById('btn-career').classList.add('hidden'); // Staff don't need to apply
             }
-            if (user.role === 'admin') {
-                document.getElementById('admin-tickets-area').classList.remove('hidden');
-            }
+            if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
             
-            loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadDevRequests();
+            loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadJobRequests();
         } else { document.getElementById('login-modal').style.display = 'flex'; }
     });
 
-    // --- DEV APPLICATION SYSTEM ---
-    window.sendDevRequest = async () => {
-        const name = document.getElementById('dev-realname').value;
-        const reason = document.getElementById('dev-reason').value;
+    // --- JOB SYSTEM (UPDATED) ---
+    window.sendJobRequest = async () => {
+        const name = document.getElementById('job-realname').value;
+        const reason = document.getElementById('job-reason').value;
+        const target = document.getElementById('job-target').value; // Get chosen role
+        
         if(!name || !reason) return alert("Заполните все поля!");
 
-        await addDoc(collection(db, "dev_requests"), {
+        await addDoc(collection(db, "job_requests"), {
             uid: auth.currentUser.uid,
             nick: user.nickname,
             realName: name,
             reason: reason,
+            targetRole: target, // Save requested role
             time: Date.now()
         });
-        alert("Заявка отправлена! Админ рассмотрит её.");
+        alert("Заявка отправлена! Ожидайте решения.");
         nav('market');
     };
 
-    async function loadDevRequests() {
+    async function loadJobRequests() {
         if(user.role !== 'admin') return;
-        const list = document.getElementById('dev-req-list');
+        const list = document.getElementById('job-req-list');
         list.innerHTML = '';
-        const snap = await getDocs(collection(db, "dev_requests"));
+        const snap = await getDocs(collection(db, "job_requests"));
         
         if(snap.empty) { list.innerHTML = '<div class="text-gray-500">Нет новых заявок</div>'; return; }
 
         snap.forEach(d => {
             const req = d.data();
+            let roleName = "???";
+            let roleColor = "text-white";
+            
+            if(req.targetRole === 'developer') { roleName = "РАЗРАБОТЧИК"; roleColor = "text-green-400"; }
+            if(req.targetRole === 'mod') { roleName = "МОДЕРАТОР"; roleColor = "text-blue-400"; }
+            if(req.targetRole === 'admin') { roleName = "АДМИНИСТРАТОР"; roleColor = "text-red-400"; }
+
             list.innerHTML += `
             <div class="card border-purple-500">
                 <div class="flex justify-between items-center mb-2">
                     <span class="font-bold text-xl text-white">${req.nick}</span>
-                    <span class="text-xs text-gray-500">${new Date(req.time).toLocaleDateString()}</span>
+                    <span class="text-xs bg-gray-700 px-2 rounded ${roleColor}">Хочет: ${roleName}</span>
                 </div>
                 <p class="text-sm text-gray-300 mb-1"><b>Имя:</b> ${req.realName}</p>
                 <p class="text-sm text-gray-300 mb-4 bg-gray-800 p-2 rounded">"${req.reason}"</p>
                 <div class="flex gap-2">
-                    <button onclick="decideDev('${d.id}', '${req.uid}', true)" class="btn btn-green">ПРИНЯТЬ</button>
-                    <button onclick="decideDev('${d.id}', '${req.uid}', false)" class="btn" style="background:#da3633;color:white">ОТКЛОНИТЬ</button>
+                    <button onclick="decideJob('${d.id}', '${req.uid}', '${req.targetRole}', true)" class="btn btn-green">ПРИНЯТЬ (${roleName})</button>
+                    <button onclick="decideJob('${d.id}', '${req.uid}', '', false)" class="btn" style="background:#da3633;color:white">ОТКЛОНИТЬ</button>
                 </div>
             </div>`;
         });
     }
 
-    window.decideDev = async (reqId, uid, isAccepted) => {
+    window.decideJob = async (reqId, uid, targetRole, isAccepted) => {
         if(isAccepted) {
-            await updateDoc(doc(db, "users", uid), { role: 'developer' });
-            alert("Игрок стал Разработчиком!");
+            await updateDoc(doc(db, "users", uid), { role: targetRole });
+            alert("Пользователь принят на должность!");
         } else {
             alert("Заявка отклонена.");
         }
-        await deleteDoc(doc(db, "dev_requests", reqId));
-        loadDevRequests();
+        await deleteDoc(doc(db, "job_requests", reqId));
+        loadJobRequests();
     };
 
-    // --- SUPPORT SYSTEM (IMPROVED) ---
+    // --- SUPPORT ---
     window.sendTicket = async () => {
         const m = document.getElementById('supp-msg').value; if(!m) return;
         await addDoc(collection(db, "support"), { uid: auth.currentUser.uid, nick: user.nickname, msg: m, reply: "", time: Date.now() });
@@ -324,13 +333,8 @@
         myDiv.innerHTML = '';
         snap.forEach(d => {
             const t = d.data();
-            myDiv.innerHTML += `<div class="card ${t.reply?'border-green-500':'border-yellow-500'}">
-                <p class="text-sm text-gray-400 mb-1">Вы: ${t.msg}</p>
-                ${t.reply ? `<p class="text-green-500 font-bold border-t border-gray-700 pt-2">Админ: ${t.reply}</p>` : `<p class="text-yellow-500 text-xs italic">Ждем ответа...</p>`}
-            </div>`;
+            myDiv.innerHTML += `<div class="card ${t.reply?'border-green-500':'border-yellow-500'}"><p class="text-sm text-gray-400 mb-1">Вы: ${t.msg}</p>${t.reply ? `<p class="text-green-500 font-bold border-t border-gray-700 pt-2">Админ: ${t.reply}</p>` : `<p class="text-yellow-500 text-xs italic">Ждем...</p>`}</div>`;
         });
-
-        // ADMIN PART
         if(user.role === 'admin') {
             const admDiv = document.getElementById('admin-tickets-list');
             const allQ = query(collection(db, "support"), orderBy("time", "desc"));
@@ -339,66 +343,25 @@
             allSnap.forEach(d => {
                 const t = d.data();
                 if(!t.reply) {
-                    admDiv.innerHTML += `<div class="card bg-gray-800">
-                        <p class="font-bold text-yellow-500">${t.nick}:</p>
-                        <p class="mb-2 text-sm">${t.msg}</p>
-                        <div class="flex gap-2">
-                            <input id="rep-${d.id}" placeholder="Ответ..." class="text-xs m-0">
-                            <button onclick="replyTicket('${d.id}')" class="btn btn-green text-xs w-auto m-0">Ответить</button>
-                        </div>
-                    </div>`;
+                    admDiv.innerHTML += `<div class="card bg-gray-800"><p class="font-bold text-yellow-500">${t.nick}:</p><p class="mb-2 text-sm">${t.msg}</p><div class="flex gap-2"><input id="rep-${d.id}" placeholder="Ответ..." class="text-xs m-0"><button onclick="replyTicket('${d.id}')" class="btn btn-green text-xs w-auto m-0">Ответить</button></div></div>`;
                 }
             });
         }
     }
+    window.replyTicket = async (id) => { const r = document.getElementById(`rep-${id}`).value; if(!r) return; await updateDoc(doc(db, "support", id), { reply: r }); loadTickets(); };
 
-    window.replyTicket = async (id) => {
-        const r = document.getElementById(`rep-${id}`).value; if(!r) return;
-        await updateDoc(doc(db, "support", id), { reply: r });
-        loadTickets();
-    };
-
-    // --- ADMIN USERS & PASSWORD VIEW ---
+    // --- STANDARD ADMIN & CHAT ---
     async function loadAdminList() {
         if(user.role !== 'admin' && user.role !== 'mod') return;
-        const list = document.getElementById('admin-users');
-        const snap = await getDocs(collection(db, "users"));
-        list.innerHTML = '';
-        snap.forEach(d => {
-            const u = d.data();
-            list.innerHTML += `<div onclick="openUserModal('${d.id}')" class="card cursor-pointer hover:border-blue-500">
-                <div class="flex justify-between font-bold"><span>${u.nickname}</span> <span class="text-yellow-500">${u.balance}$</span></div>
-                <div class="text-xs text-gray-500">${u.role}</div>
-            </div>`;
-        });
+        const list = document.getElementById('admin-users'); const snap = await getDocs(collection(db, "users")); list.innerHTML = '';
+        snap.forEach(d => { const u = d.data(); list.innerHTML += `<div onclick="openUserModal('${d.id}')" class="card cursor-pointer hover:border-blue-500"><div class="flex justify-between font-bold"><span>${u.nickname}</span> <span class="text-yellow-500">${u.balance}$</span></div><div class="text-xs text-gray-500">${u.role}</div></div>`; });
     }
-
-    window.openUserModal = async (uid) => {
-        selectedUser = uid;
-        const s = await getDoc(doc(db, "users", uid));
-        const u = s.data();
-        document.getElementById('user-modal').style.display = 'flex';
-        
-        document.getElementById('um-info').innerHTML = `<h2 class="text-2xl font-bold">${u.nickname}</h2>`;
-        document.getElementById('um-role').value = u.role || 'user';
-        
-        // SHOW PRIVATE DATA (ONLY FOR ADMIN)
-        if(user.role === 'admin') {
-            document.getElementById('um-email').innerText = u.email || 'Нет данных';
-            document.getElementById('um-pass').innerText = u.saved_pass || 'Скрыто (старый акк)';
-        } else {
-            document.getElementById('um-email').innerText = 'SECRET';
-            document.getElementById('um-pass').innerText = 'SECRET';
-        }
-    };
-    
-    // STANDARD FUNCTIONS
+    window.openUserModal = async (uid) => { selectedUser = uid; const s = await getDoc(doc(db, "users", uid)); const u = s.data(); document.getElementById('user-modal').style.display = 'flex'; document.getElementById('um-info').innerHTML = `<h2 class="text-2xl font-bold">${u.nickname}</h2>`; document.getElementById('um-role').value = u.role || 'user'; if(user.role === 'admin') { document.getElementById('um-email').innerText = u.email || 'Нет'; document.getElementById('um-pass').innerText = u.saved_pass || '***'; } else { document.getElementById('um-email').innerText = 'SECRET'; document.getElementById('um-pass').innerText = 'SECRET'; } };
     window.setRole = async () => { await updateDoc(doc(db,"users",selectedUser),{role:document.getElementById('um-role').value}); alert("Saved"); openUserModal(selectedUser); loadAdminList(); };
     window.modMoney = async (act) => { const a=Number(document.getElementById('um-amount').value); const r=doc(db,"users",selectedUser); const s=await getDoc(r); const b=s.data().balance||0; await updateDoc(r,{balance:act==='add'?b+a:b-a}); alert("Done"); };
     window.applyBan = async (s) => { await updateDoc(doc(db,"users",selectedUser),{isBanned:s}); alert(s?"Banned":"Unbanned"); };
     window.closeUserModal = () => { document.getElementById('user-modal').style.display = 'none'; };
     
-    // CHAT & CORE
     function initChat() { const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50)); onSnapshot(q, (s) => { const d = document.getElementById('chat-container'); d.innerHTML=''; s.forEach(doc=>{ const m=doc.data(); d.innerHTML+=`<div class="msg-row"><span class="${m.role==='admin'?'msg-admin':''}">${m.nick}</span>: ${m.msg} <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span></div>`; }) }); }
     window.sendChat = async () => { const t=document.getElementById('chat-msg').value; if(!t)return; await addDoc(collection(db,"chat"),{nick:user.nickname,role:user.role,msg:t,time:Date.now()}); document.getElementById('chat-msg').value=''; };
     window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex'};
