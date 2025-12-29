@@ -1,234 +1,229 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | CLEAN SETTINGS</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <style>
-        /* THEME VARIABLES */
-        :root { 
-            --bg: #0d1117; 
-            --panel: #161b22; 
-            --accent: #238636; 
-            --danger: #da3633; 
-            --text: #c9d1d9;
-            --border: #30363d;
-        }
-        
-        /* THEME CLASSES */
-        .theme-light { --bg: #f6f8fa; --panel: #ffffff; --accent: #2da44e; --danger: #cf222e; --text: #24292f; --border: #d0d7de; }
-        .theme-hacker { --bg: #000000; --panel: #0a0a0a; --accent: #00ff00; --danger: #ff0000; --text: #00ff00; --border: #003300; }
-        .theme-cyber { --bg: #0f0a1e; --panel: #1a1625; --accent: #d300c5; --danger: #ff0055; --text: #00f3ff; --border: #5e267c; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>GOODGAME | SETTINGS UPDATE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* THEME VARIABLES */
+        :root { 
+            --bg: #0d1117; 
+            --panel: #161b22; 
+            --accent: #238636; 
+            --danger: #da3633; 
+            --text: #c9d1d9;
+            --border: #30363d;
+        }
+        
+        /* THEME CLASSES (Applied by JS) */
+        .theme-light { --bg: #f6f8fa; --panel: #ffffff; --accent: #2da44e; --danger: #cf222e; --text: #24292f; --border: #d0d7de; }
+        .theme-hacker { --bg: #000000; --panel: #0a0a0a; --accent: #00ff00; --danger: #ff0000; --text: #00ff00; --border: #003300; }
+        .theme-cyber { --bg: #0f0a1e; --panel: #1a1625; --accent: #d300c5; --danger: #ff0055; --text: #00f3ff; --border: #5e267c; }
 
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; transition: 0.3s; }
-        
-        .sidebar { 
-            width: 260px; background: var(--panel); height: 100vh; position: fixed; top: 0; left: 0;
-            border-right: 1px solid var(--border); z-index: 100; transition: 0.3s; transform: translateX(0);
-            overflow-y: auto; padding-bottom: 80px; 
-        }
-        .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; padding-top: 60px; }
-        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 90; align-items: center; padding: 0 15px; justify-content: space-between; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; transition: 0.3s; }
+        
+        .sidebar { 
+            width: 260px; background: var(--panel); height: 100vh; position: fixed; top: 0; left: 0;
+            border-right: 1px solid var(--border); z-index: 100; transition: 0.3s; transform: translateX(0);
+            overflow-y: auto; padding-bottom: 80px; 
+        }
+        .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; padding-top: 60px; }
+        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 90; align-items: center; padding: 0 15px; justify-content: space-between; }
 
-        @media (max-width: 768px) { 
-            .sidebar { transform: translateX(-100%); z-index: 200; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } 
-            .sidebar.active { transform: translateX(0); }
-            .main { margin-left: 0; padding-top: 70px; } 
-            .mobile-header { display: flex; }
-        }
+        @media (max-width: 768px) { 
+            .sidebar { transform: translateX(-100%); z-index: 200; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } 
+            .sidebar.active { transform: translateX(0); }
+            .main { margin-left: 0; padding-top: 70px; } 
+            .mobile-header { display: flex; }
+        }
 
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
-        input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
-        .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 5px; border: none; }
-        .btn-green { background: var(--accent); color: white; }
-        .hidden { display: none !important; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
+        input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
+        .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 5px; border: none; }
+        .btn-green { background: var(--accent); color: white; }
+        .hidden { display: none !important; }
 
-        /* MODALS */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 10px; }
-        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; color: var(--text); }
-        iframe { width: 100%; height: 100%; border: none; }
-        
-        /* CHAT */
-        #chat-container { height: 50vh; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: var(--bg); display: flex; flex-direction: column-reverse; }
-        .msg-row { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: rgba(255,255,255,0.05); font-size: 13px; position: relative; }
-        .msg-admin { color: #ff7b72; font-weight: bold; }
-        .msg-mod { color: #79c0ff; font-weight: bold; }
-        .msg-dev { color: #7ee787; font-weight: bold; }
-        .msg-time { font-size: 10px; opacity: 0.6; float: right; }
-        
-        .mod-controls { display: inline-flex; gap: 5px; margin-left: 8px; opacity: 0.7; }
-        .mod-controls:hover { opacity: 1; }
-        .btn-del { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 10px; border: 1px solid var(--danger); padding: 0 4px; border-radius: 4px; }
-        .btn-mute { color: #d2a8ff; cursor: pointer; font-weight: bold; font-size: 10px; border: 1px solid #d2a8ff; padding: 0 4px; border-radius: 4px; }
+        /* MODALS */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 10px; }
+        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; color: var(--text); }
+        iframe { width: 100%; height: 100%; border: none; }
+        
+        /* CHAT */
+        #chat-container { height: 50vh; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: var(--bg); display: flex; flex-direction: column-reverse; }
+        .msg-row { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: rgba(255,255,255,0.05); font-size: 13px; position: relative; }
+        .msg-admin { color: #ff7b72; font-weight: bold; }
+        .msg-mod { color: #79c0ff; font-weight: bold; }
+        .msg-dev { color: #7ee787; font-weight: bold; }
+        .msg-time { font-size: 10px; opacity: 0.6; float: right; }
+        
+        .mod-controls { display: inline-flex; gap: 5px; margin-left: 8px; opacity: 0.7; }
+        .mod-controls:hover { opacity: 1; }
+        .btn-del { color: var(--danger); cursor: pointer; font-weight: bold; font-size: 10px; border: 1px solid var(--danger); padding: 0 4px; border-radius: 4px; }
+        .btn-mute { color: #d2a8ff; cursor: pointer; font-weight: bold; font-size: 10px; border: 1px solid #d2a8ff; padding: 0 4px; border-radius: 4px; }
 
-        .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; display: inline-block; margin-right: 10px; }
-    </style>
+        /* Theme Buttons */
+        .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; display: inline-block; margin-right: 10px; }
+    </style>
 </head>
 <body>
 
 <div class="mobile-header">
-    <button onclick="toggleMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
-    <span class="font-black italic" style="color:var(--accent)">GOODGAME</span>
-    <div id="mob-bal" class="font-bold text-sm" style="color: gold">0$</div>
+    <button onclick="toggleMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
+    <span class="font-black italic" style="color:var(--accent)">GOODGAME</span>
+    <div id="mob-bal" class="font-bold text-sm" style="color: gold">0$</div>
 </div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
-    <div>
-        <div class="flex justify-between items-center mb-8">
-            <div class="font-black text-2xl italic tracking-tighter" style="color:var(--accent)">GOODGAME</div>
-            <button onclick="toggleMenu()" class="md:hidden text-xl opacity-50"><i class="fas fa-times"></i></button>
-        </div>
-        
-        <nav class="space-y-2">
-            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> <span data-i18n="market">Market</span></button>
-            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> <span data-i18n="library">Library</span></button>
-            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments text-blue-400"></i> <span data-i18n="chat">Chat</span></button>
-            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-headset text-yellow-500"></i> <span data-i18n="support">Support</span></button>
-            <button onclick="nav('career')" id="btn-career" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-purple-400"><i class="fas fa-briefcase"></i> <span data-i18n="jobs">Jobs</span></button>
-            <button onclick="nav('rules')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 opacity-70"><i class="fas fa-scroll"></i> <span data-i18n="rules">Rules</span></button>
-            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 border border-gray-700 bg-gray-800/50"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></button>
-            
-            <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
-                <div class="text-xs font-bold px-3 opacity-50">ADMIN TOOLS</div>
-                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 font-bold flex items-center gap-3"><i class="fas fa-plus"></i> Add Game</button>
-                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/20 rounded-xl"><i class="fas fa-crown"></i> ADMIN</button>
-                <button onclick="nav('admin-jobs')" class="w-full text-left p-3 text-purple-500 font-bold flex items-center gap-3"><i class="fas fa-user-tie"></i> HR</button>
-            </div>
-        </nav>
-    </div>
-    
-    <div class="border-t border-gray-700 pt-4 mt-4">
-        <div class="flex items-center gap-2">
-            <div id="u-name" class="font-bold mb-1">...</div>
-            <div id="email-status-icon" class="text-xs"></div>
-        </div>
-        <div id="u-bal" class="text-sm font-bold" style="color:gold">0$</div>
-        <button onclick="logout()" class="text-xs opacity-50 mt-2 hover:opacity-100"><span data-i18n="logout">Logout</span></button>
-    </div>
+    <div>
+        <div class="flex justify-between items-center mb-8">
+            <div class="font-black text-2xl italic tracking-tighter" style="color:var(--accent)">GOODGAME</div>
+            <button onclick="toggleMenu()" class="md:hidden text-xl opacity-50"><i class="fas fa-times"></i></button>
+        </div>
+        
+        <nav class="space-y-2">
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> <span data-i18n="market">Market</span></button>
+            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> <span data-i18n="library">Library</span></button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments text-blue-400"></i> <span data-i18n="chat">Chat</span></button>
+            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-headset text-yellow-500"></i> <span data-i18n="support">Support</span></button>
+            <button onclick="nav('career')" id="btn-career" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-purple-400"><i class="fas fa-briefcase"></i> <span data-i18n="jobs">Jobs</span></button>
+            <button onclick="nav('rules')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 opacity-70"><i class="fas fa-scroll"></i> <span data-i18n="rules">Rules</span></button>
+            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 border border-gray-700 bg-gray-800/50"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></button>
+            
+            <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
+                <div class="text-xs font-bold px-3 opacity-50">ADMIN TOOLS</div>
+                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 font-bold flex items-center gap-3"><i class="fas fa-plus"></i> Add Game</button>
+                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/20 rounded-xl"><i class="fas fa-crown"></i> ADMIN</button>
+                <button onclick="nav('admin-jobs')" class="w-full text-left p-3 text-purple-500 font-bold flex items-center gap-3"><i class="fas fa-user-tie"></i> HR</button>
+            </div>
+        </nav>
+    </div>
+    
+    <div class="border-t border-gray-700 pt-4 mt-4">
+        <div class="flex items-center gap-2">
+            <div id="u-name" class="font-bold mb-1">...</div>
+            <div id="email-status-icon" class="text-xs"></div>
+        </div>
+        <div id="u-bal" class="text-sm font-bold" style="color:gold">0$</div>
+        <button onclick="logout()" class="text-xs opacity-50 mt-2 hover:opacity-100"><span data-i18n="logout">Logout</span></button>
+    </div>
 </aside>
 
 <main class="main">
-    <section id="market">
-        <h2 class="text-3xl font-black mb-8 italic" data-i18n="market">MARKET</h2>
-        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-    </section>
+    <section id="market">
+        <h2 class="text-3xl font-black mb-8 italic" data-i18n="market">MARKET</h2>
+        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+    </section>
 
-    <section id="settings" class="hidden">
-        <h2 class="text-3xl font-black mb-8 italic" data-i18n="settings">SETTINGS</h2>
-        
-        <div class="card">
-            <h3 class="font-bold text-xl mb-4"><i class="fas fa-globe"></i> Language</h3>
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
-                <button onclick="setLang('en')" class="btn bg-gray-700 text-white">English</button>
-                <button onclick="setLang('ru')" class="btn bg-blue-700 text-white">Русский</button>
-                <button onclick="setLang('ua')" class="btn bg-yellow-600 text-white">Українська</button>
-                <button onclick="setLang('es')" class="btn bg-red-700 text-white">Español</button>
-                <button onclick="setLang('de')" class="btn bg-yellow-800 text-white">Deutsch</button>
-            </div>
-        </div>
+    <section id="settings" class="hidden">
+        <h2 class="text-3xl font-black mb-8 italic" data-i18n="settings">SETTINGS</h2>
+        
+        <div class="card">
+            <h3 class="font-bold text-xl mb-4"><i class="fas fa-globe"></i> Language / Язык</h3>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                <button onclick="setLang('en')" class="btn bg-gray-700 text-white">English</button>
+                <button onclick="setLang('ru')" class="btn bg-blue-700 text-white">Русский</button>
+                <button onclick="setLang('ua')" class="btn bg-yellow-600 text-white">Українська</button>
+                <button onclick="setLang('es')" class="btn bg-red-700 text-white">Español</button>
+                <button onclick="setLang('de')" class="btn bg-yellow-800 text-white">Deutsch</button>
+            </div>
+        </div>
 
-        <div class="card">
-            <h3 class="font-bold text-xl mb-4"><i class="fas fa-palette"></i> Theme</h3>
-            <div class="flex gap-4">
-                <div onclick="setTheme('default')" class="theme-btn" style="background:#0d1117;" title="Default Dark"></div>
-                <div onclick="setTheme('light')" class="theme-btn" style="background:#ffffff;" title="Light Mode"></div>
-                <div onclick="setTheme('hacker')" class="theme-btn" style="background:#000000; border-color:#0f0;" title="Hacker"></div>
-                <div onclick="setTheme('cyber')" class="theme-btn" style="background:#0f0a1e; border-color:#d300c5;" title="Cyberpunk"></div>
-            </div>
-        </div>
+        <div class="card">
+            <h3 class="font-bold text-xl mb-4"><i class="fas fa-palette"></i> Theme</h3>
+            <div class="flex gap-4">
+                <div onclick="setTheme('default')" class="theme-btn" style="background:#0d1117;" title="Default Dark"></div>
+                <div onclick="setTheme('light')" class="theme-btn" style="background:#ffffff;" title="Light Mode"></div>
+                <div onclick="setTheme('hacker')" class="theme-btn" style="background:#000000; border-color:#0f0;" title="Hacker"></div>
+                <div onclick="setTheme('cyber')" class="theme-btn" style="background:#0f0a1e; border-color:#d300c5;" title="Cyberpunk"></div>
+            </div>
+        </div>
 
-        <div class="card">
-            <h3 class="font-bold text-xl mb-4"><i class="fas fa-user-edit"></i> Change Nickname</h3>
-            <p class="text-sm opacity-50 mb-2">You can change your nickname once every 3 days.</p>
-            <input id="new-nick" placeholder="New Nickname">
-            <button onclick="changeNickname()" class="btn btn-green">SAVE NICKNAME</button>
-        </div>
-    </section>
+        <div class="card">
+            <h3 class="font-bold text-xl mb-4"><i class="fas fa-user-edit"></i> Change Nickname</h3>
+            <p class="text-sm opacity-50 mb-2">You can change your nickname once every 3 days.</p>
+            <input id="new-nick" placeholder="New Nickname">
+            <button onclick="changeNickname()" class="btn btn-green">SAVE NICKNAME</button>
+        </div>
+    </section>
 
-    <section id="chat" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-blue-400" data-i18n="chat">CHAT</h2>
-        <div class="card">
-            <div id="chat-container"></div>
-            <div class="flex gap-2 mt-4">
-                <input id="chat-msg" placeholder="..." class="m-0">
-                <button onclick="sendChat()" class="btn btn-green w-20 m-0"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-    </section>
+    <section id="chat" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-blue-400" data-i18n="chat">CHAT</h2>
+        <div class="card">
+            <div id="chat-container"></div>
+            <div class="flex gap-2 mt-4">
+                <input id="chat-msg" placeholder="..." class="m-0">
+                <button onclick="sendChat()" class="btn btn-green w-20 m-0"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </section>
 
-    <section id="rules" class="hidden">
-        <h2 class="text-3xl font-black mb-8 italic opacity-70" data-i18n="rules">RULES</h2>
-        <div class="space-y-6">
-            <div class="card border-l-4 border-blue-500">
-                <h3 class="text-xl font-bold text-blue-400 mb-2">1. General</h3>
-                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70">
-                    <li>Toxic behavior is forbidden.</li>
-                    <li>No scamming.</li>
-                </ul>
-            </div>
-            <div class="card border-l-4 border-yellow-500">
-                <h3 class="text-xl font-bold text-yellow-500 mb-2">2. Chat</h3>
-                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70">
-                    <li>No links or ads (Mute 10-60 min).</li>
-                    <li>No swearing/bad words (Mute 10 min).</li>
-                </ul>
-            </div>
-            <div class="card border-l-4 border-purple-500">
-                <h3 class="text-xl font-bold text-purple-400 mb-2">3. Admin Abuse</h3>
-                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70">
-                    <li>Punishing without reason = BAN.</li>
-                </ul>
-            </div>
-            <div class="p-4 bg-red-900/20 border border-red-500 rounded-xl text-center mt-6">
-                <p class="text-red-400 font-bold text-sm">⚠️ Repeated violations = PERMANENT BAN (IP).</p>
-            </div>
-        </div>
-    </section>
+    <section id="rules" class="hidden">
+        <h2 class="text-3xl font-black mb-8 italic opacity-70" data-i18n="rules">RULES</h2>
+        <div class="space-y-6">
+            <div class="card border-l-4 border-blue-500">
+                <h3 class="text-xl font-bold text-blue-400 mb-2">1. General</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70">
+                    <li>Toxic behavior is forbidden.</li>
+                    <li>No scamming.</li>
+                </ul>
+            </div>
+            <div class="card border-l-4 border-yellow-500">
+                <h3 class="text-xl font-bold text-yellow-500 mb-2">2. Chat</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70">
+                    <li>No links or ads (Mute 10-60 min).</li>
+                    <li>No swearing/bad words (Mute 10 min).</li>
+                </ul>
+            </div>
+            <div class="p-4 bg-red-900/20 border border-red-500 rounded-xl text-center mt-6">
+                <p class="text-red-400 font-bold text-sm">⚠️ Repeated violations = PERMANENT BAN (IP).</p>
+            </div>
+        </div>
+    </section>
 
-    <section id="career" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-purple-500" data-i18n="jobs">JOBS</h2>
-        <div class="card max-w-lg">
-            <p class="mb-4 opacity-50 text-sm">Join the team.</p>
-            <input id="job-realname" placeholder="Name">
-            <select id="job-target">
-                <option value="developer">🛠️ Developer</option>
-                <option value="mod">🛡️ Moderator</option>
-                <option value="admin">👑 Administrator</option>
-            </select>
-            <textarea id="job-reason" placeholder="Why you?" rows="3"></textarea>
-            <button onclick="sendJobRequest()" class="btn" style="background:#8957e5;color:white">SEND APPLICATION</button>
-        </div>
-    </section>
+    <section id="career" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-purple-500" data-i18n="jobs">JOBS</h2>
+        <div class="card max-w-lg">
+            <p class="mb-4 opacity-50 text-sm">Join the team.</p>
+            <input id="job-realname" placeholder="Name">
+            <select id="job-target">
+                <option value="developer">🛠️ Developer</option>
+                <option value="mod">🛡️ Moderator</option>
+                <option value="admin">👑 Administrator</option>
+            </select>
+            <textarea id="job-reason" placeholder="Why you?" rows="3"></textarea>
+            <button onclick="sendJobRequest()" class="btn" style="background:#8957e5;color:white">SEND APPLICATION</button>
+        </div>
+    </section>
 
-    <section id="support" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-yellow-500" data-i18n="support">SUPPORT</h2>
-        <div id="admin-tickets-area" class="hidden mb-10 border border-yellow-700 p-4 rounded-xl bg-yellow-900/10">
-            <h3 class="text-yellow-500 font-bold mb-4">Inbox:</h3>
-            <div id="admin-tickets-list" class="space-y-4"></div>
-        </div>
-        <div class="card max-w-lg">
-            <h3 class="font-bold mb-2">Ask a Question</h3>
-            <textarea id="supp-msg" placeholder="Problem..."></textarea>
-            <button onclick="sendTicket()" class="btn btn-green mt-2">SEND</button>
-        </div>
-        <div class="mt-8">
-            <h3 class="font-bold opacity-50 mb-4">History:</h3>
-            <div id="my-tickets" class="space-y-4"></div>
-        </div>
-    </section>
+    <section id="support" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-yellow-500" data-i18n="support">SUPPORT</h2>
+        <div id="admin-tickets-area" class="hidden mb-10 border border-yellow-700 p-4 rounded-xl bg-yellow-900/10">
+            <h3 class="text-yellow-500 font-bold mb-4">Inbox:</h3>
+            <div id="admin-tickets-list" class="space-y-4"></div>
+        </div>
+        <div class="card max-w-lg">
+            <h3 class="font-bold mb-2">Ask a Question</h3>
+            <textarea id="supp-msg" placeholder="Problem..."></textarea>
+            <button onclick="sendTicket()" class="btn btn-green mt-2">SEND</button>
+        </div>
+        <div class="mt-8">
+            <h3 class="font-bold opacity-50 mb-4">History:</h3>
+            <div id="my-tickets" class="space-y-4"></div>
+        </div>
+    </section>
 
-    <section id="admin-center" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-red-500">USERS</h2><div id="admin-users" class="grid grid-cols-1 gap-4"></div></section>
-    <section id="admin-jobs" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-purple-500">HR DEPT</h2><div id="job-req-list" class="space-y-4"></div></section>
-    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500" data-i18n="library">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
-    <section id="publish" class="hidden">
-        <div class="card max-w-lg"><h3 class="font-bold mb-4">Publish Game</h3><input id="p-name" placeholder="Name"><textarea id="p-desc" placeholder="Desc"><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price"><button onclick="pubGame()" class="btn btn-green">DONE</button></div>
-    </section>
+    <section id="admin-center" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-red-500">USERS</h2><div id="admin-users" class="grid grid-cols-1 gap-4"></div></section>
+    <section id="admin-jobs" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-purple-500">HR DEPT</h2><div id="job-req-list" class="space-y-4"></div></section>
+    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500" data-i18n="library">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
+    <section id="publish" class="hidden">
+        <div class="card max-w-lg"><h3 class="font-bold mb-4">Publish Game</h3><input id="p-name" placeholder="Name"><textarea id="p-desc" placeholder="Desc"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price"><button onclick="pubGame()" class="btn btn-green">DONE</button></div>
+    </section>
 </main>
 
 <div id="user-modal" class="modal-overlay"><div class="modal-box"><div class="flex justify-between items-center mb-6"><h2 class="text-2xl font-black text-red-500 italic">DOSSIER</h2><button onclick="closeUserModal()" class="opacity-50 text-xl">X</button></div><div id="um-info" class="mb-6 text-center">Loading...</div><div class="card border-red-500/50 bg-red-900/10"><h3 class="font-bold text-red-400 mb-2">Data</h3><div class="flex items-center gap-2 mb-1"><span class="text-sm opacity-50">Email:</span><span id="um-status-icon"></span></div><div id="um-email" class="font-mono bg-black p-1 rounded text-xs mb-1">...</div><div class="text-sm opacity-50">Pass:</div><div id="um-pass" class="font-mono text-red-400 font-bold bg-black p-1 rounded text-xs">...</div></div><div class="card border-purple-500"><h3 class="font-bold text-purple-400 mb-2">Role</h3><select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="mod">Mod</option><option value="admin">Admin</option></select><button onclick="setRole()" class="btn" style="background:#8957e5;color:white">Save</button></div><div class="card border-blue-900"><h3 class="font-bold text-blue-400 mb-2">Money</h3><input type="number" id="um-amount" placeholder="Sum"><div class="flex gap-2"><button onclick="modMoney('add')" class="btn btn-green">+</button><button onclick="modMoney('take')" class="btn" style="background:var(--danger);color:white">-</button></div></div><div class="card border-red-900"><button onclick="applyBan(true)" class="btn" style="background:var(--danger);color:white">BAN</button><button onclick="applyBan(false)" class="btn btn-green mt-2">UNBAN</button></div></div></div>
@@ -238,152 +233,161 @@
 <div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card max-w-sm w-full text-center shadow-2xl"><h2 class="text-3xl font-black italic mb-6" style="color:var(--accent)">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><div id="ban-msg" class="text-red-500 font-bold mb-4 text-xs hidden"></div><button onclick="authHandler()" class="btn btn-green">LOGIN / REGISTER</button></div></div>
 
 <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification, updateProfile } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    let user = null; let selectedUser = null; 
+    const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    let user = null; let selectedUser = null; 
 
-    const i18n = {
-        en: { market: "Market", library: "Library", chat: "Chat", support: "Support", jobs: "Jobs", rules: "Rules", settings: "Settings", logout: "Logout" },
-        ru: { market: "Магазин", library: "Библиотека", chat: "Чат", support: "Поддержка", jobs: "Вакансии", rules: "Правила", settings: "Настройки", logout: "Выйти" },
-        ua: { market: "Магазин", library: "Бібліотека", chat: "Чат", support: "Підтримка", jobs: "Вакансії", rules: "Правила", settings: "Налаштування", logout: "Вийти" },
-        es: { market: "Mercado", library: "Biblioteca", chat: "Chat", support: "Soporte", jobs: "Trabajos", rules: "Reglas", settings: "Ajustes", logout: "Salir" },
-        de: { market: "Markt", library: "Bibliothek", chat: "Chat", support: "Support", jobs: "Jobs", rules: "Regeln", settings: "Einstellungen", logout: "Ausloggen" }
-    };
+    // --- TRANSLATION DATA ---
+    const i18n = {
+        en: { market: "Market", library: "Library", chat: "Chat", support: "Support", jobs: "Jobs", rules: "Rules", settings: "Settings", logout: "Logout" },
+        ru: { market: "Магазин", library: "Библиотека", chat: "Чат", support: "Поддержка", jobs: "Вакансии", rules: "Правила", settings: "Настройки", logout: "Выйти" },
+        ua: { market: "Магазин", library: "Бібліотека", chat: "Чат", support: "Підтримка", jobs: "Вакансії", rules: "Правила", settings: "Налаштування", logout: "Вийти" },
+        es: { market: "Mercado", library: "Biblioteca", chat: "Chat", support: "Soporte", jobs: "Trabajos", rules: "Reglas", settings: "Ajustes", logout: "Salir" },
+        de: { market: "Markt", library: "Bibliothek", chat: "Chat", support: "Support", jobs: "Jobs", rules: "Regeln", settings: "Einstellungen", logout: "Ausloggen" }
+    };
 
-    window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('active'); };
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.getElementById('sidebar').classList.remove('active'); };
+    window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('active'); };
+    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.getElementById('sidebar').classList.remove('active'); };
 
-    window.setLang = (lang) => {
-        const t = i18n[lang];
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if(t[key]) el.innerText = t[key];
-        });
-        localStorage.setItem('gg_lang', lang);
-    };
+    // --- SETTINGS LOGIC ---
+    window.setLang = (lang) => {
+        const t = i18n[lang];
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if(t[key]) el.innerText = t[key];
+        });
+        localStorage.setItem('gg_lang', lang);
+    };
 
-    window.setTheme = (theme) => {
-        document.body.className = ''; 
-        if(theme !== 'default') document.body.classList.add(`theme-${theme}`);
-        localStorage.setItem('gg_theme', theme);
-    };
+    window.setTheme = (theme) => {
+        document.body.className = ''; 
+        if(theme !== 'default') document.body.classList.add(`theme-${theme}`);
+        localStorage.setItem('gg_theme', theme);
+    };
 
-    window.changeNickname = async () => {
-        const newNick = document.getElementById('new-nick').value.trim();
-        if(!newNick) return alert("Empty nickname!");
-        const now = Date.now();
-        const last = user.lastNickChange || 0;
-        const diff = now - last;
-        const threeDays = 3 * 24 * 60 * 60 * 1000;
-        if (diff < threeDays) {
-            const hoursLeft = Math.ceil((threeDays - diff) / (1000 * 60 * 60));
-            return alert(`Wait ${hoursLeft} hours to change nickname again.`);
-        }
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { nickname: newNick, lastNickChange: now });
-        alert("Nickname changed!"); location.reload();
-    };
+    window.changeNickname = async () => {
+        const newNick = document.getElementById('new-nick').value.trim();
+        if(!newNick) return alert("Empty nickname!");
 
-    const savedLang = localStorage.getItem('gg_lang') || 'en';
-    const savedTheme = localStorage.getItem('gg_theme') || 'default';
-    window.setLang(savedLang);
-    window.setTheme(savedTheme);
+        const now = Date.now();
+        const last = user.lastNickChange || 0;
+        const diff = now - last;
+        const threeDays = 3 * 24 * 60 * 60 * 1000;
 
-    function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
-    window.authHandler = async () => {
-        const n = document.getElementById('auth-nick').value.trim();
-        const e = document.getElementById('auth-email').value.trim();
-        const p = document.getElementById('auth-pass').value;
-        const msg = document.getElementById('ban-msg'); msg.classList.add('hidden');
-        if (!n || !e || !p) { msg.innerText = "Fill all fields!"; msg.classList.remove('hidden'); return; }
-        if (!isValidEmail(e)) { msg.innerText = "Invalid Email!"; msg.classList.remove('hidden'); return; }
-        if (p.length < 6) { msg.innerText = "Password min 6 chars"; msg.classList.remove('hidden'); return; }
-        try { await signInWithEmailAndPassword(auth, e, p); } 
-        catch (err) { 
-            if(err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
-                 try {
-                    const res = await createUserWithEmailAndPassword(auth, e, p);
-                    await sendEmailVerification(res.user);
-                    await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p, muteUntil: 0, lastNickChange: 0 });
-                    alert("Verification email sent!");
-                 } catch (regErr) { msg.innerText = regErr.message; msg.classList.remove('hidden'); }
-            } else { msg.innerText = err.message; msg.classList.remove('hidden'); }
-        }
-    };
+        if (diff < threeDays) {
+            const hoursLeft = Math.ceil((threeDays - diff) / (1000 * 60 * 60));
+            return alert(`Wait ${hoursLeft} hours to change nickname again.`);
+        }
 
-    onAuthStateChanged(auth, async (u) => {
-        if (u) {
-            const snap = await getDoc(doc(db, "users", u.uid)); user = snap.data();
-            if (user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db, "users", u.uid), { role: 'admin' }); user.role = 'admin'; }
-            if (user.isBanned) { await signOut(auth); return alert("BANNED"); }
-            
-            document.getElementById('login-modal').style.display = 'none';
-            document.getElementById('u-name').innerText = user.nickname;
-            document.getElementById('u-bal').innerText = `${user.balance}$`;
-            document.getElementById('mob-bal').innerText = `${user.balance}$`;
-            
-            const icon = auth.currentUser.emailVerified ? '<span class="text-green-500">✅</span>' : '<span class="text-yellow-500">⚠️</span>';
-            document.getElementById('email-status-icon').innerHTML = icon;
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { nickname: newNick, lastNickChange: now });
+        alert("Nickname changed!"); location.reload();
+    };
 
-            if (['admin', 'mod', 'developer'].includes(user.role)) document.getElementById('admin-tools').classList.remove('hidden');
-            if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
-            
-            loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadJobRequests();
-        } else { document.getElementById('login-modal').style.display = 'flex'; }
-    });
+    // Load Settings on Start
+    const savedLang = localStorage.getItem('gg_lang') || 'en';
+    const savedTheme = localStorage.getItem('gg_theme') || 'default';
+    window.setLang(savedLang);
+    window.setTheme(savedTheme);
 
-    function initChat() {
-        const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50));
-        onSnapshot(q, (snapshot) => {
-            const div = document.getElementById('chat-container'); div.innerHTML = '';
-            const isStaff = user && ['admin', 'mod', 'developer', 'sr_admin'].includes(user.role);
-            snapshot.forEach(d => {
-                const m = d.data();
-                let c = ''; if(m.role==='admin')c='msg-admin'; else if(m.role==='mod')c='msg-mod'; else if(m.role==='developer')c='msg-dev';
-                let btns = '';
-                if(isStaff) btns = `<span class="mod-controls"><button onclick="deleteChatMsg('${d.id}')" class="btn-del">X</button> <button onclick="toggleMute('${m.uid}', '${m.nick}')" class="btn-mute">MUTE</button></span>`;
-                div.innerHTML += `<div class="msg-row"><span class="${c}">${m.nick}</span>: ${m.msg} ${btns} <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span></div>`;
-            });
-        });
-    }
-    window.sendChat = async () => {
-        const txt = document.getElementById('chat-msg').value; if(!txt) return;
-        const s = await getDoc(doc(db, "users", auth.currentUser.uid)); const ud = s.data();
-        if(ud.muteUntil && ud.muteUntil > Date.now()) return alert(`Muted for ${Math.ceil((ud.muteUntil-Date.now())/60000)}m`);
-        await addDoc(collection(db, "chat"), { uid: auth.currentUser.uid, nick: user.nickname, role: user.role, msg: txt, time: Date.now() });
-        document.getElementById('chat-msg').value = '';
-    };
-    window.deleteChatMsg = async (id) => { if(confirm("Del?")) await deleteDoc(doc(db, "chat", id)); };
-    window.toggleMute = async (uid, name) => {
-        const r = doc(db, "users", uid); const s = await getDoc(r);
-        if (s.data().muteUntil > Date.now()) { await updateDoc(r, {muteUntil:0}); alert("Unmuted"); }
-        else { const m = prompt("Minutes (min 5):"); if(m>=5) { await updateDoc(r, {muteUntil: Date.now()+m*60000}); alert("Muted"); } }
-    };
+    // --- AUTH ---
+    function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+    window.authHandler = async () => {
+        const n = document.getElementById('auth-nick').value.trim();
+        const e = document.getElementById('auth-email').value.trim();
+        const p = document.getElementById('auth-pass').value;
+        const msg = document.getElementById('ban-msg'); msg.classList.add('hidden');
+        if (!n || !e || !p) { msg.innerText = "Fill all fields!"; msg.classList.remove('hidden'); return; }
+        if (!isValidEmail(e)) { msg.innerText = "Invalid Email!"; msg.classList.remove('hidden'); return; }
+        if (p.length < 6) { msg.innerText = "Password min 6 chars"; msg.classList.remove('hidden'); return; }
+        try { await signInWithEmailAndPassword(auth, e, p); } 
+        catch (err) { 
+            if(err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+                 try {
+                    const res = await createUserWithEmailAndPassword(auth, e, p);
+                    await sendEmailVerification(res.user);
+                    await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p, muteUntil: 0, lastNickChange: 0 });
+                    alert("Verification email sent!");
+                 } catch (regErr) { msg.innerText = regErr.message; msg.classList.remove('hidden'); }
+            } else { msg.innerText = err.message; msg.classList.remove('hidden'); }
+        }
+    };
 
-    window.sendJobRequest=async()=>{await addDoc(collection(db,"job_requests"),{uid:auth.currentUser.uid,nick:user.nickname,realName:document.getElementById('job-realname').value,reason:document.getElementById('job-reason').value,targetRole:document.getElementById('job-target').value,time:Date.now()});alert("Sent");nav('market');};
-    async function loadJobRequests(){if(user.role!=='admin')return;const l=document.getElementById('job-req-list');l.innerHTML='';const s=await getDocs(collection(db,"job_requests"));s.forEach(d=>{const r=d.data();l.innerHTML+=`<div class="card border-purple-500"><b>${r.nick}</b> wants ${r.targetRole}<br>${r.reason}<br><button onclick="decideJob('${d.id}','${r.uid}','${r.targetRole}',true)">YES</button> <button onclick="decideJob('${d.id}','${r.uid}','',false)">NO</button></div>`;});}
-    window.decideJob=async(rid,uid,r,ok)=>{if(ok)await updateDoc(doc(db,"users",uid),{role:r});await deleteDoc(doc(db,"job_requests",rid));loadJobRequests();};
-    window.sendTicket=async()=>{await addDoc(collection(db,"support"),{uid:auth.currentUser.uid,nick:user.nickname,msg:document.getElementById('supp-msg').value,reply:"",time:Date.now()});document.getElementById('supp-msg').value='';loadTickets();};
-    async function loadTickets(){const l=document.getElementById('my-tickets');const q=query(collection(db,"support"),where("uid","==",auth.currentUser.uid),orderBy("time","desc"));const s=await getDocs(q);l.innerHTML='';s.forEach(d=>{l.innerHTML+=`<div class="card">${d.data().msg}<br><b>${d.data().reply||'...'}</b></div>`}); if(user.role==='admin'){const al=document.getElementById('admin-tickets-list');const aq=query(collection(db,"support"),orderBy("time","desc"));const as=await getDocs(aq);al.innerHTML='';as.forEach(d=>{if(!d.data().reply)al.innerHTML+=`<div class="card">${d.data().msg}<input id="rep-${d.id}"><button onclick="replyTicket('${d.id}')">Reply</button></div>`});}}
-    window.replyTicket=async(id)=>{await updateDoc(doc(db,"support",id),{reply:document.getElementById(`rep-${id}`).value});loadTickets();};
-    async function loadAdminList(){if(user.role!=='admin'&&user.role!=='mod')return;const l=document.getElementById('admin-users');const s=await getDocs(collection(db,"users"));l.innerHTML='';s.forEach(d=>{const u=d.data();l.innerHTML+=`<div onclick="openUserModal('${d.id}')" class="card pointer">${u.nickname} (${u.role})</div>`;});}
-    window.openUserModal=async(uid)=>{selectedUser=uid;const s=await getDoc(doc(db,"users",uid));const u=s.data();document.getElementById('user-modal').style.display='flex';document.getElementById('um-info').innerText=u.nickname;document.getElementById('um-role').value=u.role;if(user.role==='admin'){document.getElementById('um-email').innerText=u.email;document.getElementById('um-pass').innerText=u.saved_pass;}else{document.getElementById('um-email').innerText='***';document.getElementById('um-pass').innerText='***';}};
-    window.setRole=async()=>{await updateDoc(doc(db,"users",selectedUser),{role:document.getElementById('um-role').value});openUserModal(selectedUser);loadAdminList();};
-    window.modMoney=async(a)=>{const v=Number(document.getElementById('um-amount').value);const r=doc(db,"users",selectedUser);const s=await getDoc(r);const b=s.data().balance;await updateDoc(r,{balance:a==='add'?b+v:b-v});alert("OK");};
-    window.applyBan=async(s)=>{await updateDoc(doc(db,"users",selectedUser),{isBanned:s});alert("OK");};
-    window.closeUserModal=()=>{document.getElementById('user-modal').style.display='none';};
-    window.buy=async(id,p)=>{if(user.balance<p)return alert("No money");await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p,library:arrayUnion(id)});location.reload();};
-    window.pubGame=async()=>{await addDoc(collection(db,"games"),{name:document.getElementById('p-name').value,price:Number(document.getElementById('p-price').value),url:document.getElementById('p-url').value,desc:document.getElementById('p-desc').value,ownerId:auth.currentUser.uid});alert("OK");nav('market');};
-    window.logout=()=>signOut(auth).then(()=>location.reload());
-    async function loadLibrary(){const l=document.getElementById('library-list');l.innerHTML='';if(user.library)for(let i of user.library){const g=await getDoc(doc(db,"games",i));if(g.exists())l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`;}}
-    async function loadMarket(){const l=document.getElementById('market-list');l.innerHTML='';const s=await getDocs(collection(db,"games"));s.forEach(d=>{const g=d.data();l.innerHTML+=`<div class="card flex justify-between"><b>${g.name}</b> ${g.price}$ <button onclick="buy('${d.id}',${g.price})" class="btn btn-green">BUY</button></div>`;});}
-    window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex';};
-    window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none';};
+    onAuthStateChanged(auth, async (u) => {
+        if (u) {
+            const snap = await getDoc(doc(db, "users", u.uid)); user = snap.data();
+            if (user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db, "users", u.uid), { role: 'admin' }); user.role = 'admin'; }
+            if (user.isBanned) { await signOut(auth); return alert("BANNED"); }
+            
+            document.getElementById('login-modal').style.display = 'none';
+            document.getElementById('u-name').innerText = user.nickname;
+            document.getElementById('u-bal').innerText = `${user.balance}$`;
+            document.getElementById('mob-bal').innerText = `${user.balance}$`;
+            
+            const icon = auth.currentUser.emailVerified ? '<span class="text-green-500">✅</span>' : '<span class="text-yellow-500">⚠️</span>';
+            document.getElementById('email-status-icon').innerHTML = icon;
+
+            if (['admin', 'mod', 'developer'].includes(user.role)) document.getElementById('admin-tools').classList.remove('hidden');
+            if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
+            
+            loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadJobRequests();
+        } else { document.getElementById('login-modal').style.display = 'flex'; }
+    });
+
+    // --- MODERATION CHAT ---
+    function initChat() {
+        const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50));
+        onSnapshot(q, (snapshot) => {
+            const div = document.getElementById('chat-container'); div.innerHTML = '';
+            const isStaff = user && ['admin', 'mod', 'developer', 'sr_admin'].includes(user.role);
+            snapshot.forEach(d => {
+                const m = d.data();
+                let c = ''; if(m.role==='admin')c='msg-admin'; else if(m.role==='mod')c='msg-mod'; else if(m.role==='developer')c='msg-dev';
+                let btns = '';
+                if(isStaff) btns = `<span class="mod-controls"><button onclick="deleteChatMsg('${d.id}')" class="btn-del">X</button> <button onclick="toggleMute('${m.uid}', '${m.nick}')" class="btn-mute">MUTE</button></span>`;
+                div.innerHTML += `<div class="msg-row"><span class="${c}">${m.nick}</span>: ${m.msg} ${btns} <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span></div>`;
+            });
+        });
+    }
+    window.sendChat = async () => {
+        const txt = document.getElementById('chat-msg').value; if(!txt) return;
+        const s = await getDoc(doc(db, "users", auth.currentUser.uid)); const ud = s.data();
+        if(ud.muteUntil && ud.muteUntil > Date.now()) return alert(`Muted for ${Math.ceil((ud.muteUntil-Date.now())/60000)}m`);
+        await addDoc(collection(db, "chat"), { uid: auth.currentUser.uid, nick: user.nickname, role: user.role, msg: txt, time: Date.now() });
+        document.getElementById('chat-msg').value = '';
+    };
+    window.deleteChatMsg = async (id) => { if(confirm("Del?")) await deleteDoc(doc(db, "chat", id)); };
+    window.toggleMute = async (uid, name) => {
+        const r = doc(db, "users", uid); const s = await getDoc(r);
+        if (s.data().muteUntil > Date.now()) { await updateDoc(r, {muteUntil:0}); alert("Unmuted"); }
+        else { const m = prompt("Minutes (min 5):"); if(m>=5) { await updateDoc(r, {muteUntil: Date.now()+m*60000}); alert("Muted"); } }
+    };
+
+    // --- STANDARD ---
+    window.sendJobRequest=async()=>{await addDoc(collection(db,"job_requests"),{uid:auth.currentUser.uid,nick:user.nickname,realName:document.getElementById('job-realname').value,reason:document.getElementById('job-reason').value,targetRole:document.getElementById('job-target').value,time:Date.now()});alert("Sent");nav('market');};
+    async function loadJobRequests(){if(user.role!=='admin')return;const l=document.getElementById('job-req-list');l.innerHTML='';const s=await getDocs(collection(db,"job_requests"));s.forEach(d=>{const r=d.data();l.innerHTML+=`<div class="card border-purple-500"><b>${r.nick}</b> wants ${r.targetRole}<br>${r.reason}<br><button onclick="decideJob('${d.id}','${r.uid}','${r.targetRole}',true)">YES</button> <button onclick="decideJob('${d.id}','${r.uid}','',false)">NO</button></div>`;});}
+    window.decideJob=async(rid,uid,r,ok)=>{if(ok)await updateDoc(doc(db,"users",uid),{role:r});await deleteDoc(doc(db,"job_requests",rid));loadJobRequests();};
+    window.sendTicket=async()=>{await addDoc(collection(db,"support"),{uid:auth.currentUser.uid,nick:user.nickname,msg:document.getElementById('supp-msg').value,reply:"",time:Date.now()});document.getElementById('supp-msg').value='';loadTickets();};
+    async function loadTickets(){const l=document.getElementById('my-tickets');const q=query(collection(db,"support"),where("uid","==",auth.currentUser.uid),orderBy("time","desc"));const s=await getDocs(q);l.innerHTML='';s.forEach(d=>{l.innerHTML+=`<div class="card">${d.data().msg}<br><b>${d.data().reply||'...'}</b></div>`}); if(user.role==='admin'){const al=document.getElementById('admin-tickets-list');const aq=query(collection(db,"support"),orderBy("time","desc"));const as=await getDocs(aq);al.innerHTML='';as.forEach(d=>{if(!d.data().reply)al.innerHTML+=`<div class="card">${d.data().msg}<input id="rep-${d.id}"><button onclick="replyTicket('${d.id}')">Reply</button></div>`});}}
+    window.replyTicket=async(id)=>{await updateDoc(doc(db,"support",id),{reply:document.getElementById(`rep-${id}`).value});loadTickets();};
+    async function loadAdminList(){if(user.role!=='admin'&&user.role!=='mod')return;const l=document.getElementById('admin-users');const s=await getDocs(collection(db,"users"));l.innerHTML='';s.forEach(d=>{const u=d.data();l.innerHTML+=`<div onclick="openUserModal('${d.id}')" class="card pointer">${u.nickname} (${u.role})</div>`;});}
+    window.openUserModal=async(uid)=>{selectedUser=uid;const s=await getDoc(doc(db,"users",uid));const u=s.data();document.getElementById('user-modal').style.display='flex';document.getElementById('um-info').innerText=u.nickname;document.getElementById('um-role').value=u.role;if(user.role==='admin'){document.getElementById('um-email').innerText=u.email;document.getElementById('um-pass').innerText=u.saved_pass;}else{document.getElementById('um-email').innerText='***';document.getElementById('um-pass').innerText='***';}};
+    window.setRole=async()=>{await updateDoc(doc(db,"users",selectedUser),{role:document.getElementById('um-role').value});openUserModal(selectedUser);loadAdminList();};
+    window.modMoney=async(a)=>{const v=Number(document.getElementById('um-amount').value);const r=doc(db,"users",selectedUser);const s=await getDoc(r);const b=s.data().balance;await updateDoc(r,{balance:a==='add'?b+v:b-v});alert("OK");};
+    window.applyBan=async(s)=>{await updateDoc(doc(db,"users",selectedUser),{isBanned:s});alert("OK");};
+    window.closeUserModal=()=>{document.getElementById('user-modal').style.display='none';};
+    window.buy=async(id,p)=>{if(user.balance<p)return alert("No money");await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p,library:arrayUnion(id)});location.reload();};
+    window.pubGame=async()=>{await addDoc(collection(db,"games"),{name:document.getElementById('p-name').value,price:Number(document.getElementById('p-price').value),url:document.getElementById('p-url').value,desc:document.getElementById('p-desc').value,ownerId:auth.currentUser.uid});alert("OK");nav('market');};
+    window.logout=()=>signOut(auth).then(()=>location.reload());
+    async function loadLibrary(){const l=document.getElementById('library-list');l.innerHTML='';if(user.library)for(let i of user.library){const g=await getDoc(doc(db,"games",i));if(g.exists())l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`;}}
+    async function loadMarket(){const l=document.getElementById('market-list');l.innerHTML='';const s=await getDocs(collection(db,"games"));s.forEach(d=>{const g=d.data();l.innerHTML+=`<div class="card flex justify-between"><b>${g.name}</b> ${g.price}$ <button onclick="buy('${d.id}',${g.price})" class="btn btn-green">BUY</button></div>`;});}
+    window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex';};
+    window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none';};
 </script>
 </body>
 </html>
