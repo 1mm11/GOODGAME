@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME |GOOD BOY</title>
+    <title>GOODGAME | v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -54,8 +54,6 @@
         .btn-mute { color: #d2a8ff; cursor: pointer; font-weight: bold; font-size: 10px; border: 1px solid #d2a8ff; padding: 0 4px; border-radius: 4px; }
 
         .theme-btn { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border); cursor: pointer; display: inline-block; margin-right: 10px; }
-        
-        /* FRIEND CODE STYLE */
         .friend-code-box { font-family: monospace; font-size: 24px; letter-spacing: 2px; color: var(--accent); background: #000; padding: 10px; border-radius: 8px; text-align: center; margin-bottom: 10px; user-select: all; }
     </style>
 </head>
@@ -111,27 +109,21 @@
 
     <section id="friends" class="hidden">
         <h2 class="text-3xl font-black mb-8 italic text-blue-400" data-i18n="friends">FRIENDS</h2>
-        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="card">
                 <h3 class="font-bold text-xl mb-4 text-center">Your Friend Code</h3>
-                <div id="my-friend-code" class="friend-code-box">...</div>
-                <p class="text-xs text-center opacity-50 mb-4">Share this code with others to add them.</p>
-                
+                <div id="my-friend-code" class="friend-code-box">Loading...</div>
+                <p class="text-xs text-center opacity-50 mb-4">Share this code with others.</p>
                 <hr class="border-gray-700 my-4">
-                
                 <h3 class="font-bold mb-2">Add a Friend</h3>
                 <div class="flex gap-2">
                     <input id="friend-input" placeholder="Enter Friend Code" class="m-0">
                     <button onclick="addFriend()" class="btn btn-green w-32 m-0">ADD</button>
                 </div>
             </div>
-
             <div class="card">
                 <h3 class="font-bold text-xl mb-4">Your Friends</h3>
-                <div id="friends-list" class="space-y-2">
-                    <div class="text-center opacity-50 mt-4">No friends yet...</div>
-                </div>
+                <div id="friends-list" class="space-y-2"><div class="text-center opacity-50 mt-4">No friends yet...</div></div>
             </div>
         </div>
     </section>
@@ -180,21 +172,17 @@
         <div class="space-y-6">
             <div class="card border-l-4 border-blue-500">
                 <h3 class="text-xl font-bold text-blue-400 mb-2">1. General</h3>
-                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70">
-                    <li>Toxic behavior is forbidden.</li>
-                    <li>No scamming.</li>
-                </ul>
+                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70"><li>Toxic behavior is forbidden.</li><li>No scamming.</li></ul>
             </div>
             <div class="card border-l-4 border-yellow-500">
                 <h3 class="text-xl font-bold text-yellow-500 mb-2">2. Chat</h3>
-                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70">
-                    <li>No links or ads (Mute 10-60 min).</li>
-                    <li>No swearing/bad words (Mute 10 min).</li>
-                </ul>
+                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70"><li>No links or ads (Mute 10-60 min).</li><li>No swearing/bad words (Mute 10 min).</li></ul>
             </div>
-            <div class="p-4 bg-red-900/20 border border-red-500 rounded-xl text-center mt-6">
-                <p class="text-red-400 font-bold text-sm">⚠️ Repeated violations = PERMANENT BAN (IP).</p>
+            <div class="card border-l-4 border-purple-500">
+                <h3 class="text-xl font-bold text-purple-400 mb-2">3. Admin Abuse</h3>
+                <ul class="list-disc pl-5 space-y-2 text-sm opacity-70"><li>Punishing without reason = BAN.</li></ul>
             </div>
+            <div class="p-4 bg-red-900/20 border border-red-500 rounded-xl text-center mt-6"><p class="text-red-400 font-bold text-sm">⚠️ Repeated violations = PERMANENT BAN (IP).</p></div>
         </div>
     </section>
 
@@ -223,6 +211,14 @@
     const db = getFirestore(app);
     let user = null; let selectedUser = null; 
 
+    // --- GLOBAL FUNCTIONS ATTACHMENT ---
+    window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('active'); };
+    window.nav = (id) => { 
+        document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); 
+        document.getElementById(id).classList.remove('hidden'); 
+        document.getElementById('sidebar').classList.remove('active');
+    };
+
     const i18n = {
         en: { market: "Market", library: "Library", chat: "Chat", support: "Support", jobs: "Jobs", rules: "Rules", settings: "Settings", logout: "Logout", friends: "Friends" },
         ru: { market: "Магазин", library: "Библиотека", chat: "Чат", support: "Поддержка", jobs: "Вакансии", rules: "Правила", settings: "Настройки", logout: "Выйти", friends: "Друзья" },
@@ -231,86 +227,45 @@
         de: { market: "Markt", library: "Bibliothek", chat: "Chat", support: "Support", jobs: "Jobs", rules: "Regeln", settings: "Einstellungen", logout: "Ausloggen", friends: "Freunde" }
     };
 
-    window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('active'); };
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); document.getElementById('sidebar').classList.remove('active'); };
+    window.setLang = (lang) => { const t = i18n[lang]; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(t[key]) el.innerText = t[key]; }); localStorage.setItem('gg_lang', lang); };
+    window.setTheme = (theme) => { document.body.className = ''; if(theme !== 'default') document.body.classList.add(`theme-${theme}`); localStorage.setItem('gg_theme', theme); };
 
-    // --- FRIENDS LOGIC ---
     function generateFriendCode() { return Math.floor(100000000 + Math.random() * 900000000).toString(); }
 
     window.addFriend = async () => {
         const code = document.getElementById('friend-input').value.trim();
         if(!code) return alert("Enter code!");
-        if(code === user.friendCode) return alert("You can't add yourself!");
+        if(code === user.friendCode) return alert("Cannot add self!");
+        try {
+            const q = query(collection(db, "users"), where("friendCode", "==", code));
+            const snap = await getDocs(q);
+            if(snap.empty) return alert("Friend not found!");
+            const friendId = snap.docs[0].id;
+            
+            // Check if user.friends exists (for old accounts)
+            if(user.friends && user.friends.includes(friendId)) return alert("Already friends!");
 
-        const q = query(collection(db, "users"), where("friendCode", "==", code));
-        const snap = await getDocs(q);
-
-        if(snap.empty) return alert("Friend not found!");
-        const friendDoc = snap.docs[0];
-        const friendId = friendDoc.id;
-
-        if(user.friends && user.friends.includes(friendId)) return alert("Already friends!");
-
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayUnion(friendId) });
-        await updateDoc(doc(db, "users", friendId), { friends: arrayUnion(auth.currentUser.uid) });
-        
-        alert("Friend Added!");
-        loadFriends();
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayUnion(friendId) });
+            await updateDoc(doc(db, "users", friendId), { friends: arrayUnion(auth.currentUser.uid) });
+            alert("Friend Added!"); loadFriends();
+        } catch(e) { console.error(e); alert("Error adding friend"); }
     };
 
     async function loadFriends() {
-        const list = document.getElementById('friends-list');
-        list.innerHTML = '';
-        const mySnap = await getDoc(doc(db, "users", auth.currentUser.uid));
-        const myFriends = mySnap.data().friends || [];
-
-        if(myFriends.length === 0) {
-            list.innerHTML = '<div class="text-center opacity-50 mt-4">No friends yet...</div>';
-            return;
-        }
-
-        for (const fId of myFriends) {
+        const list = document.getElementById('friends-list'); list.innerHTML = '';
+        if(!user.friends || user.friends.length === 0) { list.innerHTML = '<div class="text-center opacity-50 mt-4">No friends yet...</div>'; return; }
+        for (const fId of user.friends) {
             const fSnap = await getDoc(doc(db, "users", fId));
             if(fSnap.exists()) {
                 const f = fSnap.data();
-                // Simple status simulation
                 const status = Math.random() > 0.5 ? '<span class="text-green-500">Online</span>' : '<span class="text-gray-500">Offline</span>';
-                
-                list.innerHTML += `
-                    <div class="bg-gray-800 p-3 rounded-lg flex justify-between items-center">
-                        <div>
-                            <div class="font-bold text-lg">${f.nickname}</div>
-                            <div class="text-xs">${status}</div>
-                        </div>
-                        <button onclick="removeFriend('${fId}')" class="btn bg-red-900/50 text-red-400 text-xs w-auto px-3 border border-red-900">Remove</button>
-                    </div>
-                `;
+                list.innerHTML += `<div class="bg-gray-800 p-3 rounded-lg flex justify-between items-center"><div><div class="font-bold text-lg">${f.nickname}</div><div class="text-xs">${status}</div></div><button onclick="removeFriend('${fId}')" class="btn bg-red-900/50 text-red-400 text-xs w-auto px-3 border border-red-900">Remove</button></div>`;
             }
         }
     }
+    window.removeFriend = async (fId) => { if(!confirm("Remove?")) return; await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayRemove(fId) }); await updateDoc(doc(db, "users", fId), { friends: arrayRemove(auth.currentUser.uid) }); loadFriends(); };
 
-    window.removeFriend = async (fId) => {
-        if(!confirm("Remove friend?")) return;
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayRemove(fId) });
-        await updateDoc(doc(db, "users", fId), { friends: arrayRemove(auth.currentUser.uid) });
-        loadFriends();
-    };
-
-    // --- SETTINGS ---
-    window.setLang = (lang) => { const t = i18n[lang]; document.querySelectorAll('[data-i18n]').forEach(el => { const key = el.getAttribute('data-i18n'); if(t[key]) el.innerText = t[key]; }); localStorage.setItem('gg_lang', lang); };
-    window.setTheme = (theme) => { document.body.className = ''; if(theme !== 'default') document.body.classList.add(`theme-${theme}`); localStorage.setItem('gg_theme', theme); };
-    window.changeNickname = async () => {
-        const newNick = document.getElementById('new-nick').value.trim();
-        if(!newNick) return alert("Empty!");
-        const now = Date.now(); const last = user.lastNickChange || 0;
-        if ((now - last) < 259200000) return alert(`Wait ${Math.ceil((259200000 - (now-last)) / 3600000)} hours.`);
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { nickname: newNick, lastNickChange: now }); alert("Changed!"); location.reload();
-    };
-
-    const savedLang = localStorage.getItem('gg_lang') || 'en';
-    const savedTheme = localStorage.getItem('gg_theme') || 'default';
-    window.setLang(savedLang); window.setTheme(savedTheme);
-
+    // --- AUTH & INIT ---
     function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
@@ -318,15 +273,12 @@
         const p = document.getElementById('auth-pass').value;
         const msg = document.getElementById('ban-msg'); msg.classList.add('hidden');
         if (!n || !e || !p) { msg.innerText = "Fill all fields!"; msg.classList.remove('hidden'); return; }
-        if (!isValidEmail(e)) { msg.innerText = "Invalid Email!"; msg.classList.remove('hidden'); return; }
-        if (p.length < 6) { msg.innerText = "Password min 6 chars"; msg.classList.remove('hidden'); return; }
         try { await signInWithEmailAndPassword(auth, e, p); } 
         catch (err) { 
             if(err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
                  try {
                     const res = await createUserWithEmailAndPassword(auth, e, p);
                     await sendEmailVerification(res.user);
-                    // GENERATE FRIEND CODE ON REGISTER
                     await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p, muteUntil: 0, lastNickChange: 0, friendCode: generateFriendCode(), friends: [] });
                     alert("Verification email sent!");
                  } catch (regErr) { msg.innerText = regErr.message; msg.classList.remove('hidden'); }
@@ -336,33 +288,55 @@
 
     onAuthStateChanged(auth, async (u) => {
         if (u) {
-            const snap = await getDoc(doc(db, "users", u.uid)); user = snap.data();
-            
-            // Check if existing user has friend code, if not, create one
-            if (!user.friendCode) {
-                const newCode = generateFriendCode();
-                await updateDoc(doc(db, "users", u.uid), { friendCode: newCode, friends: [] });
-                user.friendCode = newCode;
-            }
+            try {
+                const snap = await getDoc(doc(db, "users", u.uid));
+                if (!snap.exists()) { console.log("No user doc"); return; }
+                user = snap.data();
 
-            if (user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db, "users", u.uid), { role: 'admin' }); user.role = 'admin'; }
-            if (user.isBanned) { await signOut(auth); return alert("BANNED"); }
-            
-            document.getElementById('login-modal').style.display = 'none';
-            document.getElementById('u-name').innerText = user.nickname;
-            document.getElementById('u-bal').innerText = `${user.balance}$`;
-            document.getElementById('mob-bal').innerText = `${user.balance}$`;
-            document.getElementById('my-friend-code').innerText = user.friendCode || 'Error';
-            
-            const icon = auth.currentUser.emailVerified ? '<span class="text-green-500">✅</span>' : '<span class="text-yellow-500">⚠️</span>';
-            document.getElementById('email-status-icon').innerHTML = icon;
+                // FIX FOR OLD ACCOUNTS (Add missing fields)
+                if (!user.friendCode || !user.friends) {
+                    const updates = {};
+                    if (!user.friendCode) updates.friendCode = generateFriendCode();
+                    if (!user.friends) updates.friends = [];
+                    await updateDoc(doc(db, "users", u.uid), updates);
+                    // Reload data
+                    const newSnap = await getDoc(doc(db, "users", u.uid));
+                    user = newSnap.data();
+                }
 
-            if (['admin', 'mod', 'developer'].includes(user.role)) document.getElementById('admin-tools').classList.remove('hidden');
-            if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
-            
-            loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadJobRequests(); loadFriends();
+                if (user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db, "users", u.uid), { role: 'admin' }); user.role = 'admin'; }
+                if (user.isBanned) { await signOut(auth); return alert("BANNED"); }
+
+                document.getElementById('login-modal').style.display = 'none';
+                document.getElementById('u-name').innerText = user.nickname || 'User';
+                document.getElementById('u-bal').innerText = `${user.balance || 0}$`;
+                document.getElementById('mob-bal').innerText = `${user.balance || 0}$`;
+                document.getElementById('my-friend-code').innerText = user.friendCode || '...';
+                
+                const icon = auth.currentUser.emailVerified ? '<span class="text-green-500">✅</span>' : '<span class="text-yellow-500">⚠️</span>';
+                document.getElementById('email-status-icon').innerHTML = icon;
+
+                if (['admin', 'mod', 'developer'].includes(user.role)) document.getElementById('admin-tools').classList.remove('hidden');
+                if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
+
+                // Load Settings
+                const savedLang = localStorage.getItem('gg_lang') || 'en';
+                const savedTheme = localStorage.getItem('gg_theme') || 'default';
+                window.setLang(savedLang); window.setTheme(savedTheme);
+
+                loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadJobRequests(); loadFriends();
+            } catch (err) { console.error("Login Error:", err); alert("System update error. Please refresh."); }
         } else { document.getElementById('login-modal').style.display = 'flex'; }
     });
+
+    // --- OTHER FUNCS ---
+    window.changeNickname = async () => {
+        const newNick = document.getElementById('new-nick').value.trim();
+        if(!newNick) return alert("Empty!");
+        const now = Date.now(); const last = user.lastNickChange || 0;
+        if ((now - last) < 259200000) return alert(`Wait ${Math.ceil((259200000 - (now-last)) / 3600000)} hours.`);
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { nickname: newNick, lastNickChange: now }); alert("Changed!"); location.reload();
+    };
 
     function initChat() {
         const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50));
@@ -391,7 +365,6 @@
         if (s.data().muteUntil > Date.now()) { await updateDoc(r, {muteUntil:0}); alert("Unmuted"); }
         else { const m = prompt("Minutes (min 5):"); if(m>=5) { await updateDoc(r, {muteUntil: Date.now()+m*60000}); alert("Muted"); } }
     };
-
     window.sendJobRequest=async()=>{await addDoc(collection(db,"job_requests"),{uid:auth.currentUser.uid,nick:user.nickname,realName:document.getElementById('job-realname').value,reason:document.getElementById('job-reason').value,targetRole:document.getElementById('job-target').value,time:Date.now()});alert("Sent");nav('market');};
     async function loadJobRequests(){if(user.role!=='admin')return;const l=document.getElementById('job-req-list');l.innerHTML='';const s=await getDocs(collection(db,"job_requests"));s.forEach(d=>{const r=d.data();l.innerHTML+=`<div class="card border-purple-500"><b>${r.nick}</b> wants ${r.targetRole}<br>${r.reason}<br><button onclick="decideJob('${d.id}','${r.uid}','${r.targetRole}',true)">YES</button> <button onclick="decideJob('${d.id}','${r.uid}','',false)">NO</button></div>`;});}
     window.decideJob=async(rid,uid,r,ok)=>{if(ok)await updateDoc(doc(db,"users",uid),{role:r});await deleteDoc(doc(db,"job_requests",rid));loadJobRequests();};
