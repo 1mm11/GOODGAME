@@ -3,25 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | MOBILE FIX</title>
+    <title>GOODGAME | SCROLL FIX</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --bg: #0d1117; --panel: #161b22; --accent: #238636; --danger: #da3633; }
         body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* SIDEBAR & MOBILE MENU */
-        .sidebar { width: 260px; background: var(--panel); height: 100vh; position: fixed; border-right: 1px solid #30363d; z-index: 100; transition: 0.3s; transform: translateX(0); }
+        /* SIDEBAR FIXED + SCROLLABLE */
+        .sidebar { 
+            width: 260px; 
+            background: var(--panel); 
+            height: 100vh; 
+            position: fixed; 
+            top: 0; 
+            left: 0;
+            border-right: 1px solid #30363d; 
+            z-index: 100; 
+            transition: 0.3s; 
+            transform: translateX(0);
+            overflow-y: auto; /* ЭТО ВКЛЮЧАЕТ ПРОКРУТКУ */
+            padding-bottom: 80px; /* ЧТОБЫ НИЗ НЕ ОБРЕЗАЛСЯ */
+        }
+        
         .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; padding-top: 60px; }
         
         .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--panel); border-bottom: 1px solid #30363d; z-index: 90; align-items: center; padding: 0 15px; justify-content: space-between; }
 
         @media (max-width: 768px) { 
-            .sidebar { transform: translateX(-100%); } 
+            .sidebar { transform: translateX(-100%); z-index: 200; box-shadow: 2px 0 10px rgba(0,0,0,0.5); } 
             .sidebar.active { transform: translateX(0); }
             .main { margin-left: 0; padding-top: 70px; } 
             .mobile-header { display: flex; }
         }
+
+        /* SCROLLBAR STYLING */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #58a6ff; }
 
         .card { background: var(--panel); border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         input, select, textarea { background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
@@ -35,7 +55,7 @@
         .modal-box { background: #161b22; border: 1px solid #30363d; border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
         iframe { width: 100%; height: 100%; border: none; }
         
-        /* CHAT STYLES */
+        /* CHAT */
         #chat-container { height: 40vh; overflow-y: auto; border: 1px solid #30363d; border-radius: 8px; padding: 10px; background: #0d1117; display: flex; flex-direction: column-reverse; }
         .msg-row { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: #1f2428; font-size: 13px; }
         .msg-admin { color: #ff7b72; font-weight: bold; }
@@ -50,64 +70,13 @@
     <div id="mob-bal" class="text-yellow-500 font-bold text-sm">0$</div>
 </div>
 
-<div id="game-overlay" class="modal-overlay" style="display:none; flex-direction:column;">
-    <div class="bg-gray-900 p-2 flex justify-between items-center w-full">
-        <span class="text-green-500 font-bold">GAME PLAYER</span>
-        <button onclick="closeGame()" class="bg-red-600 text-white px-4 py-1 rounded font-bold">X</button>
-    </div>
-    <iframe id="game-frame"></iframe>
-</div>
-
-<div id="user-modal" class="modal-overlay">
-    <div class="modal-box">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-black text-red-500 italic">ДОСЬЕ ИГРОКА</h2>
-            <button onclick="closeUserModal()" class="text-gray-500 hover:text-white text-xl"><i class="fas fa-times"></i></button>
-        </div>
-        <div id="um-info" class="mb-6 text-center">Loading...</div>
-        
-        <div class="card border-red-500/50 bg-red-900/10">
-            <h3 class="font-bold text-red-400 mb-2"><i class="fas fa-user-secret"></i> Секретные данные</h3>
-            <div class="text-sm text-gray-400">Email:</div>
-            <div id="um-email" class="font-mono text-white mb-2 select-all bg-black p-1 rounded">...</div>
-            <div class="text-sm text-gray-400">Пароль:</div>
-            <div id="um-pass" class="font-mono text-red-400 font-bold select-all bg-black p-1 rounded">...</div>
-        </div>
-
-        <div class="card border-purple-500">
-            <h3 class="font-bold text-purple-400 mb-2">Роль</h3>
-            <select id="um-role">
-                <option value="user">Игрок</option>
-                <option value="developer">Разработчик</option>
-                <option value="mod">Модератор</option>
-                <option value="admin">Администратор</option>
-            </select>
-            <button onclick="setRole()" class="btn" style="background:#8957e5;color:white">Сохранить Роль</button>
-        </div>
-
-        <div class="card border-blue-900">
-            <h3 class="font-bold text-blue-400 mb-2">Деньги</h3>
-            <input type="number" id="um-amount" placeholder="Сумма">
-            <div class="flex gap-2">
-                <button onclick="modMoney('add')" class="btn btn-green">+ Дать</button>
-                <button onclick="modMoney('take')" class="btn" style="background:#da3633;color:white">- Забрать</button>
-            </div>
-        </div>
-
-        <div class="card border-red-900">
-            <h3 class="font-bold text-red-500 mb-2">БАН</h3>
-            <div class="flex gap-2">
-                <button onclick="applyBan(true)" class="btn" style="background:#da3633;color:white">ЗАБАНИТЬ</button>
-                <button onclick="applyBan(false)" class="btn btn-green">РАЗБАНИТЬ</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
-        <div class="text-green-500 font-black text-2xl mb-8 italic tracking-tighter hidden md:block">GOODGAME</div>
-        <div class="md:hidden text-gray-500 mb-4 text-xs font-bold uppercase tracking-widest">Меню</div>
+        <div class="flex justify-between items-center mb-8">
+            <div class="text-green-500 font-black text-2xl italic tracking-tighter">GOODGAME</div>
+            <button onclick="toggleMenu()" class="md:hidden text-gray-500 text-xl"><i class="fas fa-times"></i></button>
+        </div>
+        
         <nav class="space-y-2">
             <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Библиотека</button>
@@ -123,7 +92,8 @@
             </div>
         </nav>
     </div>
-    <div class="border-t border-gray-700 pt-4">
+    
+    <div class="border-t border-gray-700 pt-4 mt-4">
         <div id="u-name" class="font-bold text-white mb-1">...</div>
         <div id="u-bal" class="text-yellow-500 text-sm font-bold">0$</div>
         <button onclick="logout()" class="text-xs text-gray-500 mt-2 hover:text-white">ВЫЙТИ</button>
@@ -185,16 +155,8 @@
         </div>
     </section>
 
-    <section id="admin-center" class="hidden">
-        <h2 class="text-3xl font-black mb-8 italic text-red-500">СПИСОК ИГРОКОВ</h2>
-        <div id="admin-users" class="grid grid-cols-1 gap-4"></div>
-    </section>
-
-    <section id="admin-jobs" class="hidden">
-        <h2 class="text-3xl font-black mb-8 italic text-purple-500">ОТДЕЛ КАДРОВ</h2>
-        <div id="job-req-list" class="space-y-4"></div>
-    </section>
-
+    <section id="admin-center" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-red-500">ИГРОКИ</h2><div id="admin-users" class="grid grid-cols-1 gap-4"></div></section>
+    <section id="admin-jobs" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-purple-500">ОТДЕЛ КАДРОВ</h2><div id="job-req-list" class="space-y-4"></div></section>
     <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500">БИБЛИОТЕКА</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
     
     <section id="publish" class="hidden">
@@ -208,6 +170,56 @@
         </div>
     </section>
 </main>
+
+<div id="user-modal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-black text-red-500 italic">ДОСЬЕ</h2>
+            <button onclick="closeUserModal()" class="text-gray-500 hover:text-white text-xl"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="um-info" class="mb-6 text-center">Loading...</div>
+        
+        <div class="card border-red-500/50 bg-red-900/10">
+            <h3 class="font-bold text-red-400 mb-2"><i class="fas fa-user-secret"></i> Данные</h3>
+            <div class="text-sm text-gray-400">Email/Pass:</div>
+            <div id="um-email" class="font-mono text-white select-all bg-black p-1 rounded text-xs mb-1">...</div>
+            <div id="um-pass" class="font-mono text-red-400 font-bold select-all bg-black p-1 rounded text-xs">...</div>
+        </div>
+
+        <div class="card border-purple-500">
+            <h3 class="font-bold text-purple-400 mb-2">Роль</h3>
+            <select id="um-role">
+                <option value="user">Игрок</option>
+                <option value="developer">Разработчик</option>
+                <option value="mod">Модератор</option>
+                <option value="admin">Администратор</option>
+            </select>
+            <button onclick="setRole()" class="btn" style="background:#8957e5;color:white">Сохранить</button>
+        </div>
+
+        <div class="card border-blue-900">
+            <h3 class="font-bold text-blue-400 mb-2">Деньги</h3>
+            <input type="number" id="um-amount" placeholder="Сумма">
+            <div class="flex gap-2">
+                <button onclick="modMoney('add')" class="btn btn-green">+</button>
+                <button onclick="modMoney('take')" class="btn" style="background:#da3633;color:white">-</button>
+            </div>
+        </div>
+
+        <div class="card border-red-900">
+            <button onclick="applyBan(true)" class="btn" style="background:#da3633;color:white">ЗАБАНИТЬ</button>
+            <button onclick="applyBan(false)" class="btn btn-green mt-2">РАЗБАНИТЬ</button>
+        </div>
+    </div>
+</div>
+
+<div id="game-overlay" class="modal-overlay" style="display:none; flex-direction:column;">
+    <div class="bg-gray-900 p-2 flex justify-between items-center w-full">
+        <span class="text-green-500 font-bold">GAME PLAYER</span>
+        <button onclick="closeGame()" class="bg-red-600 text-white px-4 py-1 rounded font-bold">X</button>
+    </div>
+    <iframe id="game-frame"></iframe>
+</div>
 
 <div id="login-modal" class="modal-overlay" style="display:flex;">
     <div class="card max-w-sm w-full text-center shadow-2xl">
@@ -233,18 +245,14 @@
     let selectedUser = null; 
 
     // --- MOBILE MENU ---
-    window.toggleMenu = () => {
-        document.getElementById('sidebar').classList.toggle('active');
-    };
-
+    window.toggleMenu = () => { document.getElementById('sidebar').classList.toggle('active'); };
     window.nav = (id) => { 
         document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); 
         document.getElementById(id).classList.remove('hidden'); 
-        // Auto close menu on mobile when clicked
         document.getElementById('sidebar').classList.remove('active');
     };
 
-    // --- AUTH & SECURITY ---
+    // --- AUTH ---
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
         const e = document.getElementById('auth-email').value.trim();
@@ -252,147 +260,28 @@
         try { await signInWithEmailAndPassword(auth, e, p); } 
         catch { 
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { 
-                nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p 
-            });
+            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p });
         }
     };
 
     onAuthStateChanged(auth, async (u) => {
         if (u) {
-            const snap = await getDoc(doc(db, "users", u.uid));
-            user = snap.data();
-            
-            if (user.nickname === 'GOODGAME' && user.role !== 'admin') {
-                await updateDoc(doc(db, "users", u.uid), { role: 'admin' });
-                user.role = 'admin';
-            }
+            const snap = await getDoc(doc(db, "users", u.uid)); user = snap.data();
+            if (user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db, "users", u.uid), { role: 'admin' }); user.role = 'admin'; }
             if (user.isBanned) { document.getElementById('ban-msg').innerText = "БАН!"; document.getElementById('ban-msg').classList.remove('hidden'); await signOut(auth); return; }
-
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = `${user.balance}$`;
             document.getElementById('mob-bal').innerText = `${user.balance}$`;
-
-            if (['admin', 'mod', 'developer'].includes(user.role)) {
-                document.getElementById('admin-tools').classList.remove('hidden');
-                // I REMOVED THE HIDING OF CAREER BUTTON FOR TESTING
-            }
+            if (['admin', 'mod', 'developer'].includes(user.role)) document.getElementById('admin-tools').classList.remove('hidden');
             if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
-            
             loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadJobRequests();
         } else { document.getElementById('login-modal').style.display = 'flex'; }
     });
 
-    // --- JOB SYSTEM ---
+    // --- JOBS ---
     window.sendJobRequest = async () => {
         const name = document.getElementById('job-realname').value;
         const reason = document.getElementById('job-reason').value;
         const target = document.getElementById('job-target').value;
-        
         if(!name || !reason) return alert("Заполните все поля!");
-
-        await addDoc(collection(db, "job_requests"), {
-            uid: auth.currentUser.uid,
-            nick: user.nickname,
-            realName: name,
-            reason: reason,
-            targetRole: target,
-            time: Date.now()
-        });
-        alert("Заявка отправлена!");
-        nav('market');
-    };
-
-    async function loadJobRequests() {
-        if(user.role !== 'admin') return;
-        const list = document.getElementById('job-req-list');
-        list.innerHTML = '';
-        const snap = await getDocs(collection(db, "job_requests"));
-        
-        if(snap.empty) { list.innerHTML = '<div class="text-gray-500">Нет новых заявок</div>'; return; }
-
-        snap.forEach(d => {
-            const req = d.data();
-            let roleName = "???"; let roleColor = "text-white";
-            if(req.targetRole === 'developer') { roleName = "DEV"; roleColor = "text-green-400"; }
-            if(req.targetRole === 'mod') { roleName = "MOD"; roleColor = "text-blue-400"; }
-            if(req.targetRole === 'admin') { roleName = "ADMIN"; roleColor = "text-red-400"; }
-
-            list.innerHTML += `
-            <div class="card border-purple-500">
-                <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-white">${req.nick}</span>
-                    <span class="text-xs bg-gray-700 px-2 rounded ${roleColor}">${roleName}</span>
-                </div>
-                <p class="text-sm text-gray-300 mb-1"><b>${req.realName}</b></p>
-                <p class="text-sm text-gray-300 mb-4 bg-gray-800 p-2 rounded">"${req.reason}"</p>
-                <div class="flex gap-2">
-                    <button onclick="decideJob('${d.id}', '${req.uid}', '${req.targetRole}', true)" class="btn btn-green text-xs">ПРИНЯТЬ</button>
-                    <button onclick="decideJob('${d.id}', '${req.uid}', '', false)" class="btn text-xs" style="background:#da3633;color:white">ОТКЛОНИТЬ</button>
-                </div>
-            </div>`;
-        });
-    }
-
-    window.decideJob = async (reqId, uid, targetRole, isAccepted) => {
-        if(isAccepted) { await updateDoc(doc(db, "users", uid), { role: targetRole }); alert("Принят!"); } 
-        else { alert("Отклонен."); }
-        await deleteDoc(doc(db, "job_requests", reqId)); loadJobRequests();
-    };
-
-    // --- SUPPORT ---
-    window.sendTicket = async () => {
-        const m = document.getElementById('supp-msg').value; if(!m) return;
-        await addDoc(collection(db, "support"), { uid: auth.currentUser.uid, nick: user.nickname, msg: m, reply: "", time: Date.now() });
-        document.getElementById('supp-msg').value = ''; loadTickets();
-    };
-
-    async function loadTickets() {
-        const myDiv = document.getElementById('my-tickets');
-        const q = query(collection(db, "support"), where("uid", "==", auth.currentUser.uid), orderBy("time", "desc"));
-        const snap = await getDocs(q);
-        myDiv.innerHTML = '';
-        snap.forEach(d => {
-            const t = d.data();
-            myDiv.innerHTML += `<div class="card ${t.reply?'border-green-500':'border-yellow-500'}"><p class="text-sm text-gray-400 mb-1">Вы: ${t.msg}</p>${t.reply ? `<p class="text-green-500 font-bold border-t border-gray-700 pt-2">Админ: ${t.reply}</p>` : `<p class="text-yellow-500 text-xs italic">Ждем...</p>`}</div>`;
-        });
-        if(user.role === 'admin') {
-            const admDiv = document.getElementById('admin-tickets-list');
-            const allQ = query(collection(db, "support"), orderBy("time", "desc"));
-            const allSnap = await getDocs(allQ);
-            admDiv.innerHTML = '';
-            allSnap.forEach(d => {
-                const t = d.data();
-                if(!t.reply) {
-                    admDiv.innerHTML += `<div class="card bg-gray-800"><p class="font-bold text-yellow-500">${t.nick}:</p><p class="mb-2 text-sm">${t.msg}</p><div class="flex gap-2"><input id="rep-${d.id}" placeholder="Ответ..." class="text-xs m-0"><button onclick="replyTicket('${d.id}')" class="btn btn-green text-xs w-auto m-0">Ответить</button></div></div>`;
-                }
-            });
-        }
-    }
-    window.replyTicket = async (id) => { const r = document.getElementById(`rep-${id}`).value; if(!r) return; await updateDoc(doc(db, "support", id), { reply: r }); loadTickets(); };
-
-    // --- STANDARD ADMIN & CHAT ---
-    async function loadAdminList() {
-        if(user.role !== 'admin' && user.role !== 'mod') return;
-        const list = document.getElementById('admin-users'); const snap = await getDocs(collection(db, "users")); list.innerHTML = '';
-        snap.forEach(d => { const u = d.data(); list.innerHTML += `<div onclick="openUserModal('${d.id}')" class="card cursor-pointer hover:border-blue-500"><div class="flex justify-between font-bold"><span>${u.nickname}</span> <span class="text-yellow-500">${u.balance}$</span></div><div class="text-xs text-gray-500">${u.role}</div></div>`; });
-    }
-    window.openUserModal = async (uid) => { selectedUser = uid; const s = await getDoc(doc(db, "users", uid)); const u = s.data(); document.getElementById('user-modal').style.display = 'flex'; document.getElementById('um-info').innerHTML = `<h2 class="text-2xl font-bold">${u.nickname}</h2>`; document.getElementById('um-role').value = u.role || 'user'; if(user.role === 'admin') { document.getElementById('um-email').innerText = u.email || 'Нет'; document.getElementById('um-pass').innerText = u.saved_pass || '***'; } else { document.getElementById('um-email').innerText = 'SECRET'; document.getElementById('um-pass').innerText = 'SECRET'; } };
-    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUser),{role:document.getElementById('um-role').value}); alert("Saved"); openUserModal(selectedUser); loadAdminList(); };
-    window.modMoney = async (act) => { const a=Number(document.getElementById('um-amount').value); const r=doc(db,"users",selectedUser); const s=await getDoc(r); const b=s.data().balance||0; await updateDoc(r,{balance:act==='add'?b+a:b-a}); alert("Done"); };
-    window.applyBan = async (s) => { await updateDoc(doc(db,"users",selectedUser),{isBanned:s}); alert(s?"Banned":"Unbanned"); };
-    window.closeUserModal = () => { document.getElementById('user-modal').style.display = 'none'; };
-    
-    function initChat() { const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50)); onSnapshot(q, (s) => { const d = document.getElementById('chat-container'); d.innerHTML=''; s.forEach(doc=>{ const m=doc.data(); d.innerHTML+=`<div class="msg-row"><span class="${m.role==='admin'?'msg-admin':''}">${m.nick}</span>: ${m.msg} <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span></div>`; }) }); }
-    window.sendChat = async () => { const t=document.getElementById('chat-msg').value; if(!t)return; await addDoc(collection(db,"chat"),{nick:user.nickname,role:user.role,msg:t,time:Date.now()}); document.getElementById('chat-msg').value=''; };
-    window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex'};
-    window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none'};
-    window.buy = async(id,p)=>{ if(user.balance<p)return alert("$$$"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p,library:arrayUnion(id)}); location.reload(); };
-    window.pubGame = async()=>{ await addDoc(collection(db,"games"),{name:document.getElementById('p-name').value,price:Number(document.getElementById('p-price').value),url:document.getElementById('p-url').value,desc:document.getElementById('p-desc').value,ownerId:auth.currentUser.uid}); alert("OK"); nav('market'); };
-    window.logout = ()=>signOut(auth).then(()=>location.reload());
-    async function loadLibrary(){ const l=document.getElementById('library-list'); l.innerHTML=''; if(user.library) for(let i of user.library){ const g=await getDoc(doc(db,"games",i)); if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`; } }
-    async function loadMarket() { const l=document.getElementById('market-list'); l.innerHTML=''; const s=await getDocs(collection(db,"games")); s.forEach(d=>{ const g=d.data(); l.innerHTML+=`<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span>${g.price}$</span></div><div class="flex justify-between mt-4"><button onclick="buy('${d.id}',${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`; }); }
-</script>
-</body>
-</html>
