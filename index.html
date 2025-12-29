@@ -3,31 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | SCROLL FIX</title>
+    <title>GOODGAME | EMAIL CONFIRMATION</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --bg: #0d1117; --panel: #161b22; --accent: #238636; --danger: #da3633; }
         body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         
-        /* SIDEBAR FIXED + SCROLLABLE */
+        /* SIDEBAR */
         .sidebar { 
-            width: 260px; 
-            background: var(--panel); 
-            height: 100vh; 
-            position: fixed; 
-            top: 0; 
-            left: 0;
-            border-right: 1px solid #30363d; 
-            z-index: 100; 
-            transition: 0.3s; 
-            transform: translateX(0);
-            overflow-y: auto; /* ЭТО ВКЛЮЧАЕТ ПРОКРУТКУ */
-            padding-bottom: 80px; /* ЧТОБЫ НИЗ НЕ ОБРЕЗАЛСЯ */
+            width: 260px; background: var(--panel); height: 100vh; position: fixed; top: 0; left: 0;
+            border-right: 1px solid #30363d; z-index: 100; transition: 0.3s; transform: translateX(0);
+            overflow-y: auto; padding-bottom: 80px; 
         }
-        
         .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; padding-top: 60px; }
-        
         .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--panel); border-bottom: 1px solid #30363d; z-index: 90; align-items: center; padding: 0 15px; justify-content: space-between; }
 
         @media (max-width: 768px) { 
@@ -37,15 +26,12 @@
             .mobile-header { display: flex; }
         }
 
-        /* SCROLLBAR STYLING */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #0d1117; }
         ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #58a6ff; }
 
         .card { background: var(--panel); border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         input, select, textarea { background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
-        
         .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-bottom: 5px; }
         .btn-green { background: var(--accent); color: white; }
         .hidden { display: none !important; }
@@ -94,7 +80,10 @@
     </div>
     
     <div class="border-t border-gray-700 pt-4 mt-4">
-        <div id="u-name" class="font-bold text-white mb-1">...</div>
+        <div class="flex items-center gap-2">
+            <div id="u-name" class="font-bold text-white mb-1">...</div>
+            <div id="email-status-icon" class="text-xs"></div>
+        </div>
         <div id="u-bal" class="text-yellow-500 text-sm font-bold">0$</div>
         <button onclick="logout()" class="text-xs text-gray-500 mt-2 hover:text-white">ВЫЙТИ</button>
     </div>
@@ -122,14 +111,12 @@
         <div class="card max-w-lg">
             <p class="mb-4 text-gray-400 text-sm">Заполни анкету, чтобы попасть в команду.</p>
             <input id="job-realname" placeholder="Ваше имя">
-            
             <label class="text-xs text-gray-500 ml-1">Желаемая должность:</label>
             <select id="job-target">
                 <option value="developer">🛠️ Разработчик</option>
                 <option value="mod">🛡️ Модератор</option>
                 <option value="admin">👑 Администратор</option>
             </select>
-            
             <textarea id="job-reason" placeholder="Почему именно вы?" rows="3"></textarea>
             <button onclick="sendJobRequest()" class="btn btn-purple" style="background:#8957e5;color:white">ОТПРАВИТЬ</button>
         </div>
@@ -137,18 +124,15 @@
 
     <section id="support" class="hidden">
         <h2 class="text-3xl font-black mb-6 italic text-yellow-500">ПОДДЕРЖКА</h2>
-        
         <div id="admin-tickets-area" class="hidden mb-10 border border-yellow-700 p-4 rounded-xl bg-yellow-900/10">
             <h3 class="text-yellow-500 font-bold mb-4">Входящие (Админ):</h3>
             <div id="admin-tickets-list" class="space-y-4"></div>
         </div>
-
         <div class="card max-w-lg">
             <h3 class="font-bold mb-2">Задать вопрос</h3>
             <textarea id="supp-msg" placeholder="Опишите проблему..."></textarea>
             <button onclick="sendTicket()" class="btn btn-green mt-2">ОТПРАВИТЬ</button>
         </div>
-        
         <div class="mt-8">
             <h3 class="font-bold text-gray-500 mb-4">Ваша история:</h3>
             <div id="my-tickets" class="space-y-4"></div>
@@ -181,8 +165,12 @@
         
         <div class="card border-red-500/50 bg-red-900/10">
             <h3 class="font-bold text-red-400 mb-2"><i class="fas fa-user-secret"></i> Данные</h3>
-            <div class="text-sm text-gray-400">Email/Pass:</div>
+            <div class="flex items-center gap-2 mb-1">
+                <span class="text-sm text-gray-400">Email:</span>
+                <span id="um-status-icon"></span>
+            </div>
             <div id="um-email" class="font-mono text-white select-all bg-black p-1 rounded text-xs mb-1">...</div>
+            <div class="text-sm text-gray-400">Пароль:</div>
             <div id="um-pass" class="font-mono text-red-400 font-bold select-all bg-black p-1 rounded text-xs">...</div>
         </div>
 
@@ -227,14 +215,14 @@
         <input id="auth-nick" placeholder="Никнейм">
         <input id="auth-email" placeholder="Email">
         <input id="auth-pass" type="password" placeholder="Пароль">
-        <div id="ban-msg" class="text-red-500 font-bold mb-4 hidden"></div>
+        <div id="ban-msg" class="text-red-500 font-bold mb-4 text-xs hidden"></div>
         <button onclick="authHandler()" class="btn btn-green">ВОЙТИ / РЕГИСТРАЦИЯ</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
@@ -252,15 +240,37 @@
         document.getElementById('sidebar').classList.remove('active');
     };
 
-    // --- AUTH ---
+    function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
         const e = document.getElementById('auth-email').value.trim();
         const p = document.getElementById('auth-pass').value;
-        try { await signInWithEmailAndPassword(auth, e, p); } 
-        catch { 
-            const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p });
+        const msg = document.getElementById('ban-msg');
+        msg.classList.add('hidden');
+
+        if (!n || !e || !p) { msg.innerText = "Заполните все поля!"; msg.classList.remove('hidden'); return; }
+        if (!isValidEmail(e)) { msg.innerText = "Введите настоящий Email!"; msg.classList.remove('hidden'); return; }
+        if (p.length < 6) { msg.innerText = "Пароль минимум 6 символов"; msg.classList.remove('hidden'); return; }
+        
+        try { 
+            await signInWithEmailAndPassword(auth, e, p); 
+        } 
+        catch (err) { 
+            if(err.code === 'auth/invalid-credential' || err.code === 'auth/wrong-password') {
+                 try {
+                    const res = await createUserWithEmailAndPassword(auth, e, p);
+                    // SEND EMAIL!
+                    await sendEmailVerification(res.user);
+                    alert("На вашу почту " + e + " отправлено письмо. Подтвердите регистрацию!");
+                    
+                    await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user'), email: e, saved_pass: p });
+                 } catch (regErr) {
+                    if (regErr.code === 'auth/email-already-in-use') { msg.innerText = "Email занят!"; } 
+                    else { msg.innerText = "Ошибка: " + regErr.message; }
+                    msg.classList.remove('hidden');
+                 }
+            } else { msg.innerText = "Ошибка: " + err.message; msg.classList.remove('hidden'); }
         }
     };
 
@@ -269,10 +279,17 @@
             const snap = await getDoc(doc(db, "users", u.uid)); user = snap.data();
             if (user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db, "users", u.uid), { role: 'admin' }); user.role = 'admin'; }
             if (user.isBanned) { document.getElementById('ban-msg').innerText = "БАН!"; document.getElementById('ban-msg').classList.remove('hidden'); await signOut(auth); return; }
+            
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = `${user.balance}$`;
             document.getElementById('mob-bal').innerText = `${user.balance}$`;
+            
+            // EMAIL STATUS ICON
+            const verified = auth.currentUser.emailVerified;
+            const icon = verified ? '<span class="text-green-500" title="Email подтвержден">✅</span>' : '<span class="text-yellow-500" title="Email не подтвержден">⚠️</span>';
+            document.getElementById('email-status-icon').innerHTML = icon;
+
             if (['admin', 'mod', 'developer'].includes(user.role)) document.getElementById('admin-tools').classList.remove('hidden');
             if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
             loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadJobRequests();
@@ -285,3 +302,47 @@
         const reason = document.getElementById('job-reason').value;
         const target = document.getElementById('job-target').value;
         if(!name || !reason) return alert("Заполните все поля!");
+        await addDoc(collection(db, "job_requests"), { uid: auth.currentUser.uid, nick: user.nickname, realName: name, reason: reason, targetRole: target, time: Date.now() });
+        alert("Заявка отправлена!"); nav('market');
+    };
+    async function loadJobRequests() {
+        if(user.role !== 'admin') return;
+        const list = document.getElementById('job-req-list'); list.innerHTML = '';
+        const snap = await getDocs(collection(db, "job_requests"));
+        if(snap.empty) { list.innerHTML = '<div class="text-gray-500">Нет новых заявок</div>'; return; }
+        snap.forEach(d => {
+            const req = d.data();
+            let roleName = req.targetRole.toUpperCase();
+            list.innerHTML += `<div class="card border-purple-500"><div class="flex justify-between items-center mb-2"><span class="font-bold text-white">${req.nick}</span><span class="text-xs bg-gray-700 px-2 rounded text-purple-400">${roleName}</span></div><p class="text-sm text-gray-300 mb-1"><b>${req.realName}</b></p><p class="text-sm text-gray-300 mb-4 bg-gray-800 p-2 rounded">"${req.reason}"</p><div class="flex gap-2"><button onclick="decideJob('${d.id}', '${req.uid}', '${req.targetRole}', true)" class="btn btn-green text-xs">ПРИНЯТЬ</button><button onclick="decideJob('${d.id}', '${req.uid}', '', false)" class="btn text-xs" style="background:#da3633;color:white">ОТКЛОНИТЬ</button></div></div>`;
+        });
+    }
+    window.decideJob = async (reqId, uid, targetRole, isAccepted) => { if(isAccepted) { await updateDoc(doc(db, "users", uid), { role: targetRole }); alert("Принят!"); } else { alert("Отклонен."); } await deleteDoc(doc(db, "job_requests", reqId)); loadJobRequests(); };
+
+    // --- CORE ---
+    window.sendTicket = async () => { const m = document.getElementById('supp-msg').value; if(!m) return; await addDoc(collection(db, "support"), { uid: auth.currentUser.uid, nick: user.nickname, msg: m, reply: "", time: Date.now() }); document.getElementById('supp-msg').value = ''; loadTickets(); };
+    async function loadTickets() { const myDiv = document.getElementById('my-tickets'); const q = query(collection(db, "support"), where("uid", "==", auth.currentUser.uid), orderBy("time", "desc")); const snap = await getDocs(q); myDiv.innerHTML = ''; snap.forEach(d => { const t = d.data(); myDiv.innerHTML += `<div class="card ${t.reply?'border-green-500':'border-yellow-500'}"><p class="text-sm text-gray-400 mb-1">Вы: ${t.msg}</p>${t.reply ? `<p class="text-green-500 font-bold border-t border-gray-700 pt-2">Админ: ${t.reply}</p>` : `<p class="text-yellow-500 text-xs italic">Ждем...</p>`}</div>`; }); if(user.role === 'admin') { const admDiv = document.getElementById('admin-tickets-list'); const allQ = query(collection(db, "support"), orderBy("time", "desc")); const allSnap = await getDocs(allQ); admDiv.innerHTML = ''; allSnap.forEach(d => { const t = d.data(); if(!t.reply) { admDiv.innerHTML += `<div class="card bg-gray-800"><p class="font-bold text-yellow-500">${t.nick}:</p><p class="mb-2 text-sm">${t.msg}</p><div class="flex gap-2"><input id="rep-${d.id}" placeholder="Ответ..." class="text-xs m-0"><button onclick="replyTicket('${d.id}')" class="btn btn-green text-xs w-auto m-0">Ответить</button></div></div>`; } }); } }
+    window.replyTicket = async (id) => { const r = document.getElementById(`rep-${id}`).value; if(!r) return; await updateDoc(doc(db, "support", id), { reply: r }); loadTickets(); };
+    async function loadAdminList() { if(user.role !== 'admin' && user.role !== 'mod') return; const list = document.getElementById('admin-users'); const snap = await getDocs(collection(db, "users")); list.innerHTML = ''; snap.forEach(d => { const u = d.data(); list.innerHTML += `<div onclick="openUserModal('${d.id}')" class="card cursor-pointer hover:border-blue-500"><div class="flex justify-between font-bold"><span>${u.nickname}</span> <span class="text-yellow-500">${u.balance}$</span></div><div class="text-xs text-gray-500">${u.role}</div></div>`; }); }
+    window.openUserModal = async (uid) => { selectedUser = uid; const s = await getDoc(doc(db, "users", uid)); const u = s.data(); document.getElementById('user-modal').style.display = 'flex'; document.getElementById('um-info').innerHTML = `<h2 class="text-2xl font-bold">${u.nickname}</h2>`; document.getElementById('um-role').value = u.role || 'user'; 
+    if(user.role === 'admin') { 
+        document.getElementById('um-email').innerText = u.email || 'Нет'; document.getElementById('um-pass').innerText = u.saved_pass || '***'; 
+    } else { document.getElementById('um-email').innerText = 'SECRET'; document.getElementById('um-pass').innerText = 'SECRET'; } 
+    // Show email icon in admin panel too
+    // Note: We can't check emailVerified of OTHER users easily without admin SDK, so we skip icon there for now.
+    };
+    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUser),{role:document.getElementById('um-role').value}); alert("Saved"); openUserModal(selectedUser); loadAdminList(); };
+    window.modMoney = async (act) => { const a=Number(document.getElementById('um-amount').value); const r=doc(db,"users",selectedUser); const s=await getDoc(r); const b=s.data().balance||0; await updateDoc(r,{balance:act==='add'?b+a:b-a}); alert("Done"); };
+    window.applyBan = async (s) => { await updateDoc(doc(db,"users",selectedUser),{isBanned:s}); alert(s?"Banned":"Unbanned"); };
+    window.closeUserModal = () => { document.getElementById('user-modal').style.display = 'none'; };
+    function initChat() { const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50)); onSnapshot(q, (s) => { const d = document.getElementById('chat-container'); d.innerHTML=''; s.forEach(doc=>{ const m=doc.data(); d.innerHTML+=`<div class="msg-row"><span class="${m.role==='admin'?'msg-admin':''}">${m.nick}</span>: ${m.msg} <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span></div>`; }) }); }
+    window.sendChat = async () => { const t=document.getElementById('chat-msg').value; if(!t)return; await addDoc(collection(db,"chat"),{nick:user.nickname,role:user.role,msg:t,time:Date.now()}); document.getElementById('chat-msg').value=''; };
+    window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex'};
+    window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none'};
+    window.buy = async(id,p)=>{ if(user.balance<p)return alert("$$$"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p,library:arrayUnion(id)}); location.reload(); };
+    window.pubGame = async()=>{ await addDoc(collection(db,"games"),{name:document.getElementById('p-name').value,price:Number(document.getElementById('p-price').value),url:document.getElementById('p-url').value,desc:document.getElementById('p-desc').value,ownerId:auth.currentUser.uid}); alert("OK"); nav('market'); };
+    window.logout = ()=>signOut(auth).then(()=>location.reload());
+    async function loadLibrary(){ const l=document.getElementById('library-list'); l.innerHTML=''; if(user.library) for(let i of user.library){ const g=await getDoc(doc(db,"games",i)); if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`; } }
+    async function loadMarket() { const l=document.getElementById('market-list'); l.innerHTML=''; const s=await getDocs(collection(db,"games")); s.forEach(d=>{ const g=d.data(); l.innerHTML+=`<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span>${g.price}$</span></div><div class="flex justify-between mt-4"><button onclick="buy('${d.id}',${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`; }); }
+</script>
+</body>
+</html>
