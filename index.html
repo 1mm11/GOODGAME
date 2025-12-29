@@ -3,340 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | FRIENDS EDITION</title>
+    <title>GOODGAME | STEAM STYLE FRIENDS</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { 
-            --bg: #0d1117; --panel: #161b22; --accent: #238636; --danger: #da3633; --text: #c9d1d9; --border: #30363d; --friends: #db2777;
+            --bg: #0d1117; --panel: #161b22; --accent: #238636; --danger: #da3633; --text: #c9d1d9; --border: #30363d;
         }
         .theme-light { --bg: #f6f8fa; --panel: #ffffff; --accent: #2da44e; --danger: #cf222e; --text: #24292f; --border: #d0d7de; }
         .theme-hacker { --bg: #000000; --panel: #0a0a0a; --accent: #00ff00; --danger: #ff0000; --text: #00ff00; --border: #003300; }
         .theme-cyber { --bg: #0f0a1e; --panel: #1a1625; --accent: #d300c5; --danger: #ff0055; --text: #00f3ff; --border: #5e267c; }
 
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; transition: 0.3s; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; transition: 0.3s; }
         .sidebar { width: 260px; background: var(--panel); height: 100vh; position: fixed; top: 0; left: 0; border-right: 1px solid var(--border); z-index: 100; transition: 0.3s; overflow-y: auto; padding-bottom: 80px; }
         .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; padding-top: 60px; }
         .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 90; align-items: center; padding: 0 15px; justify-content: space-between; }
 
-        @media (max-width: 768px) { 
-            .sidebar { transform: translateX(-100%); } 
-            .sidebar.active { transform: translateX(0); }
-            .main { margin-left: 0; } 
-            .mobile-header { display: flex; }
-        }
-
+        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .sidebar.active { transform: translateX(0); } .main { margin-left: 0; } .mobile-header { display: flex; } }
         .card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         input, select, textarea { background: var(--bg); border: 1px solid var(--border); color: var(--text); padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
-        .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; border: none; }
+        .btn { padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; border: none; margin-bottom: 5px; }
         .btn-green { background: var(--accent); color: white; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 10px; }
+        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; }
         .hidden { display: none !important; }
-
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 10px; }
-        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; }
-        
-        #chat-container { height: 40vh; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: var(--bg); display: flex; flex-direction: column-reverse; }
-        .msg-row { margin-bottom: 8px; padding: 6px; border-radius: 6px; background: rgba(255,255,255,0.03); font-size: 13px; }
-        .theme-btn { width: 30px; height: 30px; border-radius: 50%; cursor: pointer; border: 2px solid var(--border); }
+        #chat-container { height: 50vh; overflow-y: auto; border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: var(--bg); display: flex; flex-direction: column-reverse; }
+        .msg-row { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: rgba(255,255,255,0.05); font-size: 13px; }
     </style>
 </head>
 <body>
 
 <div class="mobile-header">
     <button onclick="toggleMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
-    <span class="font-black italic" style="color:var(--accent)">GOODGAME</span>
+    <span class="font-black italic text-green-500">GOODGAME</span>
     <div id="mob-bal" class="font-bold text-sm text-yellow-500">0$</div>
 </div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
-        <div class="flex justify-between items-center mb-8">
-            <div class="font-black text-2xl italic tracking-tighter" style="color:var(--accent)">GOODGAME</div>
-            <button onclick="toggleMenu()" class="md:hidden text-xl opacity-50"><i class="fas fa-times"></i></button>
-        </div>
-        <nav class="space-y-1">
-            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> <span data-i18n="market">Market</span></button>
-            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> <span data-i18n="library">Library</span></button>
-            <button onclick="nav('friends')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-pink-500"><i class="fas fa-user-friends"></i> <span data-i18n="friends">Friends</span></button>
-            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments text-blue-400"></i> <span data-i18n="chat">Chat</span></button>
-            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-headset text-yellow-500"></i> <span data-i18n="support">Support</span></button>
-            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> <span data-i18n="settings">Settings</span></button>
-            
-            <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-gray-700 space-y-1">
-                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/10 rounded-xl"><i class="fas fa-crown"></i> USERS</button>
-            </div>
+        <div class="font-black text-2xl italic mb-8" style="color:var(--accent)">GOODGAME</div>
+        <nav class="space-y-2">
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Market</button>
+            <button onclick="nav('friends')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-pink-500"><i class="fas fa-user-friends"></i> Friends</button>
+            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Library</button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> Chat</button>
+            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings</button>
         </nav>
     </div>
     <div class="border-t border-gray-700 pt-4">
-        <div id="u-name" class="font-bold text-sm">...</div>
-        <div id="u-bal" class="text-xs text-yellow-500">0$</div>
-        <button onclick="logout()" class="text-xs opacity-50 hover:opacity-100 mt-2">Logout</button>
+        <div id="u-name" class="font-bold">...</div>
+        <div id="u-friend-code" class="text-[10px] opacity-50 select-all">Code: Loading...</div>
+        <button onclick="logout()" class="text-xs opacity-50 mt-2">Logout</button>
     </div>
 </aside>
 
 <main class="main">
     <section id="market">
-        <h2 class="text-3xl font-black mb-6 italic">MARKET</h2>
-        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <h2 class="text-3xl font-black mb-8 italic">MARKET</h2>
+        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
     </section>
 
     <section id="friends" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-pink-500">FRIENDS</h2>
-        <div class="card">
-            <div id="friends-list" class="space-y-3 text-sm">
-                <p class="opacity-50">No friends yet. Find users in the "Users" list to add them.</p>
+        <h2 class="text-3xl font-black mb-8 italic text-pink-500">FRIENDS</h2>
+        <div class="card bg-pink-900/10 border-pink-500/30">
+            <h3 class="font-bold mb-2">Add by Friend Code</h3>
+            <div class="flex gap-2">
+                <input id="friend-search-input" type="number" placeholder="Enter 16-digit code" class="m-0">
+                <button onclick="addFriendByCode()" class="btn btn-green w-32 m-0">ADD</button>
             </div>
         </div>
-    </section>
-
-    <section id="library" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-green-500">LIBRARY</h2>
-        <div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        <div class="card">
+            <h3 class="font-bold mb-4 opacity-50">Your Friend List</h3>
+            <div id="friends-list" class="space-y-2 text-sm"></div>
+        </div>
     </section>
 
     <section id="settings" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic">SETTINGS</h2>
+        <h2 class="text-3xl font-black mb-8 italic">SETTINGS</h2>
         <div class="card">
-            <h3 class="font-bold mb-4">Themes</h3>
-            <div class="flex gap-2">
-                <div onclick="setTheme('default')" class="theme-btn" style="background:#0d1117"></div>
-                <div onclick="setTheme('light')" class="theme-btn" style="background:#fff"></div>
-                <div onclick="setTheme('hacker')" class="theme-btn" style="background:#000; border-color:#0f0"></div>
-                <div onclick="setTheme('cyber')" class="theme-btn" style="background:#0f0a1e; border-color:#d300c5"></div>
-            </div>
-        </div>
-        <div class="card">
-            <h3 class="font-bold mb-2">Nickname</h3>
-            <input id="new-nick" placeholder="New nickname">
-            <button onclick="changeNickname()" class="btn btn-green">UPDATE</button>
+            <h3 class="font-bold mb-2">Friend Code</h3>
+            <p class="text-xs opacity-50 mb-4 text-pink-400">Your unique ID for friends: <span id="my-code-display" class="font-mono font-bold">...</span></p>
+            <button onclick="generateFriendCode()" class="btn bg-gray-700 text-white">REGENERATE CODE</button>
         </div>
     </section>
 
     <section id="chat" class="hidden">
         <h2 class="text-3xl font-black mb-6 italic text-blue-400">CHAT</h2>
-        <div class="card">
-            <div id="chat-container"></div>
-            <div class="flex gap-2 mt-4">
-                <input id="chat-msg" placeholder="Message..." class="mb-0">
-                <button onclick="sendChat()" class="btn btn-green w-20">GO</button>
-            </div>
-        </div>
+        <div class="card"><div id="chat-container"></div><div class="flex gap-2 mt-4"><input id="chat-msg" placeholder="..." class="m-0"><button onclick="sendChat()" class="btn btn-green w-20 m-0">GO</button></div></div>
     </section>
-
-    <section id="admin-center" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-red-500">USER MANAGEMENT</h2>
-        <div id="admin-users" class="grid grid-cols-1 md:grid-cols-3 gap-3"></div>
-    </section>
+    
+    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
 </main>
 
-<div id="user-modal" class="modal-overlay">
-    <div class="modal-box">
-        <div class="flex justify-between items-center mb-4">
-            <h2 id="um-info" class="text-xl font-black italic">USER INFO</h2>
-            <button onclick="closeUserModal()" class="text-xl">&times;</button>
-        </div>
-        
-        <div class="mb-4">
-            <button id="add-friend-btn" onclick="addFriendAction()" class="btn bg-pink-600 text-white flex items-center justify-center gap-2">
-                <i class="fas fa-user-plus"></i> ADD TO FRIENDS
-            </button>
-        </div>
-
-        <div id="admin-only-tools" class="hidden space-y-4">
-            <div class="card border-red-500/30">
-                <p class="text-xs opacity-50">Role Control</p>
-                <select id="um-role">
-                    <option value="user">User</option>
-                    <option value="mod">Mod</option>
-                    <option value="admin">Admin</option>
-                </select>
-                <button onclick="setRole()" class="btn btn-green">Save Role</button>
-            </div>
-            <div class="card border-yellow-500/30">
-                <input type="number" id="um-amount" placeholder="Amount">
-                <div class="flex gap-2">
-                    <button onclick="modMoney('add')" class="btn btn-green">Add $</button>
-                    <button onclick="applyBan(true)" class="btn bg-red-600 text-white">BAN</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="login-modal" class="modal-overlay" style="display:flex">
-    <div class="modal-box max-w-sm text-center">
-        <h2 class="text-3xl font-black italic mb-6 text-green-500">GOODGAME</h2>
-        <input id="auth-nick" placeholder="Nickname">
-        <input id="auth-email" placeholder="Email">
-        <input id="auth-pass" type="password" placeholder="Password">
-        <button onclick="authHandler()" class="btn btn-green">JOIN / LOGIN</button>
-        <p id="auth-err" class="text-red-500 text-xs mt-2 hidden"></p>
-    </div>
-</div>
+<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card max-w-sm w-full text-center"><h2 class="text-3xl font-black italic mb-6 text-green-500">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green">LOGIN / REGISTER</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, query, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    
-    let user = null; 
-    let selectedUser = null;
+    let user = null;
 
-    // NAVIGATION
+    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(id==='friends') loadFriends(); };
     window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
-    window.nav = (id) => {
-        document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
-        document.getElementById(id).classList.remove('hidden');
-        document.getElementById('sidebar').classList.remove('active');
-        if(id === 'friends') loadFriends();
-        if(id === 'admin-center') loadAdminList();
+
+    // ГЕНЕРАЦИЯ КОДА (16 ЦИФР)
+    window.generateFriendCode = async () => {
+        const code = Math.floor(Math.random() * 9000000000000000) + 1000000000000000;
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { friendCode: code.toString() });
+        document.getElementById('my-code-display').innerText = code;
+        document.getElementById('u-friend-code').innerText = "Code: " + code;
+        alert("New code generated!");
     };
 
-    // THEMES
-    window.setTheme = (t) => {
-        document.body.className = t === 'default' ? '' : `theme-${t}`;
-        localStorage.setItem('gg_theme', t);
+    // ДОБАВЛЕНИЕ ПО КОДУ
+    window.addFriendByCode = async () => {
+        const code = document.getElementById('friend-search-input').value.trim();
+        if(!code || code.length < 5) return alert("Enter valid code");
+        if(code === user.friendCode) return alert("It's your code!");
+
+        const q = query(collection(db, "users"), where("friendCode", "==", code));
+        const snap = await getDocs(q);
+
+        if(snap.empty) return alert("User not found!");
+
+        const friendDoc = snap.docs[0];
+        const friendId = friendDoc.id;
+
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { friends: arrayUnion(friendId) });
+        alert("Added " + friendDoc.data().nickname);
+        loadFriends();
     };
-    setTheme(localStorage.getItem('gg_theme') || 'default');
 
-    // AUTH
-    window.authHandler = async () => {
-        const n = document.getElementById('auth-nick').value.trim();
-        const e = document.getElementById('auth-email').value.trim();
-        const p = document.getElementById('auth-pass').value;
-        const err = document.getElementById('auth-err');
-        if(!n || !e || p.length < 6) return alert("Invalid data!");
-
-        try {
-            await signInWithEmailAndPassword(auth, e, p);
-        } catch {
-            try {
-                const res = await createUserWithEmailAndPassword(auth, e, p);
-                await setDoc(doc(db, "users", res.user.uid), { 
-                    nickname: n, balance: 100, role: 'user', email: e, friends: [], isBanned: false 
-                });
-            } catch (e) { alert(e.message); }
+    // ЗАГРУЗКА ДРУЗЕЙ
+    async function loadFriends() {
+        const list = document.getElementById('friends-list');
+        list.innerHTML = 'Loading...';
+        const s = await getDoc(doc(db, "users", auth.currentUser.uid));
+        const ids = s.data().friends || [];
+        if(ids.length === 0) { list.innerHTML = 'Empty.'; return; }
+        list.innerHTML = '';
+        for(let id of ids) {
+            const f = await getDoc(doc(db, "users", id));
+            if(f.exists()) list.innerHTML += `<div class="p-3 bg-white/5 rounded-lg border border-gray-700 flex justify-between"><span>${f.data().nickname}</span><span class="text-green-500 text-[10px]">FRIEND</span></div>`;
         }
-    };
+    }
 
     onAuthStateChanged(auth, async (u) => {
-        if(u) {
-            const snap = await getDoc(doc(db, "users", u.uid));
+        if (u) {
+            const snap = await getDoc(doc(db, "users", u.uid)); 
             user = snap.data();
-            if(user.isBanned) { alert("Banned!"); signOut(auth); return; }
-            
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = user.balance + '$';
-            document.getElementById('mob-bal').innerText = user.balance + '$';
-
-            if(['admin', 'mod'].includes(user.role)) document.getElementById('admin-tools').classList.remove('hidden');
             
-            initChat();
-            loadMarket();
-            loadLibrary();
+            // Проверка наличия кода
+            if(!user.friendCode) {
+                const startCode = (Math.floor(Math.random() * 9000000000000000) + 1000000000000000).toString();
+                await updateDoc(doc(db, "users", u.uid), { friendCode: startCode });
+                user.friendCode = startCode;
+            }
+            document.getElementById('u-friend-code').innerText = "Code: " + user.friendCode;
+            document.getElementById('my-code-display').innerText = user.friendCode;
         } else {
             document.getElementById('login-modal').style.display = 'flex';
         }
     });
 
-    // FRIENDS SYSTEM
-    window.addFriendAction = async () => {
-        if(!selectedUser || selectedUser === auth.currentUser.uid) return alert("Cannot add yourself");
-        
-        const myRef = doc(db, "users", auth.currentUser.uid);
-        const mySnap = await getDoc(myRef);
-        const myFriends = mySnap.data().friends || [];
-
-        if(myFriends.includes(selectedUser)) return alert("Already friends!");
-
-        await updateDoc(myRef, { friends: arrayUnion(selectedUser) });
-        alert("Friend added!");
-        loadFriends();
-    };
-
-    async function loadFriends() {
-        const list = document.getElementById('friends-list');
-        list.innerHTML = 'Loading...';
-        const snap = await getDoc(doc(db, "users", auth.currentUser.uid));
-        const ids = snap.data().friends || [];
-
-        if(ids.length === 0) {
-            list.innerHTML = 'No friends yet.';
-            return;
-        }
-
-        list.innerHTML = '';
-        for(let id of ids) {
-            const fSnap = await getDoc(doc(db, "users", id));
-            if(fSnap.exists()) {
-                list.innerHTML += `<div class="p-3 bg-white/5 rounded-lg flex justify-between items-center">
-                    <span>${fSnap.data().nickname}</span>
-                    <span class="text-[10px] text-green-500">ONLINE</span>
-                </div>`;
-            }
-        }
-    }
-
-    // CHAT
-    function initChat() {
-        const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(30));
-        onSnapshot(q, (s) => {
-            const div = document.getElementById('chat-container');
-            div.innerHTML = '';
-            s.forEach(d => {
-                const m = d.data();
-                div.innerHTML += `<div class="msg-row"><b>${m.nick}:</b> ${m.msg}</div>`;
-            });
-        });
-    }
-    window.sendChat = async () => {
-        const m = document.getElementById('chat-msg').value;
-        if(!m) return;
-        await addDoc(collection(db, "chat"), { nick: user.nickname, msg: m, time: Date.now(), uid: auth.currentUser.uid });
-        document.getElementById('chat-msg').value = '';
-    };
-
-    // ADMIN TOOLS
-    async function loadAdminList() {
-        const list = document.getElementById('admin-users');
-        list.innerHTML = '';
-        const s = await getDocs(collection(db, "users"));
-        s.forEach(d => {
-            const u = d.data();
-            list.innerHTML += `<div onclick="openUserModal('${d.id}')" class="card cursor-pointer hover:border-accent transition">
-                <div class="font-bold">${u.nickname}</div>
-                <div class="text-xs opacity-50">${u.role}</div>
-            </div>`;
-        });
-    }
-
-    window.openUserModal = async (id) => {
-        selectedUser = id;
-        const s = await getDoc(doc(db, "users", id));
-        const u = s.data();
-        document.getElementById('user-modal').style.display = 'flex';
-        document.getElementById('um-info').innerText = u.nickname.toUpperCase();
-        
-        // Показываем админ-панель только если мы админы
-        if(['admin', 'mod'].includes(user.role)) {
-            document.getElementById('admin-only-tools').classList.remove('hidden');
-            document.getElementById('um-role').value = u.role;
+    // AUTH / CHAT / ETC
+    window.authHandler = async () => {
+        const n = document.getElementById('auth-nick').value;
+        const e = document.getElementById('auth-email').value;
+        const p = document.getElementById('auth-pass').value;
+        try { await signInWithEmailAndPassword(auth, e, p); } catch {
+            const res = await createUserWithEmailAndPassword(auth, e, p);
+            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: 'user', friends: [] });
         }
     };
-
-    window.closeUserModal = () => document.getElementById('user-modal').style.display = 'none';
-
-    // COMMON
-    window.logout = () => signOut(auth).then(() => location.reload());
-    async function loadMarket() { /* Базовая загрузка игр из твоего кода */ }
-    async function loadLibrary() { /* Базовая загрузка игр из твоего кода */ }
-
+    window.logout = () => signOut(auth).then(()=>location.reload());
 </script>
 </body>
 </html>
