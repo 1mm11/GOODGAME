@@ -3,68 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | WINTER GLOBAL UPDATE</title>
+    <title>GOODGAME | WINTER GLOBAL UPDATE 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { 
-            --bg: #050a18; 
-            --panel: #0b1426; 
-            --accent: #e63946; 
-            --text: #e0f2fe; 
-            --border: #1e293b; 
-            --gold: #fbbf24; 
-        }
+        :root { --bg: #050a18; --panel: #0b1426; --accent: #e63946; --text: #e0f2fe; --border: #1e293b; --gold: #fbbf24; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at top, #1e3a8a 0%, #050a18 100%); touch-action: manipulation; }
         
-        body { 
-            background: var(--bg); 
-            color: var(--text); 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            overflow-x: hidden; 
-            background-image: radial-gradient(circle at top, #1e3a8a 0%, #050a18 100%);
-            touch-action: manipulation;
-        }
-
-        /* NEW YEAR DECO */
         #snow { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
         .garland { height: 3px; background: linear-gradient(90deg, #f00, #0f0, #ff0, #00f); background-size: 40px 100%; animation: move 2s linear infinite; position: fixed; top: 0; width: 100%; z-index: 2001; }
         @keyframes move { from { background-position: 0 0; } to { background-position: 40px 0; } }
 
-        /* NAVIGATION & ADAPTIVE */
-        .sidebar { 
-            width: 280px; background: rgba(11, 20, 38, 0.98); height: 100vh; position: fixed; top: 0; left: -280px;
-            border-right: 1px solid var(--border); z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(15px);
-        }
-        .sidebar.active { left: 0; box-shadow: 10px 0 50px rgba(0,0,0,0.8); }
-        
+        .sidebar { width: 280px; background: rgba(11, 20, 38, 0.98); height: 100vh; position: fixed; top: 0; left: -280px; border-right: 1px solid var(--border); z-index: 2000; transition: 0.4s; backdrop-filter: blur(15px); }
+        .sidebar.active { left: 0; }
         .mobile-nav { display: flex; position: fixed; top: 0; width: 100%; height: 60px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 1500; align-items: center; padding: 0 15px; justify-content: space-between; }
+        .main { padding: 80px 15px 100px 15px; min-height: 100vh; }
         
-        .main { padding: 80px 15px 100px 15px; transition: 0.3s; min-height: 100vh; }
-        
-        @media (min-width: 1024px) {
-            .sidebar { left: 0; }
-            .main { margin-left: 280px; padding-top: 30px; }
-            .mobile-nav { display: none; }
-        }
+        @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } .mobile-nav { display: none; } }
 
-        /* UI ELEMENTS */
         .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-        .btn { padding: 12px 20px; border-radius: 14px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 10px; transition: 0.2s; }
-        .btn:active { transform: scale(0.96); }
+        .btn { padding: 12px 20px; border-radius: 14px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; }
         .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; }
         .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
 
         input, select, textarea { background: #0f172a; border: 1px solid var(--border); color: var(--text); padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 12px; font-size: 16px; outline: none; }
-        
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: bold; transition: 0.4s; z-index: 9999; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: bold; transition: 0.4s; z-index: 9999; }
         #toast.active { transform: translate(-50%, 0); }
 
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
-
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 450px; }
         #game-overlay { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
@@ -73,30 +41,28 @@
 
 <canvas id="snow"></canvas>
 <div class="garland"></div>
-<div id="toast">Уведомление</div>
+<div id="toast"></div>
 
 <div class="mobile-nav">
     <button onclick="toggleMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
-    <div class="font-black italic text-gold text-xl tracking-tighter">GOODGAME ❄️</div>
+    <div class="font-black italic text-gold text-xl">GOODGAME ❄️</div>
     <div id="mob-bal" class="font-bold text-yellow-400">0$</div>
 </div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
         <div class="flex justify-between items-center mb-10">
-            <div class="font-black text-2xl italic text-gold tracking-tighter">GOODGAME</div>
+            <div class="font-black text-2xl italic text-gold">GOODGAME</div>
             <button onclick="toggleMenu()" class="lg:hidden text-2xl">✕</button>
         </div>
         <nav class="space-y-2">
-            <button onclick="nav('market')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4 transition"><i class="fas fa-shopping-bag text-red-400"></i> Market</button>
-            <button onclick="nav('library')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4 transition"><i class="fas fa-gamepad text-green-400"></i> Library</button>
-            <button onclick="nav('chat')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4 transition"><i class="fas fa-comments text-blue-400"></i> Chat</button>
-            <button onclick="nav('support')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4 transition"><i class="fas fa-headset text-yellow-400"></i> Support</button>
-            <button onclick="nav('career')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4 transition"><i class="fas fa-user-tie text-purple-400"></i> Jobs</button>
-            <button onclick="nav('settings')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4 transition"><i class="fas fa-cog"></i> Settings</button>
-            
+            <button onclick="nav('market')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-shopping-bag text-red-400"></i> Market</button>
+            <button onclick="nav('library')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-gamepad text-green-400"></i> Library</button>
+            <button onclick="nav('chat')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-comments text-blue-400"></i> Chat</button>
+            <button onclick="nav('support')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-headset text-yellow-400"></i> Support</button>
+            <button onclick="nav('career')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-user-tie text-purple-400"></i> Jobs</button>
+            <button onclick="nav('settings')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-cog"></i> Settings</button>
             <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-white/10 space-y-2">
-                <p class="text-[10px] font-bold opacity-30 px-4 uppercase tracking-widest">Administration</p>
                 <button onclick="nav('publish')" class="w-full text-left p-4 text-green-400 flex items-center gap-4"><i class="fas fa-plus-circle"></i> Add Game</button>
                 <button onclick="nav('admin-center')" class="w-full text-left p-4 text-red-500 flex items-center gap-4 font-bold"><i class="fas fa-crown"></i> Admin Panel</button>
             </div>
@@ -104,135 +70,44 @@
     </div>
     <div class="border-t border-white/10 pt-6">
         <div id="u-name" class="font-bold text-xl text-white truncate">...</div>
-        <div id="u-bal" class="text-sm font-black text-yellow-400 mb-4">0$</div>
-        <button onclick="logout()" class="text-xs text-red-500 font-bold opacity-60 hover:opacity-100">LOGOUT</button>
+        <button onclick="logout()" class="text-xs text-red-500 font-bold opacity-60">LOGOUT</button>
     </div>
 </aside>
 
 <main class="main">
-    <section id="market">
-        <h2 class="text-3xl font-black mb-6 italic">WINTER MARKET</h2>
-        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
-    </section>
-
-    <section id="library" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-green-500">MY GAMES</h2>
-        <div id="library-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
-    </section>
-
+    <section id="market"><h2 class="text-3xl font-black mb-6 italic">WINTER MARKET</h2><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-green-500">MY GAMES</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
     <section id="chat" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-blue-400">GLOBAL CHAT</h2>
         <div class="card p-0 overflow-hidden flex flex-col h-[65vh]">
             <div id="chat-container" class="flex-1 p-4 overflow-y-auto flex flex-col-reverse gap-3"></div>
-            <div class="p-4 bg-black/20 flex gap-2">
-                <input id="chat-msg" placeholder="Write a message..." class="m-0">
-                <button onclick="sendChat()" class="btn btn-green w-16 m-0"><i class="fas fa-paper-plane"></i></button>
-            </div>
+            <div class="p-4 bg-black/20 flex gap-2"><input id="chat-msg" placeholder="Message..." class="m-0"><button onclick="sendChat()" class="btn btn-green w-16 m-0"><i class="fas fa-paper-plane"></i></button></div>
         </div>
     </section>
-
-    <section id="career" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-purple-400">APPLY FOR JOB</h2>
-        <div class="card max-w-lg mx-auto">
-            <input id="job-name" placeholder="Real Name">
-            <select id="job-role">
-                <option value="developer">Developer</option>
-                <option value="mod">Moderator</option>
-            </select>
-            <textarea id="job-text" placeholder="Why should we hire you?" rows="4"></textarea>
-            <button onclick="sendJobApp()" class="btn btn-gold w-full">SUBMIT APPLICATION</button>
-        </div>
-    </section>
-
-    <section id="support" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-yellow-400">SUPPORT</h2>
-        <div class="card max-w-lg mx-auto">
-            <textarea id="supp-msg" placeholder="Describe your issue..." rows="3"></textarea>
-            <button onclick="sendTicket()" class="btn btn-green w-full">SEND TICKET</button>
-        </div>
-        <div id="admin-tickets-area" class="hidden mt-8">
-            <h3 class="font-bold text-red-400 mb-4">INCOMING TICKETS</h3>
-            <div id="admin-tickets-list" class="space-y-3"></div>
-        </div>
-        <div id="my-tickets" class="mt-8 space-y-3"></div>
-    </section>
-
-    <section id="settings" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic">SETTINGS</h2>
-        <div class="card max-w-md mx-auto text-center">
-            <p class="opacity-50 mb-4 text-sm">Update your profile nickname</p>
-            <input id="new-nick" placeholder="New Nickname">
-            <button onclick="changeNickname()" class="btn btn-gold w-full">UPDATE NICKNAME</button>
-        </div>
-    </section>
-
+    <section id="career" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-purple-400">APPLY FOR JOB</h2><div class="card max-w-lg mx-auto"><input id="job-name" placeholder="Real Name"><select id="job-role"><option value="developer">Developer</option><option value="mod">Moderator</option></select><textarea id="job-text" placeholder="Why you?" rows="4"></textarea><button onclick="sendJobApp()" class="btn btn-gold w-full">SUBMIT</button></div></section>
+    <section id="support" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-yellow-500">SUPPORT</h2><div class="card"><textarea id="supp-msg" placeholder="Your issue..." rows="3"></textarea><button onclick="sendTicket()" class="btn btn-green w-full">SEND</button></div><div id="admin-tickets-area" class="hidden mt-8 space-y-3"></div><div id="my-tickets" class="mt-8 space-y-3"></div></section>
+    <section id="settings" class="hidden"><div class="card max-w-md mx-auto text-center"><input id="new-nick" placeholder="New Nickname"><button onclick="changeNickname()" class="btn btn-gold w-full">SAVE</button></div></section>
     <section id="admin-center" class="hidden">
-        <div class="mb-10">
-            <h2 class="text-2xl font-black mb-4 text-purple-400 uppercase">Pending Applications</h2>
-            <div id="admin-apps-list" class="space-y-4"></div>
-        </div>
-        <div>
-            <h2 class="text-2xl font-black mb-4 text-red-500 uppercase">User Database</h2>
-            <div id="admin-users" class="grid grid-cols-1 md:grid-cols-2 gap-2"></div>
-        </div>
+        <h2 class="text-2xl font-black mb-4 text-purple-400 uppercase">Requests</h2><div id="admin-apps-list" class="space-y-4 mb-10"></div>
+        <h2 class="text-2xl font-black mb-4 text-red-500 uppercase">Users</h2><div id="admin-users" class="space-y-2"></div>
     </section>
-
-    <section id="publish" class="hidden">
-        <h2 class="text-3xl font-black mb-6 text-green-500">ADD NEW GAME</h2>
-        <div class="card max-w-lg mx-auto">
-            <input id="p-name" placeholder="Game Name">
-            <textarea id="p-desc" placeholder="Short description"></textarea>
-            <input id="p-url" placeholder="Direct Game URL (https://...)">
-            <input id="p-price" type="number" placeholder="Price $">
-            <label class="flex items-center gap-3 mb-4 cursor-pointer">
-                <input type="checkbox" id="p-beta" class="w-auto"> <span>Enable Beta Mode</span>
-            </label>
-            <button onclick="pubGame()" class="btn btn-green w-full">PUBLISH GAME</button>
-        </div>
-    </section>
+    <section id="publish" class="hidden"><div class="card max-w-lg mx-auto"><input id="p-name" placeholder="Name"><textarea id="p-desc" placeholder="Desc"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price $"><label class="flex items-center gap-3 mb-4"><input type="checkbox" id="p-beta"> Beta</label><button onclick="pubGame()" class="btn btn-green w-full">CREATE</button></div></section>
 </main>
 
-<div id="user-modal" class="modal-overlay">
-    <div class="modal-box">
-        <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold">User Dossier</h2>
-        <div class="text-xs font-mono bg-black/50 p-4 rounded-xl mb-4 border border-white/10">
-            <div class="mb-1 opacity-50">Email:</div>
-            <div id="um-email" class="mb-3 text-white"></div>
-            <div class="mb-1 opacity-50">Saved Password:</div>
-            <div id="um-pass" class="text-red-400 font-bold"></div>
-        </div>
-        <label class="text-[10px] font-bold opacity-50 uppercase ml-2">Change Role</label>
-        <select id="um-role">
-            <option value="user">User</option>
-            <option value="developer">Developer</option>
-            <option value="mod">Moderator</option>
-            <option value="admin">Administrator</option>
-        </select>
-        <button onclick="setRole()" class="btn btn-gold w-full mb-3">SAVE CHANGES</button>
-        <button onclick="applyBan(1440)" class="btn btn-red w-full mb-3">BAN 24 HOURS</button>
-        <button onclick="applyBan(0)" class="btn bg-gray-600 w-full mb-3">UNBAN USER</button>
-        <button onclick="closeModal('user-modal')" class="btn w-full opacity-40 text-sm">CLOSE</button>
-    </div>
-</div>
+<div id="user-modal" class="modal-overlay"><div class="modal-box">
+    <h2 id="um-nick" class="text-2xl font-bold mb-4">User</h2>
+    <div class="text-xs font-mono bg-black/50 p-4 rounded-xl mb-4">Email: <span id="um-email"></span><br>Pass: <span id="um-pass" class="text-red-400"></span></div>
+    <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="mod">Mod</option><option value="admin">Admin</option></select>
+    <button onclick="setRole()" class="btn btn-gold w-full mb-3">SAVE ROLE</button>
+    <button onclick="applyBan(1440)" class="btn btn-red w-full mb-3">BAN 24H</button>
+    <button onclick="applyBan(0)" class="btn bg-gray-600 w-full mb-3">UNBAN</button>
+    <button onclick="closeModal('user-modal')" class="btn w-full opacity-50">CLOSE</button>
+</div></div>
 
-<div id="game-overlay">
-    <div class="p-4 flex justify-between items-center bg-gray-900 border-b border-white/10">
-        <span class="font-bold text-gold">GOODGAME PLAYER</span>
-        <button onclick="closeGame()" class="bg-red-600 px-6 py-2 rounded-full font-bold text-sm">EXIT GAME</button>
-    </div>
-    <iframe id="game-frame"></iframe>
-</div>
+<div id="apply-modal" class="modal-overlay"><div class="card w-full max-w-md"><h2 class="text-xl font-bold mb-4 text-purple-400">Beta Application</h2><input id="apply-name" placeholder="Real Name"><textarea id="apply-reason" placeholder="Reason"></textarea><button id="apply-confirm-btn" class="btn btn-green w-full">SEND</button><button onclick="closeModal('apply-modal')" class="btn bg-gray-700 w-full mt-2">CANCEL</button></div></div>
 
-<div id="login-modal" class="modal-overlay" style="display:flex;">
-    <div class="card w-full max-w-sm text-center shadow-2xl">
-        <h2 class="text-4xl font-black italic text-red-500 mb-2">GOODGAME</h2>
-        <p class="text-[10px] opacity-40 mb-8 tracking-widest uppercase">Winter Edition 2025</p>
-        <input id="auth-nick" placeholder="Nickname">
-        <input id="auth-email" placeholder="Email Address">
-        <input id="auth-pass" type="password" placeholder="Password">
-        <button onclick="authHandler()" class="btn btn-green w-full text-lg">START JOURNEY</button>
-    </div>
-</div>
+<div id="game-overlay"><div class="p-4 flex justify-between bg-gray-900"><span class="text-gold font-bold">GOODGAME</span><button onclick="closeGame()" class="bg-red-600 px-4 py-1 rounded-full font-bold">EXIT</button></div><iframe id="game-frame"></iframe></div>
+
+<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black italic text-red-500 mb-6">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -245,15 +120,13 @@
     const db = getFirestore(app);
     let user = null, selectedUid = null;
 
-    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'), 3000); };
+    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'),3000); };
     window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
     window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
-    // --- AUTH ---
     window.authHandler = async () => {
-        const n=document.getElementById('auth-nick').value.trim(), e=document.getElementById('auth-email').value.trim(), p=document.getElementById('auth-pass').value;
-        if(!n || !e || !p) return toast("Fill all fields!");
+        const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
         try { await signInWithEmailAndPassword(auth, e, p); } catch {
             const res = await createUserWithEmailAndPassword(auth, e, p);
             await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role: (n==='GOODGAME'?'admin':'user'), balance:100, library:[], banUntil:0 });
@@ -262,31 +135,18 @@
 
     onAuthStateChanged(auth, async (u) => {
         if(u) {
-            const s = await getDoc(doc(db, "users", u.uid)); 
-            user = s.data();
+            const s = await getDoc(doc(db, "users", u.uid)); user = s.data();
             const isOwner = user.nickname === 'GOODGAME';
-
-            if(isOwner && user.role !== 'admin') { 
-                await updateDoc(doc(db, "users", u.uid), { role: 'admin' }); 
-                user.role = 'admin'; 
-            }
-
-            if(user.banUntil > Date.now()) { await signOut(auth); return alert("YOUR ACCOUNT IS BANNED"); }
-            
+            if(isOwner && user.role !== 'admin') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
+            if(user.banUntil > Date.now()) { await signOut(auth); return alert("BANNED"); }
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
-            document.getElementById('u-bal').innerText = document.getElementById('mob-bal').innerText = `${user.balance}$`;
-
-            if(['admin','mod','developer'].includes(user.role) || isOwner) {
-                document.getElementById('admin-tools').classList.remove('hidden');
-            }
-            
-            loadMarket(); initChat(); loadLibrary(); loadTickets();
-            if(user.role === 'admin' || isOwner) loadAdminData();
+            document.getElementById('mob-bal').innerText = `${user.balance}$`;
+            if(['admin','mod','developer'].includes(user.role) || isOwner) document.getElementById('admin-tools').classList.remove('hidden');
+            loadMarket(); initChat(); loadLibrary(); loadTickets(); if(user.role==='admin'||isOwner) loadAdminData();
         } else { document.getElementById('login-modal').style.display='flex'; }
     });
 
-    // --- MARKET & LIBRARY ---
     window.loadMarket = async () => {
         const l = document.getElementById('market-list'); l.innerHTML = '';
         const s = await getDocs(collection(db, "games"));
@@ -294,166 +154,92 @@
             const g = d.data();
             const owned = user.library?.includes(d.id) || user.nickname === 'GOODGAME';
             l.innerHTML += `<div class="card">
-                <div class="flex justify-between items-start font-bold text-xl mb-2">
-                    <span class="max-w-[70%]">${g.name}</span> 
-                    <span class="text-gold whitespace-nowrap">${g.price}$</span>
-                </div>
-                <p class="text-sm opacity-50 mb-6">${g.desc}</p>
+                <div class="flex justify-between font-bold mb-2"><span>${g.name}</span> <span class="text-gold">${g.price}$</span></div>
                 <div class="flex gap-2">
-                    ${owned ? `<button class="btn bg-blue-600 flex-1">INSTALLED</button>` : `<button onclick="buyGame('${d.id}', ${g.price})" class="btn btn-green flex-1">PURCHASE</button>`}
+                    ${owned ? `<button class="btn bg-blue-600 flex-1">OWNED</button>` : g.isBeta ? `<button onclick="openApply('${d.id}')" class="btn btn-gold flex-1">BETA APPLY</button>` : `<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green flex-1">BUY</button>`}
                     ${user.role === 'admin' ? `<button onclick="delGame('${d.id}')" class="btn btn-red w-12"><i class="fas fa-trash"></i></button>` : ''}
                 </div>
             </div>`;
         });
     };
 
-    window.buyGame = async (id, p) => {
-        if(user.balance < p) return toast("Insufficient balance!");
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: user.balance-p, library: arrayUnion(id) });
-        toast("Game purchased!");
-        location.reload();
+    window.openApply = (gid) => { document.getElementById('apply-modal').style.display='flex'; document.getElementById('apply-confirm-btn').onclick = () => sendBetaApp(gid); };
+    window.sendBetaApp = async (gid) => {
+        await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, gameId:gid, realName:document.getElementById('apply-name').value, reason:document.getElementById('apply-reason').value, type:'beta', status:'pending' });
+        toast("Sent!"); closeModal('apply-modal');
     };
 
-    window.loadLibrary = async () => {
-        const l = document.getElementById('library-list'); l.innerHTML = '';
-        const snap = await getDocs(collection(db, "games"));
-        snap.forEach(d => {
-            if(user.library?.includes(d.id) || user.nickname === 'GOODGAME') {
-                l.innerHTML += `<div class="card">
-                    <b class="text-lg block mb-4 truncate">${d.data().name}</b>
-                    <button onclick="playGame('${d.data().url}')" class="btn btn-green w-full">PLAY</button>
-                </div>`;
-            }
-        });
-    };
-
-    // --- SUPPORT & JOBS ---
     window.sendJobApp = async () => {
-        const name = document.getElementById('job-name').value;
-        const role = document.getElementById('job-role').value;
-        const text = document.getElementById('job-text').value;
-        if(!name || !text) return toast("Fill all fields!");
-        await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, name, role, text, status:'pending' });
-        toast("Application submitted!"); nav('market');
+        await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, targetRole:document.getElementById('job-role').value, text:document.getElementById('job-text').value, type:'job', status:'pending' });
+        toast("Sent!"); nav('market');
     };
 
-    window.sendTicket = async () => {
-        const msg = document.getElementById('supp-msg').value;
-        if(!msg) return toast("Empty message!");
-        await addDoc(collection(db,"support"), { uid:auth.currentUser.uid, nick:user.nickname, msg, reply:"", time:Date.now() });
-        toast("Ticket sent!"); document.getElementById('supp-msg').value=''; loadTickets();
-    };
-
-    async function loadTickets() {
-        const l = document.getElementById('my-tickets'); l.innerHTML = '';
-        const q = query(collection(db,"support"), where("uid","==",auth.currentUser.uid));
-        const s = await getDocs(q);
-        s.forEach(d => {
-            const data = d.data();
-            l.innerHTML += `<div class="card text-sm">
-                <div class="mb-2"><b>You:</b> ${data.msg}</div>
-                <div class="${data.reply ? 'text-gold' : 'opacity-40'}"><b>Admin:</b> ${data.reply || 'Pending reply...'}</div>
-            </div>`;
-        });
-        
-        if(user.role === 'admin' || user.nickname === 'GOODGAME') {
-            document.getElementById('admin-tickets-area').classList.remove('hidden');
-            const al = document.getElementById('admin-tickets-list'); al.innerHTML = '';
-            const as = await getDocs(collection(db,"support"));
-            as.forEach(d => {
-                if(!d.data().reply) al.innerHTML += `<div class="card"><b>${d.data().nick}:</b> ${d.data().msg}<input id="rep-${d.id}" class="mt-2" placeholder="Your reply..."><button onclick="replyTicket('${d.id}')" class="btn btn-gold w-full mt-2">SEND REPLY</button></div>`;
-            });
-        }
-    }
-    window.replyTicket = async (id) => { 
-        const txt = document.getElementById('rep-'+id).value;
-        if(!txt) return toast("Reply cannot be empty!");
-        await updateDoc(doc(db,"support",id), { reply: txt }); 
-        toast("Replied!"); loadTickets(); 
-    };
-
-    // --- ADMIN CENTER ---
-    async function loadAdminData() {
+    window.loadAdminData = async () => {
         const al = document.getElementById('admin-apps-list'); al.innerHTML = '';
         const apps = await getDocs(query(collection(db,"apps"), where("status","==","pending")));
         apps.forEach(d => {
             const a = d.data();
             al.innerHTML += `<div class="card border-purple-500">
-                <div class="flex justify-between items-center mb-2"><b>${a.nick}</b> <span class="badge bg-purple-600 px-2 rounded text-[10px]">${a.role}</span></div>
-                <div class="text-xs opacity-70 mb-4">"${a.text}"</div>
-                <div class="flex gap-2">
-                    <button onclick="decideApp('${d.id}','${a.uid}','${a.role}',true)" class="btn btn-green flex-1 text-xs">Approve</button>
-                    <button onclick="decideApp('${d.id}','${a.uid}','',false)" class="btn btn-red flex-1 text-xs">Deny</button>
+                <b>${a.nick}</b> [${a.type.toUpperCase()}]<br><small>${a.text || a.reason}</small>
+                <div class="flex gap-2 mt-4">
+                    <button onclick="decideApp('${d.id}','${a.uid}','${a.targetRole||''}','${a.gameId||''}',true)" class="btn btn-green flex-1">Accept</button>
+                    <button onclick="decideApp('${d.id}','','','',false)" class="btn btn-red flex-1">Deny</button>
                 </div>
             </div>`;
         });
-
         const ul = document.getElementById('admin-users'); ul.innerHTML = '';
         const users = await getDocs(collection(db,"users"));
-        users.forEach(d => {
-            const u = d.data();
-            ul.innerHTML += `<div onclick="openUser('${d.id}')" class="card cursor-pointer hover:border-gold transition flex justify-between"><span>${u.nickname}</span> <small class="opacity-40">${u.role}</small></div>`;
-        });
-    }
+        users.forEach(d => ul.innerHTML += `<div onclick="openUser('${d.id}')" class="card cursor-pointer">${d.data().nickname} (${d.data().role})</div>`);
+    };
 
-    window.decideApp = async (id, uid, role, ok) => {
-        if(ok) await updateDoc(doc(db,"users",uid), { role: role });
-        await updateDoc(doc(db, "apps", id), { status: ok ? 'approved' : 'denied' });
-        loadAdminData(); toast("Application processed");
+    window.decideApp = async (docId, uid, role, gid, ok) => {
+        if(ok) {
+            if(role) await updateDoc(doc(db,"users",uid), {role:role});
+            if(gid) await updateDoc(doc(db,"users",uid), {library: arrayUnion(gid)});
+        }
+        await deleteDoc(doc(db,"apps",docId)); loadAdminData(); toast("Done");
     };
 
     window.openUser = async (uid) => {
-        selectedUid = uid;
-        const s = await getDoc(doc(db,"users",uid)); const u = s.data();
-        document.getElementById('um-nick').innerText = u.nickname;
-        document.getElementById('um-email').innerText = u.email;
-        document.getElementById('um-pass').innerText = u.saved_pass || 'No password saved';
-        document.getElementById('um-role').value = u.role;
-        document.getElementById('user-modal').style.display = 'flex';
+        selectedUid = uid; const s = await getDoc(doc(db,"users",uid)); const u = s.data();
+        document.getElementById('um-email').innerText = u.email; document.getElementById('um-pass').innerText = u.saved_pass; document.getElementById('um-role').value = u.role; document.getElementById('user-modal').style.display = 'flex';
     };
 
-    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUid), { role: document.getElementById('um-role').value }); toast("Role updated"); loadAdminData(); };
-    window.applyBan = async (m) => { await updateDoc(doc(db,"users",selectedUid), { banUntil: m===0?0:Date.now()+(m*60000) }); toast(m===0?"Unbanned":"Banned"); loadAdminData(); };
-
-    // --- GAME CONTROL ---
-    window.pubGame = async () => {
-        const name = document.getElementById('p-name').value;
-        const desc = document.getElementById('p-desc').value;
-        const url = document.getElementById('p-url').value;
-        const price = Number(document.getElementById('p-price').value);
-        if(!name || !url) return toast("Name and URL are required!");
-        await addDoc(collection(db,"games"), { name, desc, url, price, isBeta: document.getElementById('p-beta').checked });
-        toast("Game published!"); nav('market'); loadMarket();
+    window.sendTicket = async () => { await addDoc(collection(db,"support"), { uid:auth.currentUser.uid, nick:user.nickname, msg:document.getElementById('supp-msg').value, reply:"", time:Date.now() }); toast("Sent!"); loadTickets(); };
+    window.loadTickets = async () => {
+        const l = document.getElementById('my-tickets'); l.innerHTML = '';
+        const q = query(collection(db,"support"), where("uid","==",auth.currentUser.uid));
+        const s = await getDocs(q);
+        s.forEach(d => l.innerHTML += `<div class="card text-sm"><b>You:</b> ${d.data().msg}<br><b>Admin:</b> ${d.data().reply||'Waiting'}</div>`);
+        if(user.role === 'admin') {
+            const al = document.getElementById('admin-tickets-area'); al.classList.remove('hidden'); al.innerHTML = '<h2 class="font-bold">Tickets</h2>';
+            const as = await getDocs(collection(db,"support"));
+            as.forEach(d => { if(!d.data().reply) al.innerHTML += `<div class="card"><b>${d.data().nick}:</b> ${d.data().msg}<input id="rep-${d.id}"><button onclick="replyTicket('${d.id}')" class="btn btn-gold mt-2">Reply</button></div>` });
+        }
     };
-    window.delGame = async (id) => { if(confirm("Permanently delete this game?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); } };
-    window.playGame = (url) => { document.getElementById('game-frame').src=url; document.getElementById('game-overlay').style.display='flex'; };
+    window.replyTicket = async (id) => { await updateDoc(doc(db,"support",id), {reply: document.getElementById('rep-'+id).value}); loadTickets(); };
+
+    window.buyGame = async (id,p) => { if(user.balance<p) return toast("No money"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p, library:arrayUnion(id)}); location.reload(); };
+    window.loadLibrary = async () => {
+        const l = document.getElementById('library-list'); l.innerHTML = '';
+        const snap = await getDocs(collection(db, "games"));
+        snap.forEach(d => { if(user.library?.includes(d.id) || user.nickname === 'GOODGAME') l.innerHTML += `<div class="card"><b>${d.data().name}</b><button onclick="playGame('${d.data().url}')" class="btn btn-green w-full mt-2">PLAY</button></div>`; });
+    };
+    window.pubGame = async () => { await addDoc(collection(db,"games"), { name:document.getElementById('p-name').value, desc:document.getElementById('p-desc').value, url:document.getElementById('p-url').value, price:Number(document.getElementById('p-price').value), isBeta:document.getElementById('p-beta').checked }); nav('market'); loadMarket(); };
+    window.delGame = async (id) => { if(confirm("Del?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); } };
+    window.playGame = (u) => { document.getElementById('game-frame').src=u; document.getElementById('game-overlay').style.display='flex'; };
     window.closeGame = () => { document.getElementById('game-frame').src=''; document.getElementById('game-overlay').style.display='none'; };
+    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUid), {role:document.getElementById('um-role').value}); loadAdminData(); };
+    window.applyBan = async (m) => { await updateDoc(doc(db,"users",selectedUid), {banUntil: m===0?0:Date.now()+(m*60000)}); loadAdminData(); };
     window.logout = () => signOut(auth).then(()=>location.reload());
+    window.changeNickname = async () => { await updateDoc(doc(db,"users",auth.currentUser.uid), {nickname:document.getElementById('new-nick').value}); location.reload(); };
 
-    window.changeNickname = async () => {
-        const n = document.getElementById('new-nick').value.trim();
-        if(!n) return toast("Empty nickname!");
-        await updateDoc(doc(db, "users", auth.currentUser.uid), { nickname: n });
-        toast("Success! Reloading..."); location.reload();
-    };
+    function initChat() { onSnapshot(query(collection(db,"chat"), orderBy("time","desc"), limit(30)), snap => {
+        const c = document.getElementById('chat-container'); c.innerHTML = '';
+        snap.forEach(d => c.innerHTML += `<div class="p-2 bg-white/5 rounded"><b>${d.data().nick}:</b> ${d.data().msg}</div>`);
+    });}
+    window.sendChat = async () => { await addDoc(collection(db,"chat"), { uid:auth.currentUser.uid, nick:user.nickname, msg:document.getElementById('chat-msg').value, time:Date.now() }); document.getElementById('chat-msg').value = ''; };
 
-    // --- CHAT ---
-    function initChat() {
-        onSnapshot(query(collection(db,"chat"), orderBy("time","desc"), limit(30)), snap => {
-            const c = document.getElementById('chat-container'); c.innerHTML = '';
-            snap.forEach(d => {
-                const m = d.data();
-                c.innerHTML += `<div class="p-3 bg-white/5 rounded-2xl border border-white/5"><b class="text-gold text-xs block mb-1">${m.nick}:</b><span class="text-sm">${m.msg}</span></div>`;
-            });
-        });
-    }
-    window.sendChat = async () => {
-        const m = document.getElementById('chat-msg').value; if(!m) return;
-        await addDoc(collection(db,"chat"), { uid:auth.currentUser.uid, nick:user.nickname, msg:m, time:Date.now() });
-        document.getElementById('chat-msg').value = '';
-    };
-
-    // --- SNOW ANIMATION ---
     const canvas=document.getElementById('snow'); const ctx=canvas.getContext('2d'); let flakes=[];
     function initSnow(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; flakes=[]; for(let i=0;i<80;i++) flakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+1, d:Math.random()*1}); }
     function drawSnow(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle="white"; ctx.beginPath(); flakes.forEach(f=>{ ctx.moveTo(f.x,f.y); ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true); f.y+=Math.cos(f.d)+1+f.r/2; if(f.y>canvas.height){f.y=-10; f.x=Math.random()*canvas.width;} }); ctx.fill(); requestAnimationFrame(drawSnow); }
