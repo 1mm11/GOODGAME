@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | WINTER FINAL UPDATE</title>
+    <title>GOODGAME | WINTER ULTIMATE UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -56,9 +56,12 @@
             <button onclick="nav('support')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-headset text-yellow-400"></i> <span data-i18n="support">Support</span></button>
             <button onclick="nav('career')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-user-tie text-purple-400"></i> <span data-i18n="jobs">Jobs</span></button>
             <button onclick="nav('settings')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-cog text-gray-400"></i> <span data-i18n="settings">Settings</span></button>
+            
             <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-white/10 space-y-2">
+                <p class="text-[10px] font-bold opacity-30 px-4 uppercase">Admin Panel</p>
+                <button onclick="nav('admin-apps-tab')" class="w-full text-left p-4 text-purple-400 flex items-center gap-4 font-bold"><i class="fas fa-envelope-open-text"></i> Beta/Job Apps</button>
                 <button onclick="nav('publish')" class="w-full text-left p-4 text-green-400 flex items-center gap-4"><i class="fas fa-plus-circle"></i> Add Game</button>
-                <button onclick="nav('admin-center')" class="w-full text-left p-4 text-red-500 flex items-center gap-4 font-bold"><i class="fas fa-crown"></i> Admin Panel</button>
+                <button onclick="nav('admin-center')" class="w-full text-left p-4 text-red-500 flex items-center gap-4 font-bold"><i class="fas fa-users-cog"></i> User List</button>
             </div>
         </nav>
     </div>
@@ -72,58 +75,51 @@
     <section id="market"><h2 class="text-3xl font-black mb-6 italic" data-i18n="market">MARKET</h2><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
     <section id="library" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-green-500" data-i18n="library">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
     
-    <section id="chat" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-blue-400" data-i18n="chat">CHAT</h2>
-        <div class="card p-0 overflow-hidden flex flex-col h-[65vh]">
-            <div id="chat-container" class="flex-1 p-4 overflow-y-auto flex flex-col-reverse gap-3"></div>
-            <div class="p-4 bg-black/20 flex gap-2"><input id="chat-msg" placeholder="..." class="m-0"><button onclick="sendChat()" class="btn btn-green w-16 m-0"><i class="fas fa-paper-plane"></i></button></div>
-        </div>
+    <section id="admin-apps-tab" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-purple-400 uppercase tracking-widest">Incoming Applications</h2>
+        <div id="admin-apps-list" class="space-y-4"></div>
+    </section>
+
+    <section id="admin-center" class="hidden">
+        <h2 class="text-2xl font-black mb-6 text-red-500 uppercase tracking-widest">User Database</h2>
+        <div id="admin-users" class="space-y-2"></div>
     </section>
 
     <section id="settings" class="hidden">
         <h2 class="text-3xl font-black mb-6 italic" data-i18n="settings">SETTINGS</h2>
         <div class="card mb-4">
-            <h3 class="font-bold mb-4"><i class="fas fa-globe"></i> Language</h3>
-            <div class="grid grid-cols-2 gap-2">
-                <button onclick="setLang('en')" class="btn bg-gray-800 text-white">English</button>
-                <button onclick="setLang('ru')" class="btn bg-blue-900 text-white">Русский</button>
-                <button onclick="setLang('ua')" class="btn bg-yellow-600 text-black">Українська</button>
-                <button onclick="setLang('es')" class="btn bg-red-900 text-white">Español</button>
+            <h3 class="font-bold mb-4 text-gold"><i class="fas fa-globe"></i> SELECT LANGUAGE</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                <button onclick="setLang('en')" class="btn bg-gray-800 text-white text-xs">English</button>
+                <button onclick="setLang('ru')" class="btn bg-blue-900 text-white text-xs">Русский</button>
+                <button onclick="setLang('ua')" class="btn bg-yellow-600 text-black text-xs">Українська</button>
+                <button onclick="setLang('es')" class="btn bg-red-900 text-white text-xs">Español</button>
             </div>
         </div>
-        <div class="card">
-            <input id="new-nick" placeholder="New Nickname">
-            <button onclick="changeNickname()" class="btn btn-gold w-full">SAVE</button>
-        </div>
+        <div class="card"><input id="new-nick" placeholder="Nickname"><button onclick="changeNickname()" class="btn btn-gold w-full">SAVE</button></div>
     </section>
 
+    <section id="chat" class="hidden"><div class="card p-0 overflow-hidden h-[65vh] flex flex-col"><div id="chat-container" class="flex-1 p-4 overflow-y-auto flex flex-col-reverse gap-3"></div><div class="p-4 bg-black/20 flex gap-2"><input id="chat-msg" placeholder="..." class="m-0"><button onclick="sendChat()" class="btn btn-green w-16 m-0"><i class="fas fa-paper-plane"></i></button></div></div></section>
     <section id="career" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-purple-400" data-i18n="jobs">JOBS</h2><div class="card max-w-lg mx-auto"><input id="job-name" placeholder="Name"><select id="job-role"><option value="developer">Developer</option><option value="mod">Moderator</option></select><textarea id="job-text" placeholder="Why you?" rows="4"></textarea><button onclick="sendJobApp()" class="btn btn-gold w-full">SUBMIT</button></div></section>
-    
-    <section id="support" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-yellow-500" data-i18n="support">SUPPORT</h2><div class="card"><textarea id="supp-msg" placeholder="..." rows="3"></textarea><button onclick="sendTicket()" class="btn btn-green w-full">SEND</button></div><div id="admin-tickets-area" class="hidden mt-8 space-y-3"></div><div id="my-tickets" class="mt-8 space-y-3"></div></section>
-
-    <section id="admin-center" class="hidden">
-        <h2 class="text-2xl font-black mb-4 text-purple-400 uppercase">Requests</h2><div id="admin-apps-list" class="space-y-4 mb-10"></div>
-        <h2 class="text-2xl font-black mb-4 text-red-500 uppercase">Users</h2><div id="admin-users" class="space-y-2"></div>
-    </section>
-    
+    <section id="support" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-yellow-500" data-i18n="support">SUPPORT</h2><div class="card"><textarea id="supp-msg" placeholder="..." rows="3"></textarea><button onclick="sendTicket()" class="btn btn-green w-full">SEND</button></div><div id="admin-tickets-area" class="hidden mt-8"></div><div id="my-tickets" class="mt-8 space-y-3"></div></section>
     <section id="publish" class="hidden"><div class="card max-w-lg mx-auto"><input id="p-name" placeholder="Name"><textarea id="p-desc" placeholder="Desc"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price $"><label class="flex items-center gap-3 mb-4"><input type="checkbox" id="p-beta"> Beta</label><button onclick="pubGame()" class="btn btn-green w-full">CREATE</button></div></section>
 </main>
 
 <div id="user-modal" class="modal-overlay"><div class="modal-box">
-    <h2 id="um-nick" class="text-2xl font-bold mb-4">User</h2>
-    <div class="text-xs font-mono bg-black/50 p-4 rounded-xl mb-4">Email: <span id="um-email"></span><br>Pass: <span id="um-pass" class="text-red-400"></span></div>
+    <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold">User Dossier</h2>
+    <div class="text-xs font-mono bg-black/50 p-4 rounded-xl mb-4 border border-white/10">Email: <span id="um-email" class="text-white"></span><br>Pass: <span id="um-pass" class="text-red-400"></span></div>
     <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="mod">Mod</option><option value="admin">Admin</option></select>
     <button onclick="setRole()" class="btn btn-gold w-full mb-3">SAVE ROLE</button>
     <button onclick="applyBan(1440)" class="btn btn-red w-full mb-3">BAN 24H</button>
     <button onclick="applyBan(0)" class="btn bg-gray-600 w-full mb-3">UNBAN</button>
-    <button onclick="closeModal('user-modal')" class="btn w-full opacity-50">CLOSE</button>
+    <button onclick="closeModal('user-modal')" class="btn w-full opacity-40">CLOSE</button>
 </div></div>
 
-<div id="apply-modal" class="modal-overlay"><div class="card w-full max-w-md"><h2 class="text-xl font-bold mb-4 text-purple-400">Beta Application</h2><input id="apply-name" placeholder="Real Name"><textarea id="apply-reason" placeholder="Reason"></textarea><button id="apply-confirm-btn" class="btn btn-green w-full">SEND</button><button onclick="closeModal('apply-modal')" class="btn bg-gray-700 w-full mt-2">CANCEL</button></div></div>
+<div id="apply-modal" class="modal-overlay"><div class="card w-full max-w-md"><h2 class="text-xl font-bold mb-4 text-purple-400">Beta Application</h2><input id="apply-name" placeholder="Real Name"><textarea id="apply-reason" placeholder="Reason..."></textarea><button id="apply-confirm-btn" class="btn btn-green w-full">SEND</button><button onclick="closeModal('apply-modal')" class="btn bg-gray-700 w-full mt-2">CANCEL</button></div></div>
 
-<div id="game-overlay"><div class="p-4 flex justify-between bg-gray-900"><span class="text-gold font-bold">GAME PLAYER</span><button onclick="closeGame()" class="bg-red-600 px-4 py-1 rounded-full font-bold">EXIT</button></div><iframe id="game-frame"></iframe></div>
+<div id="game-overlay"><div class="p-4 flex justify-between bg-gray-900 border-b border-white/10"><span class="text-gold font-bold">GOODGAME PLAYER</span><button onclick="closeGame()" class="bg-red-600 px-6 py-2 rounded-full font-bold text-sm">EXIT GAME</button></div><iframe id="game-frame"></iframe></div>
 
-<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black italic text-red-500 mb-6">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
+<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black italic text-red-500 mb-6">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full text-lg">START</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -136,11 +132,16 @@
     const db = getFirestore(app);
     let user = null, selectedUid = null;
 
-    // --- TRANSLATIONS ---
+    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'), 3000); };
+    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
+    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
+    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+
+    // LANGUAGES
     const i18n = {
         en: { market: "Market", library: "Library", chat: "Chat", support: "Support", jobs: "Jobs", settings: "Settings" },
-        ru: { market: "Магазин", library: "Библиотека", chat: "Чат", support: "Помощь", jobs: "Работа", settings: "Настройки" },
-        ua: { market: "Крамниця", library: "Бібліотека", chat: "Чат", support: "Допомога", jobs: "Робота", settings: "Налаштування" },
+        ru: { market: "Магазин", library: "Библиотека", chat: "Чат", support: "Помощь", jobs: "Вакансии", settings: "Настройки" },
+        ua: { market: "Крамниця", library: "Бібліотека", chat: "Чат", support: "Допомога", jobs: "Вакансії", settings: "Налаштування" },
         es: { market: "Mercado", library: "Biblioteca", chat: "Chat", support: "Soporte", jobs: "Empleo", settings: "Ajustes" }
     };
 
@@ -153,11 +154,7 @@
         localStorage.setItem('gg_lang', lang);
     };
 
-    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'),3000); };
-    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
-    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-
+    // AUTH
     window.authHandler = async () => {
         const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
         try { await signInWithEmailAndPassword(auth, e, p); } catch {
@@ -176,52 +173,32 @@
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('mob-bal').innerText = `${user.balance}$`;
             if(['admin','mod','developer'].includes(user.role) || isOwner) document.getElementById('admin-tools').classList.remove('hidden');
-            loadMarket(); initChat(); loadLibrary(); loadTickets(); if(user.role==='admin'||isOwner) loadAdminData();
+            loadMarket(); initChat(); loadLibrary(); loadTickets(); 
+            if(user.role==='admin' || isOwner) loadAdminData();
             window.setLang(localStorage.getItem('gg_lang') || 'en');
         } else { document.getElementById('login-modal').style.display='flex'; }
     });
 
-    // --- MARKET & APPS ---
-    window.loadMarket = async () => {
-        const l = document.getElementById('market-list'); l.innerHTML = '';
-        const s = await getDocs(collection(db, "games"));
-        s.forEach(d => {
-            const g = d.data();
-            const owned = user.library?.includes(d.id) || user.nickname === 'GOODGAME';
-            l.innerHTML += `<div class="card">
-                <div class="flex justify-between font-bold mb-2"><span>${g.name}</span> <span class="text-gold">${g.price}$</span></div>
-                <div class="flex gap-2">
-                    ${owned ? `<button class="btn bg-blue-600 flex-1">OWNED</button>` : g.isBeta ? `<button onclick="openApply('${d.id}')" class="btn btn-gold flex-1">BETA APPLY</button>` : `<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green flex-1">BUY</button>`}
-                    ${user.role === 'admin' ? `<button onclick="delGame('${d.id}')" class="btn btn-red w-12"><i class="fas fa-trash"></i></button>` : ''}
-                </div>
-            </div>`;
-        });
-    };
-
-    window.openApply = (gid) => { document.getElementById('apply-modal').style.display='flex'; document.getElementById('apply-confirm-btn').onclick = () => sendBetaApp(gid); };
-    window.sendBetaApp = async (gid) => {
-        await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, gameId:gid, reason:document.getElementById('apply-reason').value, type:'beta', status:'pending', time: Date.now() });
-        toast("Sent!"); closeModal('apply-modal');
-    };
-
-    window.sendJobApp = async () => {
-        await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, targetRole:document.getElementById('job-role').value, text:document.getElementById('job-text').value, type:'job', status:'pending', time: Date.now() });
-        toast("Sent!"); nav('market');
-    };
-
+    // ADMIN APPS LIST
     window.loadAdminData = async () => {
         const al = document.getElementById('admin-apps-list'); al.innerHTML = '';
-        const apps = await getDocs(query(collection(db,"apps"), where("status","==","pending")));
-        apps.forEach(d => {
+        const s = await getDocs(collection(db, "apps"));
+        let count = 0;
+        s.forEach(d => {
             const a = d.data();
-            al.innerHTML += `<div class="card border-purple-500">
-                <b>${a.nick}</b> [${a.type.toUpperCase()}]<br><small>${a.text || a.reason}</small>
-                <div class="flex gap-2 mt-4">
-                    <button onclick="decideApp('${d.id}','${a.uid}','${a.targetRole||''}','${a.gameId||''}',true)" class="btn btn-green flex-1">Accept</button>
-                    <button onclick="decideApp('${d.id}','','','',false)" class="btn btn-red flex-1">Deny</button>
-                </div>
-            </div>`;
+            if(a.status === 'pending' || !a.status) {
+                count++;
+                al.innerHTML += `<div class="card border-purple-500">
+                    <div class="flex justify-between font-bold mb-2"><span>${a.nick}</span> <span class="badge bg-gold/10 px-2 rounded text-[10px] text-gold">${a.type.toUpperCase()}</span></div>
+                    <p class="text-xs mb-4 italic">"${a.text || a.reason}"</p>
+                    <div class="flex gap-2">
+                        <button onclick="decideApp('${d.id}','${a.uid}','${a.targetRole||''}','${a.gameId||''}',true)" class="btn btn-green flex-1 text-xs">ACCEPT</button>
+                        <button onclick="decideApp('${d.id}','','','',false)" class="btn btn-red flex-1 text-xs">DENY</button>
+                    </div>
+                </div>`;
+            }
         });
+        if(count === 0) al.innerHTML = '<p class="opacity-30 italic">No applications available.</p>';
         const ul = document.getElementById('admin-users'); ul.innerHTML = '';
         const users = await getDocs(collection(db,"users"));
         users.forEach(d => ul.innerHTML += `<div onclick="openUser('${d.id}')" class="card cursor-pointer">${d.data().nickname} (${d.data().role})</div>`);
@@ -232,30 +209,43 @@
             if(role) await updateDoc(doc(db,"users",uid), {role:role});
             if(gid) await updateDoc(doc(db,"users",uid), {library: arrayUnion(gid)});
             toast("Approved!");
-        } else { toast("Rejected"); }
-        if(docId) await deleteDoc(doc(db,"apps",docId)); 
-        loadAdminData();
+        } else { toast("Denied"); }
+        if(docId) await deleteDoc(doc(db,"apps",docId)); loadAdminData();
     };
 
+    // LOGIC
+    window.sendJobApp = async () => { await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, targetRole:document.getElementById('job-role').value, text:document.getElementById('job-text').value, type:'job', status:'pending', time: Date.now() }); toast("Sent!"); nav('market'); };
+    window.openApply = (gid) => { document.getElementById('apply-modal').style.display='flex'; document.getElementById('apply-confirm-btn').onclick = () => sendBetaApp(gid); };
+    window.sendBetaApp = async (gid) => { await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, gameId:gid, reason:document.getElementById('apply-reason').value, type:'beta', status:'pending', time: Date.now() }); toast("Sent!"); closeModal('apply-modal'); };
+    window.loadMarket = async () => {
+        const l = document.getElementById('market-list'); l.innerHTML = '';
+        const s = await getDocs(collection(db, "games"));
+        s.forEach(d => {
+            const g = d.data();
+            const owned = user.library?.includes(d.id) || user.nickname === 'GOODGAME';
+            l.innerHTML += `<div class="card">
+                <div class="flex justify-between font-bold mb-2"><span>${g.name}</span> <span class="text-gold">${g.price}$</span></div>
+                <div class="flex gap-2">${owned ? `<button class="btn bg-blue-600 flex-1">OWNED</button>` : g.isBeta ? `<button onclick="openApply('${d.id}')" class="btn btn-purple flex-1">BETA</button>` : `<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green flex-1">BUY</button>`}</div>
+            </div>`;
+        });
+    };
     window.openUser = async (uid) => {
         selectedUid = uid; const s = await getDoc(doc(db,"users",uid)); const u = s.data();
         document.getElementById('um-email').innerText = u.email; document.getElementById('um-pass').innerText = u.saved_pass; document.getElementById('um-role').value = u.role; document.getElementById('user-modal').style.display = 'flex';
     };
-
     window.sendTicket = async () => { await addDoc(collection(db,"support"), { uid:auth.currentUser.uid, nick:user.nickname, msg:document.getElementById('supp-msg').value, reply:"", time:Date.now() }); toast("Sent!"); loadTickets(); };
     window.loadTickets = async () => {
         const l = document.getElementById('my-tickets'); l.innerHTML = '';
         const q = query(collection(db,"support"), where("uid","==",auth.currentUser.uid));
         const s = await getDocs(q);
-        s.forEach(d => l.innerHTML += `<div class="card text-sm"><b>You:</b> ${d.data().msg}<br><b>Admin:</b> ${d.data().reply||'Waiting'}</div>`);
+        s.forEach(d => l.innerHTML += `<div class="card text-sm"><b>You:</b> ${d.data().msg}<br><b>Admin:</b> ${d.data().reply||'Wait...'}</div>`);
         if(user.role === 'admin') {
-            const al = document.getElementById('admin-tickets-area'); al.classList.remove('hidden'); al.innerHTML = '<h2 class="font-bold">Tickets</h2>';
+            const al = document.getElementById('admin-tickets-area'); al.classList.remove('hidden'); al.innerHTML = '<h3 class="font-bold text-gold">Support</h3>';
             const as = await getDocs(collection(db,"support"));
-            as.forEach(d => { if(!d.data().reply) al.innerHTML += `<div class="card"><b>${d.data().nick}:</b> ${d.data().msg}<input id="rep-${d.id}"><button onclick="replyTicket('${d.id}')" class="btn btn-gold mt-2">Reply</button></div>` });
+            as.forEach(d => { if(!d.data().reply) al.innerHTML += `<div class="card text-xs"><b>${d.data().nick}:</b> ${d.data().msg}<input id="rep-${d.id}" class="mt-2"><button onclick="replyTicket('${d.id}')" class="btn btn-gold w-full mt-2">REPLY</button></div>` });
         }
     };
     window.replyTicket = async (id) => { await updateDoc(doc(db,"support",id), {reply: document.getElementById('rep-'+id).value}); loadTickets(); };
-
     window.buyGame = async (id,p) => { if(user.balance<p) return toast("No money"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p, library:arrayUnion(id)}); location.reload(); };
     window.loadLibrary = async () => {
         const l = document.getElementById('library-list'); l.innerHTML = '';
@@ -263,14 +253,12 @@
         snap.forEach(d => { if(user.library?.includes(d.id) || user.nickname === 'GOODGAME') l.innerHTML += `<div class="card"><b>${d.data().name}</b><button onclick="playGame('${d.data().url}')" class="btn btn-green w-full mt-2">PLAY</button></div>`; });
     };
     window.pubGame = async () => { await addDoc(collection(db,"games"), { name:document.getElementById('p-name').value, desc:document.getElementById('p-desc').value, url:document.getElementById('p-url').value, price:Number(document.getElementById('p-price').value), isBeta:document.getElementById('p-beta').checked }); nav('market'); loadMarket(); };
-    window.delGame = async (id) => { if(confirm("Del?")) { await deleteDoc(doc(db,"games",id)); loadMarket(); } };
-    window.playGame = (u) => { document.getElementById('game-frame').src=u; document.getElementById('game-overlay').style.display='flex'; };
     window.closeGame = () => { document.getElementById('game-frame').src=''; document.getElementById('game-overlay').style.display='none'; };
-    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUid), {role:document.getElementById('um-role').value}); toast("Role Saved!"); loadAdminData(); };
+    window.playGame = (u) => { document.getElementById('game-frame').src=u; document.getElementById('game-overlay').style.display='flex'; };
+    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUid), {role:document.getElementById('um-role').value}); loadAdminData(); };
     window.applyBan = async (m) => { await updateDoc(doc(db,"users",selectedUid), {banUntil: m===0?0:Date.now()+(m*60000)}); loadAdminData(); };
     window.logout = () => signOut(auth).then(()=>location.reload());
-    window.changeNickname = async () => { await updateDoc(doc(db,"users",auth.currentUser.uid), {nickname:document.getElementById('new-nick').value}); toast("Updated!"); location.reload(); };
-
+    window.changeNickname = async () => { await updateDoc(doc(db,"users",auth.currentUser.uid), {nickname:document.getElementById('new-nick').value}); location.reload(); };
     function initChat() { onSnapshot(query(collection(db,"chat"), orderBy("time","desc"), limit(30)), snap => {
         const c = document.getElementById('chat-container'); c.innerHTML = '';
         snap.forEach(d => c.innerHTML += `<div class="p-2 bg-white/5 rounded"><b>${d.data().nick}:</b> ${d.data().msg}</div>`);
