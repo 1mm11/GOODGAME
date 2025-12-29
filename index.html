@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | CAREER UPDATE</title>
+    <title>GOODGAME | MOBILE FIX</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --bg: #0d1117; --panel: #161b22; --accent: #238636; --danger: #da3633; }
         body { background: var(--bg); color: #c9d1d9; font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; }
         
-        .sidebar { width: 260px; background: var(--panel); height: 100vh; position: fixed; border-right: 1px solid #30363d; z-index: 100; transition: 0.3s; }
-        .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; }
-        @media (max-width: 768px) { .sidebar { transform: translateX(-100%); } .main { margin-left: 0; } }
+        /* SIDEBAR & MOBILE MENU */
+        .sidebar { width: 260px; background: var(--panel); height: 100vh; position: fixed; border-right: 1px solid #30363d; z-index: 100; transition: 0.3s; transform: translateX(0); }
+        .main { margin-left: 260px; padding: 20px; min-height: 100vh; padding-bottom: 100px; padding-top: 60px; }
+        
+        .mobile-header { display: none; position: fixed; top: 0; left: 0; right: 0; height: 50px; background: var(--panel); border-bottom: 1px solid #30363d; z-index: 90; align-items: center; padding: 0 15px; justify-content: space-between; }
+
+        @media (max-width: 768px) { 
+            .sidebar { transform: translateX(-100%); } 
+            .sidebar.active { transform: translateX(0); }
+            .main { margin-left: 0; padding-top: 70px; } 
+            .mobile-header { display: flex; }
+        }
 
         .card { background: var(--panel); border: 1px solid #30363d; border-radius: 12px; padding: 15px; margin-bottom: 15px; }
         input, select, textarea { background: #0d1117; border: 1px solid #30363d; color: white; padding: 10px; border-radius: 8px; width: 100%; margin-bottom: 10px; }
@@ -34,6 +43,12 @@
     </style>
 </head>
 <body>
+
+<div class="mobile-header">
+    <button onclick="toggleMenu()" class="text-2xl text-white"><i class="fas fa-bars"></i></button>
+    <span class="text-green-500 font-black italic">GOODGAME</span>
+    <div id="mob-bal" class="text-yellow-500 font-bold text-sm">0$</div>
+</div>
 
 <div id="game-overlay" class="modal-overlay" style="display:none; flex-direction:column;">
     <div class="bg-gray-900 p-2 flex justify-between items-center w-full">
@@ -91,7 +106,8 @@
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
-        <div class="text-green-500 font-black text-2xl mb-8 italic tracking-tighter">GOODGAME</div>
+        <div class="text-green-500 font-black text-2xl mb-8 italic tracking-tighter hidden md:block">GOODGAME</div>
+        <div class="md:hidden text-gray-500 mb-4 text-xs font-bold uppercase tracking-widest">Меню</div>
         <nav class="space-y-2">
             <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Магазин</button>
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-gray-800 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Библиотека</button>
@@ -125,27 +141,27 @@
         <div class="card">
             <div id="chat-container"></div>
             <div class="flex gap-2 mt-4">
-                <input id="chat-msg" placeholder="Написать сообщение..." class="m-0">
-                <button onclick="sendChat()" class="btn btn-green w-32 m-0"><i class="fas fa-paper-plane"></i></button>
+                <input id="chat-msg" placeholder="Написать..." class="m-0">
+                <button onclick="sendChat()" class="btn btn-green w-20 m-0"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
     </section>
 
     <section id="career" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-purple-500">ПОДАТЬ ЗАЯВКУ</h2>
+        <h2 class="text-3xl font-black mb-6 italic text-purple-500">ВАКАНСИИ</h2>
         <div class="card max-w-lg">
-            <p class="mb-4 text-gray-400">Хотите попасть в команду GOODGAME?</p>
-            <input id="job-realname" placeholder="Ваше реальное имя">
+            <p class="mb-4 text-gray-400 text-sm">Заполни анкету, чтобы попасть в команду.</p>
+            <input id="job-realname" placeholder="Ваше имя">
             
             <label class="text-xs text-gray-500 ml-1">Желаемая должность:</label>
             <select id="job-target">
-                <option value="developer">🛠️ Разработчик игр</option>
-                <option value="mod">🛡️ Модератор (Следить за чатом)</option>
-                <option value="admin">👑 Администратор (Помощник)</option>
+                <option value="developer">🛠️ Разработчик</option>
+                <option value="mod">🛡️ Модератор</option>
+                <option value="admin">👑 Администратор</option>
             </select>
             
-            <textarea id="job-reason" placeholder="Почему мы должны взять именно вас?"></textarea>
-            <button onclick="sendJobRequest()" class="btn btn-purple" style="background:#8957e5;color:white">ОТПРАВИТЬ АНКЕТУ</button>
+            <textarea id="job-reason" placeholder="Почему именно вы?" rows="3"></textarea>
+            <button onclick="sendJobRequest()" class="btn btn-purple" style="background:#8957e5;color:white">ОТПРАВИТЬ</button>
         </div>
     </section>
 
@@ -153,7 +169,7 @@
         <h2 class="text-3xl font-black mb-6 italic text-yellow-500">ПОДДЕРЖКА</h2>
         
         <div id="admin-tickets-area" class="hidden mb-10 border border-yellow-700 p-4 rounded-xl bg-yellow-900/10">
-            <h3 class="text-yellow-500 font-bold mb-4">Входящие вопросы (Админ):</h3>
+            <h3 class="text-yellow-500 font-bold mb-4">Входящие (Админ):</h3>
             <div id="admin-tickets-list" class="space-y-4"></div>
         </div>
 
@@ -216,6 +232,18 @@
     let user = null;
     let selectedUser = null; 
 
+    // --- MOBILE MENU ---
+    window.toggleMenu = () => {
+        document.getElementById('sidebar').classList.toggle('active');
+    };
+
+    window.nav = (id) => { 
+        document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); 
+        document.getElementById(id).classList.remove('hidden'); 
+        // Auto close menu on mobile when clicked
+        document.getElementById('sidebar').classList.remove('active');
+    };
+
     // --- AUTH & SECURITY ---
     window.authHandler = async () => {
         const n = document.getElementById('auth-nick').value.trim();
@@ -244,10 +272,11 @@
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('u-bal').innerText = `${user.balance}$`;
+            document.getElementById('mob-bal').innerText = `${user.balance}$`;
 
             if (['admin', 'mod', 'developer'].includes(user.role)) {
                 document.getElementById('admin-tools').classList.remove('hidden');
-                document.getElementById('btn-career').classList.add('hidden'); // Staff don't need to apply
+                // I REMOVED THE HIDING OF CAREER BUTTON FOR TESTING
             }
             if (user.role === 'admin') document.getElementById('admin-tickets-area').classList.remove('hidden');
             
@@ -255,11 +284,11 @@
         } else { document.getElementById('login-modal').style.display = 'flex'; }
     });
 
-    // --- JOB SYSTEM (UPDATED) ---
+    // --- JOB SYSTEM ---
     window.sendJobRequest = async () => {
         const name = document.getElementById('job-realname').value;
         const reason = document.getElementById('job-reason').value;
-        const target = document.getElementById('job-target').value; // Get chosen role
+        const target = document.getElementById('job-target').value;
         
         if(!name || !reason) return alert("Заполните все поля!");
 
@@ -268,10 +297,10 @@
             nick: user.nickname,
             realName: name,
             reason: reason,
-            targetRole: target, // Save requested role
+            targetRole: target,
             time: Date.now()
         });
-        alert("Заявка отправлена! Ожидайте решения.");
+        alert("Заявка отправлена!");
         nav('market');
     };
 
@@ -285,38 +314,31 @@
 
         snap.forEach(d => {
             const req = d.data();
-            let roleName = "???";
-            let roleColor = "text-white";
-            
-            if(req.targetRole === 'developer') { roleName = "РАЗРАБОТЧИК"; roleColor = "text-green-400"; }
-            if(req.targetRole === 'mod') { roleName = "МОДЕРАТОР"; roleColor = "text-blue-400"; }
-            if(req.targetRole === 'admin') { roleName = "АДМИНИСТРАТОР"; roleColor = "text-red-400"; }
+            let roleName = "???"; let roleColor = "text-white";
+            if(req.targetRole === 'developer') { roleName = "DEV"; roleColor = "text-green-400"; }
+            if(req.targetRole === 'mod') { roleName = "MOD"; roleColor = "text-blue-400"; }
+            if(req.targetRole === 'admin') { roleName = "ADMIN"; roleColor = "text-red-400"; }
 
             list.innerHTML += `
             <div class="card border-purple-500">
                 <div class="flex justify-between items-center mb-2">
-                    <span class="font-bold text-xl text-white">${req.nick}</span>
-                    <span class="text-xs bg-gray-700 px-2 rounded ${roleColor}">Хочет: ${roleName}</span>
+                    <span class="font-bold text-white">${req.nick}</span>
+                    <span class="text-xs bg-gray-700 px-2 rounded ${roleColor}">${roleName}</span>
                 </div>
-                <p class="text-sm text-gray-300 mb-1"><b>Имя:</b> ${req.realName}</p>
+                <p class="text-sm text-gray-300 mb-1"><b>${req.realName}</b></p>
                 <p class="text-sm text-gray-300 mb-4 bg-gray-800 p-2 rounded">"${req.reason}"</p>
                 <div class="flex gap-2">
-                    <button onclick="decideJob('${d.id}', '${req.uid}', '${req.targetRole}', true)" class="btn btn-green">ПРИНЯТЬ (${roleName})</button>
-                    <button onclick="decideJob('${d.id}', '${req.uid}', '', false)" class="btn" style="background:#da3633;color:white">ОТКЛОНИТЬ</button>
+                    <button onclick="decideJob('${d.id}', '${req.uid}', '${req.targetRole}', true)" class="btn btn-green text-xs">ПРИНЯТЬ</button>
+                    <button onclick="decideJob('${d.id}', '${req.uid}', '', false)" class="btn text-xs" style="background:#da3633;color:white">ОТКЛОНИТЬ</button>
                 </div>
             </div>`;
         });
     }
 
     window.decideJob = async (reqId, uid, targetRole, isAccepted) => {
-        if(isAccepted) {
-            await updateDoc(doc(db, "users", uid), { role: targetRole });
-            alert("Пользователь принят на должность!");
-        } else {
-            alert("Заявка отклонена.");
-        }
-        await deleteDoc(doc(db, "job_requests", reqId));
-        loadJobRequests();
+        if(isAccepted) { await updateDoc(doc(db, "users", uid), { role: targetRole }); alert("Принят!"); } 
+        else { alert("Отклонен."); }
+        await deleteDoc(doc(db, "job_requests", reqId)); loadJobRequests();
     };
 
     // --- SUPPORT ---
@@ -368,7 +390,6 @@
     window.closeGame=()=>{document.getElementById('game-frame').src='';document.getElementById('game-overlay').style.display='none'};
     window.buy = async(id,p)=>{ if(user.balance<p)return alert("$$$"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p,library:arrayUnion(id)}); location.reload(); };
     window.pubGame = async()=>{ await addDoc(collection(db,"games"),{name:document.getElementById('p-name').value,price:Number(document.getElementById('p-price').value),url:document.getElementById('p-url').value,desc:document.getElementById('p-desc').value,ownerId:auth.currentUser.uid}); alert("OK"); nav('market'); };
-    window.nav = (id)=>{ document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
     window.logout = ()=>signOut(auth).then(()=>location.reload());
     async function loadLibrary(){ const l=document.getElementById('library-list'); l.innerHTML=''; if(user.library) for(let i of user.library){ const g=await getDoc(doc(db,"games",i)); if(g.exists()) l.innerHTML+=`<div class="card"><b>${g.data().name}</b> <button onclick="openGame('${g.data().url}')" class="btn btn-green">PLAY</button></div>`; } }
     async function loadMarket() { const l=document.getElementById('market-list'); l.innerHTML=''; const s=await getDocs(collection(db,"games")); s.forEach(d=>{ const g=d.data(); l.innerHTML+=`<div class="card"><div class="flex justify-between font-bold"><span>${g.name}</span><span>${g.price}$</span></div><div class="flex justify-between mt-4"><button onclick="buy('${d.id}',${g.price})" class="btn btn-green w-24 text-xs">КУПИТЬ</button></div></div>`; }); }
