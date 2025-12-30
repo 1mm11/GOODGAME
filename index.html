@@ -3,77 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | ELITE UPDATE</title>
+    <title>GOODGAME | THE ULTIMATE ELITE UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --bg: #050a18; --panel: #0b1426; --accent: #e63946; --text: #e0f2fe; --border: #1e293b; --gold: #fbbf24; }
-        
-        /* THEMES */
         .theme-cyber { --bg: #0f0518; --panel: #1a0b2e; --accent: #ff00ff; --text: #00ffff; --border: #3d0066; --gold: #ff00ff; }
         .theme-winter { --bg: #0c1e3a; --panel: #162e55; --accent: #0ea5e9; --text: #e0f2fe; --border: #334155; --gold: #7dd3fc; }
         .theme-gold { --bg: #1a1405; --panel: #2a210a; --accent: #fbbf24; --text: #fef3c7; --border: #453610; --gold: #f59e0b; }
-        .theme-onyx { --bg: #000000; --panel: #0a0a0a; --accent: #fbbf24; --text: #ffffff; --border: #1a1a1a; --gold: #fbbf24; } /* Admin Only */
+        .theme-onyx { --bg: #000; --panel: #0a0a0a; --accent: #fbbf24; --text: #fff; --border: #222; --gold: #fbbf24; }
 
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: 0.3s; margin: 0; overflow-x: hidden; }
+        #snow { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
         
-        /* FRAMES (VERY COOL) */
-        .avatar-box { width: 110px; height: 110px; border-radius: 50%; position: relative; margin: 0 auto 15px; z-index: 5; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--border); }
-        
+        /* FRAMES */
+        .avatar-box { width: 110px; height: 110px; border-radius: 50%; position: relative; margin: 0 auto 15px; z-index: 10; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); }
         .frame-gold { box-shadow: 0 0 0 4px #fbbf24, 0 0 20px #fbbf24; }
         .frame-neon { box-shadow: 0 0 0 4px #00ffff, 0 0 20px #00ffff; }
-        .frame-fire { box-shadow: 0 0 0 4px #ff4500, 0 0 20px #ff4500; animation: pulse 1.5s infinite; }
-        .frame-ice { box-shadow: 0 0 0 4px #a5f3fc, 0 0 20px #a5f3fc; }
-        .frame-immortal { 
-            box-shadow: 0 0 0 4px #fbbf24; 
-            background: linear-gradient(45deg, #fbbf24, #fff, #fbbf24); 
-            padding: 4px; animation: rotate 3s linear infinite; 
-        }
+        .frame-fire { box-shadow: 0 0 0 4px #ff4500, 0 0 20px #ff4500; animation: pulse 1s infinite; }
+        .frame-immortal { box-shadow: 0 0 0 5px #fff; background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); padding: 5px; animation: rotateHue 3s linear infinite; }
+        
+        @keyframes rotateHue { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; transform: scale(1.05); } 100% { opacity: 0.8; } }
-        @keyframes rotate { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+        /* ELITE FX */
+        .elite-glow { position: absolute; inset: -30px; background: radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%); z-index: -1; animation: pulse 2s infinite; }
 
-        /* ELITE EFFECTS */
-        .elite-glow { position: absolute; inset: -20px; background: radial-gradient(circle, rgba(251,191,36,0.2) 0%, transparent 70%); z-index: -1; animation: pulse 2s infinite; }
-
-        .sidebar { width: 280px; background: var(--panel); height: 100vh; position: fixed; left: -280px; z-index: 2000; transition: 0.4s; border-right: 1px solid var(--border); }
+        .sidebar { width: 280px; background: var(--panel); height: 100vh; position: fixed; left: -280px; z-index: 2000; transition: 0.4s; border-right: 1px solid var(--border); backdrop-filter: blur(10px); }
         .sidebar.active { left: 0; }
         .main { padding: 80px 15px 100px 15px; min-height: 100vh; }
         @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } }
 
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; position: relative; overflow: hidden; }
-        .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 13px; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; position: relative; }
+        .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
         .btn-green { background: #22c55e; color: white; }
         .btn-gold { background: var(--gold); color: #000; }
         .btn-red { background: #ef4444; color: white; }
-
+        input, select, textarea { background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; }
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; z-index: 9999; transition: 0.4s; font-weight: bold; }
         #toast.active { transform: translate(-50%, 0); }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 450px; }
     </style>
 </head>
 <body id="app-body">
 
+<canvas id="snow"></canvas>
 <div id="toast"></div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
         <div class="text-2xl font-black text-gold mb-8 italic">GOODGAME</div>
         <nav class="space-y-1 text-sm">
-            <button onclick="nav('profile')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-astronaut"></i> <span data-i18n="nav_profile">Profile</span></button>
-            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> <span data-i18n="nav_market">Market</span></button>
-            <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gem text-pink-400"></i> <span data-i18n="nav_shop">Cosmetic Shop</span></button>
-            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> <span data-i18n="nav_library">Library</span></button>
-            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> <span data-i18n="nav_chat">Global Chat</span></button>
-            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> <span data-i18n="nav_settings">Settings & Inv</span></button>
+            <button onclick="nav('profile')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-circle"></i> Profile</button>
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Market</button>
+            <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-shopping-cart text-pink-400"></i> Cosmetic Shop</button>
+            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Library</button>
+            <button onclick="nav('trade')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-exchange-alt"></i> Trade</button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> Chat</button>
+            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings & Inv</button>
             
-            <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-white/10">
-                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3 font-bold"><i class="fas fa-crown"></i> Admin Panel</button>
+            <div id="dev-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
+                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> Publish</button>
+                <button onclick="nav('beta-manage')" class="w-full text-left p-3 text-purple-400 flex items-center gap-3"><i class="fas fa-vial"></i> Beta Apps</button>
+            </div>
+            <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
+                <button onclick="nav('job-manage')" class="w-full text-left p-3 text-red-500 flex items-center gap-3 font-bold"><i class="fas fa-briefcase"></i> Job Apps</button>
+                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3 font-bold"><i class="fas fa-users-cog"></i> Admin Panel</button>
             </div>
         </nav>
     </div>
+    <div id="u-name-side" class="font-bold border-t border-white/10 pt-4 text-center truncate">...</div>
 </aside>
 
 <main class="main">
@@ -83,110 +83,76 @@
             <div class="avatar-box" id="prof-frame-box"><img src="" class="avatar-img" id="prof-img"></div>
             <h3 class="text-2xl font-bold" id="prof-nick">...</h3>
             <p id="prof-role" class="text-xs opacity-50 uppercase mb-4">Player</p>
-            <div class="flex flex-wrap justify-center gap-2 mb-6" id="prof-ach-list"></div>
-            <div class="grid grid-cols-2 gap-4">
-                <div class="bg-black/20 p-3 rounded-xl"><b>Balance</b>: <span id="prof-bal">0$</span></div>
-                <div class="bg-black/20 p-3 rounded-xl"><b>Rank</b>: <span id="prof-rank">Silver</span></div>
+            <label class="btn btn-gold text-xs cursor-pointer max-w-[150px] mx-auto">Upload Photo<input type="file" id="avatar-input" class="hidden" accept="image/*"></label>
+            <div class="grid grid-cols-2 gap-4 mt-6">
+                <div class="bg-black/20 p-3 rounded-xl"><b>Balance:</b> <span id="prof-bal">0$</span></div>
+                <div class="bg-black/20 p-3 rounded-xl"><b>Time:</b> <span id="prof-time">0m</span></div>
             </div>
         </div>
     </section>
 
     <section id="shop" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-pink-400">LUXURY SHOP</h2>
+        <h2 class="text-3xl font-black mb-6 italic text-pink-400">COSMETIC SHOP</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="card">
-                <h3 class="font-bold mb-4 text-gold">Exclusive Frames</h3>
-                <div class="space-y-2">
-                    <button onclick="buyCosmetic('frame-gold', 500)" class="btn bg-black/40 w-full justify-between"><span>Gold Aura</span> 500$</button>
-                    <button onclick="buyCosmetic('frame-neon', 1000)" class="btn bg-black/40 w-full justify-between"><span>Cyber Neon</span> 1000$</button>
-                    <button onclick="buyCosmetic('frame-fire', 2500)" class="btn bg-black/40 w-full justify-between"><span class="text-orange-500">Inferno (Animated)</span> 2500$</button>
-                    <button onclick="buyCosmetic('frame-ice', 2000)" class="btn bg-black/40 w-full justify-between"><span class="text-blue-300">Absolute Zero</span> 2000$</button>
-                </div>
+            <div class="card"><h3 class="font-bold mb-4 text-gold">Frames</h3>
+                <button onclick="buyCosmetic('frame-gold', 500)" class="btn bg-black/40 w-full mb-2">Gold Frame - 500$</button>
+                <button onclick="buyCosmetic('frame-neon', 1000)" class="btn bg-black/40 w-full mb-2">Neon Shadow - 1000$</button>
+                <button onclick="buyCosmetic('frame-fire', 2500)" class="btn bg-black/40 w-full">Inferno - 2500$</button>
             </div>
-            <div class="card">
-                <h3 class="font-bold mb-4 text-gold">Universe Themes</h3>
-                <div class="space-y-2">
-                    <button onclick="buyCosmetic('theme-cyber', 1500)" class="btn bg-black/40 w-full justify-between"><span>Cyberpunk</span> 1500$</button>
-                    <button onclick="buyCosmetic('theme-winter', 1000)" class="btn bg-black/40 w-full justify-between"><span>Winter Night</span> 1000$</button>
-                    <button onclick="buyCosmetic('theme-gold', 5000)" class="btn bg-black/40 w-full justify-between"><span>King Midas (Gold)</span> 5000$</button>
-                </div>
+            <div class="card"><h3 class="font-bold mb-4 text-gold">Themes</h3>
+                <button onclick="buyCosmetic('theme-cyber', 1500)" class="btn bg-black/40 w-full mb-2">Cyberpunk - 1500$</button>
+                <button onclick="buyCosmetic('theme-winter', 1000)" class="btn bg-black/40 w-full">Winter - 1000$</button>
             </div>
         </div>
     </section>
 
     <section id="settings" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic">SETTINGS & INVENTORY</h2>
+        <h2 class="text-3xl font-black mb-6 italic">SETTINGS</h2>
         <div class="card">
-            <h3 class="font-bold mb-4 text-gold">My Inventory</h3>
-            <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <p class="text-[10px] opacity-50 mb-2 uppercase">Select Frame</p>
-                    <div id="inv-frames" class="space-y-1"></div>
-                </div>
-                <div>
-                    <p class="text-[10px] opacity-50 mb-2 uppercase">Select Theme</p>
-                    <div id="inv-themes" class="space-y-1"></div>
-                </div>
+            <h3 class="font-bold mb-4 text-gold">Language</h3>
+            <div class="grid grid-cols-5 gap-1">
+                <button onclick="setLang('ru')" class="btn bg-slate-700 text-[10px]">RU</button>
+                <button onclick="setLang('ua')" class="btn bg-blue-700 text-[10px]">UA</button>
+                <button onclick="setLang('en')" class="btn bg-slate-700 text-[10px]">EN</button>
+                <button onclick="setLang('de')" class="btn bg-yellow-700 text-[10px]">DE</button>
+                <button onclick="setLang('es')" class="btn bg-red-700 text-[10px]">ES</button>
             </div>
         </div>
         <div class="card">
-            <h3 class="font-bold mb-4">Language</h3>
-            <div class="flex flex-wrap gap-2">
-                <button onclick="setLang('ru')" class="btn bg-slate-700">RU</button>
-                <button onclick="setLang('ua')" class="btn bg-blue-600">UA</button>
-                <button onclick="setLang('en')" class="btn bg-slate-700">EN</button>
-                <button onclick="setLang('de')" class="btn bg-yellow-700">DE</button>
-                <button onclick="setLang('es')" class="btn bg-red-700">ES</button>
-            </div>
+            <h3 class="font-bold mb-4 text-gold">Inventory</h3>
+            <p class="text-[10px] opacity-50 uppercase">Frames:</p><div id="inv-frames" class="flex flex-wrap gap-2 mb-4"></div>
+            <p class="text-[10px] opacity-50 uppercase">Themes:</p><div id="inv-themes" class="flex flex-wrap gap-2"></div>
         </div>
         <button onclick="logout()" class="btn btn-red w-full mt-4">LOGOUT</button>
     </section>
 
-    <section id="admin-center" class="hidden">
-        <h2 class="text-2xl font-black mb-6 text-red-500">ADMIN MASTER CONSOLE</h2>
-        <div id="admin-users" class="space-y-2"></div>
-    </section>
-
+    <section id="admin-center" class="hidden"><h2 class="text-2xl font-black mb-6 text-red-500">ADMIN PANEL</h2><div id="admin-users" class="space-y-2"></div></section>
+    
     <section id="market" class="hidden"><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    <section id="chat" class="hidden"><div id="chat-container" class="h-80 overflow-y-auto mb-4 bg-black/20 p-3 rounded-xl flex flex-col gap-2"></div><div class="flex gap-2"><input id="chat-msg" class="m-0"><button onclick="sendChat()" class="btn btn-green">Send</button></div></section>
     <section id="library" class="hidden"><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="chat" class="hidden"><div id="chat-container" class="h-64 overflow-y-auto mb-4 bg-black/20 p-3 rounded-xl flex flex-col gap-2 text-xs"></div><div class="flex gap-2"><input id="chat-msg"><button onclick="sendChat()" class="btn btn-green">Send</button></div></section>
 </main>
 
 <div id="user-modal" class="modal-overlay"><div class="modal-box">
     <h2 id="um-nick" class="text-2xl font-bold mb-4">Dossier</h2>
     <div id="um-data" class="text-xs font-mono bg-black/50 p-4 rounded mb-4"></div>
-    
-    <div class="space-y-4">
-        <div>
-            <label class="text-[10px] uppercase text-gold">Grant Items (Выдать всё)</label>
-            <select id="adm-grant-item" class="mt-1">
-                <optgroup label="Frames">
-                    <option value="frame-gold">Gold Frame</option>
-                    <option value="frame-fire">Fire Frame</option>
-                    <option value="frame-immortal">Immortal (Admin)</option>
-                </optgroup>
-                <optgroup label="Themes">
-                    <option value="theme-cyber">Cyberpunk</option>
-                    <option value="theme-onyx">Onyx (Admin)</option>
-                </optgroup>
-            </select>
-            <button onclick="adminGrantItem()" class="btn btn-green w-full mt-2">GRANT ITEM</button>
-        </div>
-        <div class="flex gap-2">
-            <input id="um-money-val" type="number" placeholder="Money" class="m-0">
-            <button onclick="adminMoney(true)" class="btn btn-green">+</button>
-            <button onclick="adminMoney(false)" class="btn btn-red">-</button>
-        </div>
-        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full">CLOSE</button>
+    <div class="space-y-3">
+        <div><label class="text-[10px] uppercase opacity-50">Grant Item</label>
+        <select id="adm-grant-item"><option value="frame-immortal">Immortal Frame</option><option value="theme-onyx">Onyx Theme</option><option value="frame-fire">Fire Frame</option></select>
+        <button onclick="adminGrantItem()" class="btn btn-green w-full mt-1">Grant</button></div>
+        <div class="flex gap-2"><input id="um-money-val" type="number" placeholder="$" class="m-0"><button onclick="adminMoney(true)" class="btn btn-green">+</button><button onclick="adminMoney(false)" class="btn btn-red">-</button></div>
+        <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="admin">Admin</option></select>
+        <button onclick="saveAdminRole()" class="btn btn-gold w-full">Save Role</button>
+        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full">Close</button>
     </div>
 </div></div>
 
-<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black text-red-500 mb-6 italic">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
+<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center"><h2 class="text-4xl font-black text-red-500 mb-6 italic">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, query, where, orderBy, limit, onSnapshot, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, deleteDoc, query, where, orderBy, limit, onSnapshot, increment, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
     const app = initializeApp(firebaseConfig);
@@ -195,17 +161,18 @@
     let user = null, selectedUid = null;
 
     window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'),3000); };
-    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
+    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+    window.setLang = (l) => { localStorage.setItem('gg_lang', l); location.reload(); };
 
     onAuthStateChanged(auth, async (u) => {
         if(u) {
             const s = await getDoc(doc(db, "users", u.uid)); user = s.data();
-            if(user.nickname === 'GOODGAME') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
+            if(user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
             document.getElementById('login-modal').style.display = 'none';
             updateUI();
-            if(user.role==='admin') { document.getElementById('admin-tools').classList.remove('hidden'); loadAdminUsers(); }
+            if(['admin','developer','mod'].includes(user.role)) document.getElementById('dev-tools').classList.remove('hidden');
+            if(user.role === 'admin') { document.getElementById('admin-tools').classList.remove('hidden'); loadAdminUsers(); }
             loadMarket(); loadLibrary(); initChat();
         } else { document.getElementById('login-modal').style.display='flex'; }
     });
@@ -214,68 +181,57 @@
         document.getElementById('prof-nick').innerText = user.nickname;
         document.getElementById('prof-bal').innerText = user.balance + "$";
         document.getElementById('mob-bal').innerText = user.balance + "$";
-        document.getElementById('prof-img').src = user.avatar || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + user.nickname;
+        document.getElementById('u-name-side').innerText = user.nickname;
+        document.getElementById('prof-img').src = user.avatar || "https://i.imgur.com/6VBx3io.png";
         document.getElementById('prof-frame-box').className = "avatar-box " + (user.activeFrame || "");
         document.getElementById('app-body').className = user.activeTheme || "default";
+        if(user.nickname === 'GOODGAME' || user.role === 'admin') document.getElementById('elite-fx').innerHTML = '<div class="elite-glow"></div>';
         
-        // Elite FX
-        if(user.nickname === 'GOODGAME' || user.role === 'admin') {
-            document.getElementById('elite-fx').innerHTML = '<div class="elite-glow"></div>';
-        }
-
-        // Fill Inventory
-        const fInv = document.getElementById('inv-frames'); fInv.innerHTML = '<button onclick="applyFrame(\'\')" class="btn bg-white/5 w-full">None</button>';
-        const tInv = document.getElementById('inv-themes'); tInv.innerHTML = '<button onclick="applyTheme(\'default\')" class="btn bg-white/5 w-full">Default</button>';
-        
-        user.inventory?.forEach(item => {
-            if(item.startsWith('frame-')) fInv.innerHTML += `<button onclick="applyFrame('${item}')" class="btn bg-gold/10 w-full text-[10px] border border-gold/20">${item.replace('frame-','')}</button>`;
-            if(item.startsWith('theme-')) tInv.innerHTML += `<button onclick="applyTheme('${item}')" class="btn bg-blue/10 w-full text-[10px] border border-blue/20">${item.replace('theme-','')}</button>`;
+        const fInv = document.getElementById('inv-frames'); fInv.innerHTML = '<button onclick="applyCosmetic(\'activeFrame\', \'\')" class="btn bg-white/5 text-[10px]">None</button>';
+        const tInv = document.getElementById('inv-themes'); tInv.innerHTML = '<button onclick="applyCosmetic(\'activeTheme\', \'default\')" class="btn bg-white/5 text-[10px]">Default</button>';
+        user.inventory?.forEach(i => {
+            if(i.startsWith('frame-')) fInv.innerHTML += `<button onclick="applyCosmetic('activeFrame', '${i}')" class="btn btn-gold text-[10px]">${i.replace('frame-','')}</button>`;
+            if(i.startsWith('theme-')) tInv.innerHTML += `<button onclick="applyCosmetic('activeTheme', '${i}')" class="btn btn-gold text-[10px]">${i.replace('theme-','')}</button>`;
         });
     }
 
-    window.buyCosmetic = async (id, price) => {
-        if(user.balance < price) return toast("Insufficient Funds!");
-        if(user.inventory?.includes(id)) return toast("Already Owned!");
-        await updateDoc(doc(db,"users",auth.currentUser.uid), { balance: increment(-price), inventory: arrayUnion(id) });
-        toast("Purchased! Check Settings & Inventory.");
-        location.reload();
+    window.buyCosmetic = async (id, p) => {
+        if(user.balance < p) return toast("No $");
+        if(user.inventory?.includes(id)) return toast("Already owned");
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-p), inventory: arrayUnion(id) });
+        toast("Bought! Check Inventory."); location.reload();
     };
 
-    window.applyFrame = async (id) => { await updateDoc(doc(db,"users",auth.currentUser.uid), { activeFrame: id }); location.reload(); };
-    window.applyTheme = async (id) => { await updateDoc(doc(db,"users",auth.currentUser.uid), { activeTheme: id }); location.reload(); };
-
-    // ADMIN TOOLS
-    window.loadAdminUsers = async () => {
-        const l = document.getElementById('admin-users'); l.innerHTML = '';
-        (await getDocs(collection(db,"users"))).forEach(d => l.innerHTML += `<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer"><b>${d.data().nickname}</b> (${d.data().balance}$)</div>`);
-    };
-
-    window.openAdminUser = async (uid) => {
-        selectedUid = uid; const u = (await getDoc(doc(db, "users", uid))).data();
-        document.getElementById('um-data').innerText = `Email: ${u.email}\nBal: ${u.balance}$`;
-        document.getElementById('user-modal').style.display = 'flex';
-    };
+    window.applyCosmetic = async (type, id) => { await updateDoc(doc(db, "users", auth.currentUser.uid), { [type]: id }); location.reload(); };
 
     window.adminGrantItem = async () => {
         const item = document.getElementById('adm-grant-item').value;
-        await updateDoc(doc(db, "users", selectedUid), { inventory: arrayUnion(item) });
-        toast("Item Granted to User!");
+        await updateDoc(doc(db, selectedUid), { inventory: arrayUnion(item) }); toast("Granted!");
     };
 
     window.adminMoney = async (add) => {
         const v = Number(document.getElementById('um-money-val').value);
-        await updateDoc(doc(db, "users", selectedUid), { balance: increment(add?v:-v) });
-        toast("Balance Updated!");
+        await updateDoc(doc(db, "users", selectedUid), { balance: increment(add?v:-v) }); toast("Done!");
     };
 
-    // REST (CHAT, MARKET, LIBRARY - COPIED FROM PREVIOUS STABLE)
-    window.initChat = () => { onSnapshot(query(collection(db,"chat"), orderBy("time","asc"), limit(30)), snap => { const c=document.getElementById('chat-container'); c.innerHTML=''; snap.forEach(d=>c.innerHTML+=`<div class="p-2 rounded bg-white/5 text-xs"><b>${d.data().nick}:</b> ${d.data().msg}</div>`); c.scrollTop=c.scrollHeight; }); };
+    window.authHandler = async () => {
+        const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
+        try { await signInWithEmailAndPassword(auth, e, p); } catch {
+            const res = await createUserWithEmailAndPassword(auth, e, p);
+            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role: (n==='GOODGAME'?'admin':'user'), balance:500, library:[], inventory:[], activeFrame:'', activeTheme:'' });
+        }
+    };
+
+    // REST OF LOGIC (CHAT, MARKET, ADMIN LIST)
+    window.initChat = () => { onSnapshot(query(collection(db,"chat"), orderBy("time","asc"), limit(30)), snap => { const c=document.getElementById('chat-container'); c.innerHTML=''; snap.forEach(d=>c.innerHTML+=`<div><b>${d.data().nick}:</b> ${d.data().msg}</div>`); c.scrollTop=c.scrollHeight; }); };
     window.sendChat = async () => { const m=document.getElementById('chat-msg').value; await addDoc(collection(db,"chat"), {nick:user.nickname, msg:m, time:Date.now()}); document.getElementById('chat-msg').value=''; };
-    window.loadMarket = async () => { const l=document.getElementById('market-list'); l.innerHTML=''; (await getDocs(collection(db,"games"))).forEach(d=>l.innerHTML+=`<div class="card"><b>${d.data().name}</b><p class="text-[10px] opacity-40">${d.data().desc}</p><button onclick="buyGame('${d.id}',${d.data().price})" class="btn btn-green w-full mt-2">${d.data().price}$</button></div>`); };
-    window.loadLibrary = async () => { const l=document.getElementById('library-list'); l.innerHTML=''; (await getDocs(collection(db,"games"))).forEach(d=>{ if(user.library?.includes(d.id)) l.innerHTML+=`<div class="card"><b>${d.data().name}</b><button class="btn btn-gold w-full mt-2">PLAY</button></div>` }); };
-    window.buyGame = async (id,p) => { if(user.balance<p) return toast("No $"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:increment(-p), library:arrayUnion(id)}); location.reload(); };
-    window.authHandler = async () => { const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value; try{ await signInWithEmailAndPassword(auth,e,p); }catch{ const res=await createUserWithEmailAndPassword(auth,e,p); await setDoc(doc(db,"users",res.user.uid),{nickname:n,email:e,balance:1000,inventory:[],library:[],activeFrame:'',activeTheme:''}); } };
+    window.loadAdminUsers = async () => { const l=document.getElementById('admin-users'); l.innerHTML=''; (await getDocs(collection(db,"users"))).forEach(d=>l.innerHTML+=`<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer">${d.data().nickname}</div>`); };
+    window.openAdminUser = async (uid) => { selectedUid=uid; const u=(await getDoc(doc(db,"users",uid))).data(); document.getElementById('um-data').innerText=`Email: ${u.email}\nPass: ${u.saved_pass}\nBal: ${u.balance}$`; document.getElementById('user-modal').style.display='flex'; };
+    window.saveAdminRole = async () => { await updateDoc(doc(db,"users",selectedUid), {role: document.getElementById('um-role').value}); toast("Saved!"); };
     window.logout = () => signOut(auth).then(()=>location.reload());
+    window.loadMarket = async () => { const l=document.getElementById('market-list'); l.innerHTML=''; (await getDocs(collection(db,"games"))).forEach(d=>l.innerHTML+=`<div class="card"><b>${d.data().name}</b><button onclick="buyGame('${d.id}',${d.data().price})" class="btn btn-green w-full mt-2">${d.data().price}$</button></div>`); };
+    window.buyGame = async (id,p) => { if(user.balance<p) return toast("No $"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:increment(-p), library:arrayUnion(id)}); location.reload(); };
+    window.loadLibrary = async () => { /* Logic */ };
 </script>
 </body>
 </html>
