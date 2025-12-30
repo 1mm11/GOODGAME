@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | WINTER ULTIMATE UPDATE</title>
+    <title>GOODGAME | STEAM UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -17,16 +17,16 @@
         .mobile-nav { display: flex; position: fixed; top: 0; width: 100%; height: 60px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 1500; align-items: center; padding: 0 15px; justify-content: space-between; }
         .main { padding: 80px 15px 100px 15px; min-height: 100vh; }
         @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } .mobile-nav { display: none; } }
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
-        .btn { padding: 12px 20px; border-radius: 14px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; }
+        .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
         .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; }
         .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; }
         .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
-        input, select, textarea { background: #0f172a; border: 1px solid var(--border); color: var(--text); padding: 14px; border-radius: 12px; width: 100%; margin-bottom: 12px; font-size: 16px; outline: none; }
+        input, select, textarea { background: #0f172a; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; }
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: bold; transition: 0.4s; z-index: 9999; }
         #toast.active { transform: translate(-50%, 0); }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 3000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 450px; }
+        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 450px; overflow-y: auto; max-height: 90vh; }
         #game-overlay { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
         iframe { width: 100%; height: 100%; border: none; }
     </style>
@@ -38,185 +38,151 @@
 <div id="toast"></div>
 
 <div class="mobile-nav">
-    <button onclick="toggleMenu()" class="text-2xl"><i class="fas fa-bars"></i></button>
-    <div class="font-black italic text-gold text-xl">GOODGAME ❄️</div>
-    <div id="mob-bal" class="font-bold text-yellow-400">0$</div>
+    <button onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
+    <div class="font-black italic text-gold">GOODGAME ❄️</div>
+    <div id="mob-bal" class="text-yellow-400 font-bold">0$</div>
 </div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
-        <div class="flex justify-between items-center mb-10">
-            <div class="font-black text-2xl italic text-gold">GOODGAME</div>
-            <button onclick="toggleMenu()" class="lg:hidden text-2xl">✕</button>
-        </div>
-        <nav class="space-y-2">
-            <button onclick="nav('market')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-shopping-bag text-red-400"></i> <span data-i18n="market">Market</span></button>
-            <button onclick="nav('library')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-gamepad text-green-400"></i> <span data-i18n="library">Library</span></button>
-            <button onclick="nav('chat')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-comments text-blue-400"></i> <span data-i18n="chat">Chat</span></button>
-            <button onclick="nav('support')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-headset text-yellow-400"></i> <span data-i18n="support">Support</span></button>
-            <button onclick="nav('career')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-user-tie text-purple-400"></i> <span data-i18n="jobs">Jobs</span></button>
-            <button onclick="nav('settings')" class="w-full text-left p-4 hover:bg-white/5 rounded-2xl flex items-center gap-4"><i class="fas fa-cog text-gray-400"></i> <span data-i18n="settings">Settings</span></button>
+        <div class="font-black text-2xl italic text-gold mb-8">GOODGAME</div>
+        <nav class="space-y-1 text-sm">
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Market</button>
+            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Library</button>
+            <button onclick="nav('achievements')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-trophy text-gold"></i> Achievements</button>
+            <button onclick="nav('trade')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-exchange-alt text-blue-400"></i> Trade</button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> Chat</button>
+            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-headset"></i> Support</button>
+            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings</button>
             
-            <div id="admin-tools" class="hidden pt-6 mt-6 border-t border-white/10 space-y-2">
-                <p class="text-[10px] font-bold opacity-30 px-4 uppercase">Admin Panel</p>
-                <button onclick="nav('admin-apps-tab')" class="w-full text-left p-4 text-purple-400 flex items-center gap-4 font-bold"><i class="fas fa-envelope-open-text"></i> Beta/Job Apps</button>
-                <button onclick="nav('publish')" class="w-full text-left p-4 text-green-400 flex items-center gap-4"><i class="fas fa-plus-circle"></i> Add Game</button>
-                <button onclick="nav('admin-center')" class="w-full text-left p-4 text-red-500 flex items-center gap-4 font-bold"><i class="fas fa-users-cog"></i> User List</button>
+            <div id="dev-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
+                <p class="text-[10px] opacity-30 px-3 uppercase">Developer</p>
+                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> Publish</button>
+                <button onclick="nav('beta-manage')" class="w-full text-left p-3 text-purple-400 flex items-center gap-3"><i class="fas fa-user-check"></i> Beta Apps</button>
+            </div>
+            
+            <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
+                <p class="text-[10px] opacity-30 px-3 uppercase">Admin</p>
+                <button onclick="nav('job-manage')" class="w-full text-left p-3 text-red-500 flex items-center gap-3 font-bold"><i class="fas fa-crown"></i> Job Apps</button>
+                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3"><i class="fas fa-users"></i> Users</button>
             </div>
         </nav>
     </div>
-    <div class="border-t border-white/10 pt-6">
-        <div id="u-name" class="font-bold text-xl text-white truncate">...</div>
-        <button onclick="logout()" class="text-xs text-red-500 font-bold opacity-60">LOGOUT</button>
-    </div>
+    <div id="u-name" class="font-bold border-t border-white/10 pt-4">...</div>
 </aside>
 
 <main class="main">
-    <section id="market"><h2 class="text-3xl font-black mb-6 italic" data-i18n="market">MARKET</h2><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-green-500" data-i18n="library">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="market"><h2 class="text-3xl font-black mb-6 italic">MARKET</h2><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
     
-    <section id="admin-apps-tab" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-purple-400 uppercase tracking-widest">Incoming Applications</h2>
-        <div id="admin-apps-list" class="space-y-4"></div>
+    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-green-500">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+
+    <section id="achievements" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-gold">ACHIEVEMENTS</h2>
+        <div id="ach-list" class="space-y-4"></div>
     </section>
 
-    <section id="admin-center" class="hidden">
-        <h2 class="text-2xl font-black mb-6 text-red-500 uppercase tracking-widest">User Database</h2>
-        <div id="admin-users" class="space-y-2"></div>
-    </section>
-
-    <section id="settings" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic" data-i18n="settings">SETTINGS</h2>
-        <div class="card mb-4">
-            <h3 class="font-bold mb-4 text-gold"><i class="fas fa-globe"></i> SELECT LANGUAGE</h3>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-                <button onclick="setLang('en')" class="btn bg-gray-800 text-white text-xs">English</button>
-                <button onclick="setLang('ru')" class="btn bg-blue-900 text-white text-xs">Русский</button>
-                <button onclick="setLang('ua')" class="btn bg-yellow-600 text-black text-xs">Українська</button>
-                <button onclick="setLang('es')" class="btn bg-red-900 text-white text-xs">Español</button>
-            </div>
+    <section id="trade" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-blue-400">STEAM TRADE</h2>
+        <div class="card max-w-lg mx-auto">
+            <input id="trade-target" placeholder="Recipient Nickname">
+            <input id="trade-money" type="number" placeholder="Money amount ($)">
+            <p class="text-xs opacity-50 mb-2">Or select achievement to send:</p>
+            <select id="trade-ach-id"><option value="">-- No Achievement --</option></select>
+            <button onclick="processTrade()" class="btn btn-gold w-full mt-4">SEND TRADE</button>
         </div>
-        <div class="card"><input id="new-nick" placeholder="Nickname"><button onclick="changeNickname()" class="btn btn-gold w-full">SAVE</button></div>
     </section>
 
-    <section id="chat" class="hidden"><div class="card p-0 overflow-hidden h-[65vh] flex flex-col"><div id="chat-container" class="flex-1 p-4 overflow-y-auto flex flex-col-reverse gap-3"></div><div class="p-4 bg-black/20 flex gap-2"><input id="chat-msg" placeholder="..." class="m-0"><button onclick="sendChat()" class="btn btn-green w-16 m-0"><i class="fas fa-paper-plane"></i></button></div></div></section>
-    <section id="career" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-purple-400" data-i18n="jobs">JOBS</h2><div class="card max-w-lg mx-auto"><input id="job-name" placeholder="Name"><select id="job-role"><option value="developer">Developer</option><option value="mod">Moderator</option></select><textarea id="job-text" placeholder="Why you?" rows="4"></textarea><button onclick="sendJobApp()" class="btn btn-gold w-full">SUBMIT</button></div></section>
-    <section id="support" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-yellow-500" data-i18n="support">SUPPORT</h2><div class="card"><textarea id="supp-msg" placeholder="..." rows="3"></textarea><button onclick="sendTicket()" class="btn btn-green w-full">SEND</button></div><div id="admin-tickets-area" class="hidden mt-8"></div><div id="my-tickets" class="mt-8 space-y-3"></div></section>
-    <section id="publish" class="hidden"><div class="card max-w-lg mx-auto"><input id="p-name" placeholder="Name"><textarea id="p-desc" placeholder="Desc"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price $"><label class="flex items-center gap-3 mb-4"><input type="checkbox" id="p-beta"> Beta</label><button onclick="pubGame()" class="btn btn-green w-full">CREATE</button></div></section>
+    <section id="beta-manage" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-purple-400">BETA APPLICATIONS</h2><div id="beta-apps-list" class="space-y-4"></div></section>
+    
+    <section id="job-manage" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-red-500">JOB APPLICATIONS</h2><div id="job-apps-list" class="space-y-4"></div></section>
+
+    <section id="publish" class="hidden">
+        <h2 class="text-3xl font-black mb-6 text-green-500">PUBLISH GAME</h2>
+        <div class="card max-w-lg mx-auto">
+            <input id="p-name" placeholder="Game Name">
+            <input id="p-url" placeholder="URL">
+            <input id="p-price" type="number" placeholder="Price">
+            <label class="flex items-center gap-2 mb-4"><input type="checkbox" id="p-beta"> Beta Mode</label>
+            <div class="border-t border-white/10 pt-4 mt-4">
+                <p class="font-bold text-gold mb-2">Add Achievement:</p>
+                <input id="p-ach-name" placeholder="Ach Name">
+                <input id="p-ach-desc" placeholder="Ach Description">
+                <input id="p-ach-reward" type="number" placeholder="Reward $">
+                <input id="p-ach-limit" type="number" placeholder="Max people">
+            </div>
+            <button onclick="pubGame()" class="btn btn-green w-full mt-4">CREATE</button>
+        </div>
+    </section>
+
+    <section id="admin-center" class="hidden"><div id="admin-users" class="space-y-2"></div></section>
+    <section id="settings" class="hidden"><div class="card"><button onclick="setLang('ru')" class="btn bg-blue-600 mb-2">RU</button><button onclick="setLang('en')" class="btn bg-gray-600">EN</button></div></section>
+    <section id="support" class="hidden"><div id="my-tickets" class="space-y-2"></div></section>
+    <section id="chat" class="hidden"><div id="chat-container" class="h-64 overflow-y-auto mb-4 p-2 bg-black/20 rounded"></div><input id="chat-msg"><button onclick="sendChat()" class="btn btn-green">Send</button></section>
 </main>
 
-<div id="user-modal" class="modal-overlay"><div class="modal-box">
-    <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold">User Dossier</h2>
-    <div class="text-xs font-mono bg-black/50 p-4 rounded-xl mb-4 border border-white/10">Email: <span id="um-email" class="text-white"></span><br>Pass: <span id="um-pass" class="text-red-400"></span></div>
-    <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="mod">Mod</option><option value="admin">Admin</option></select>
-    <button onclick="setRole()" class="btn btn-gold w-full mb-3">SAVE ROLE</button>
-    <button onclick="applyBan(1440)" class="btn btn-red w-full mb-3">BAN 24H</button>
-    <button onclick="applyBan(0)" class="btn bg-gray-600 w-full mb-3">UNBAN</button>
-    <button onclick="closeModal('user-modal')" class="btn w-full opacity-40">CLOSE</button>
-</div></div>
+<div id="game-overlay"><div class="p-4 flex justify-between bg-gray-900 border-b border-white/10"><span id="active-game-name" class="font-bold text-gold"></span><button onclick="closeGame()" class="bg-red-600 px-6 py-2 rounded-full font-bold">EXIT & SAVE TIME</button></div><iframe id="game-frame"></iframe></div>
 
-<div id="apply-modal" class="modal-overlay"><div class="card w-full max-w-md"><h2 class="text-xl font-bold mb-4 text-purple-400">Beta Application</h2><input id="apply-name" placeholder="Real Name"><textarea id="apply-reason" placeholder="Reason..."></textarea><button id="apply-confirm-btn" class="btn btn-green w-full">SEND</button><button onclick="closeModal('apply-modal')" class="btn bg-gray-700 w-full mt-2">CANCEL</button></div></div>
-
-<div id="game-overlay"><div class="p-4 flex justify-between bg-gray-900 border-b border-white/10"><span class="text-gold font-bold">GOODGAME PLAYER</span><button onclick="closeGame()" class="bg-red-600 px-6 py-2 rounded-full font-bold text-sm">EXIT GAME</button></div><iframe id="game-frame"></iframe></div>
-
-<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black italic text-red-500 mb-6">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full text-lg">START</button></div></div>
+<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center"><h2 class="text-4xl font-black italic text-red-500 mb-6">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, deleteDoc, query, where, orderBy, limit, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, deleteDoc, query, where, orderBy, limit, onSnapshot, arrayUnion, arrayRemove, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    let user = null, selectedUid = null;
+    let user = null, startTime = 0, activeGameId = null;
 
-    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'), 3000); };
+    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'),3000); };
     window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
     window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
-    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-
-    // LANGUAGES
-    const i18n = {
-        en: { market: "Market", library: "Library", chat: "Chat", support: "Support", jobs: "Jobs", settings: "Settings" },
-        ru: { market: "Магазин", library: "Библиотека", chat: "Чат", support: "Помощь", jobs: "Вакансии", settings: "Настройки" },
-        ua: { market: "Крамниця", library: "Бібліотека", chat: "Чат", support: "Допомога", jobs: "Вакансії", settings: "Налаштування" },
-        es: { market: "Mercado", library: "Biblioteca", chat: "Chat", support: "Soporte", jobs: "Empleo", settings: "Ajustes" }
-    };
-
-    window.setLang = (lang) => {
-        const t = i18n[lang];
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-            const key = el.getAttribute('data-i18n');
-            if(t[key]) el.innerText = t[key];
-        });
-        localStorage.setItem('gg_lang', lang);
-    };
 
     // AUTH
     window.authHandler = async () => {
         const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
         try { await signInWithEmailAndPassword(auth, e, p); } catch {
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role: (n==='GOODGAME'?'admin':'user'), balance:100, library:[], banUntil:0 });
+            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, role: (n==='GOODGAME'?'admin':'user'), balance:500, library:[], playtime: {}, achievements: [] });
         }
     };
 
     onAuthStateChanged(auth, async (u) => {
         if(u) {
             const s = await getDoc(doc(db, "users", u.uid)); user = s.data();
-            const isOwner = user.nickname === 'GOODGAME';
-            if(isOwner && user.role !== 'admin') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
-            if(user.banUntil > Date.now()) { await signOut(auth); return alert("BANNED"); }
             document.getElementById('login-modal').style.display = 'none';
             document.getElementById('u-name').innerText = user.nickname;
             document.getElementById('mob-bal').innerText = `${user.balance}$`;
-            if(['admin','mod','developer'].includes(user.role) || isOwner) document.getElementById('admin-tools').classList.remove('hidden');
-            loadMarket(); initChat(); loadLibrary(); loadTickets(); 
-            if(user.role==='admin' || isOwner) loadAdminData();
-            window.setLang(localStorage.getItem('gg_lang') || 'en');
+            if(['admin','mod','developer'].includes(user.role)) document.getElementById('dev-tools').classList.remove('hidden');
+            if(user.role === 'admin') document.getElementById('admin-tools').classList.remove('hidden');
+            loadMarket(); loadLibrary(); loadAchievements(); updateTradeList();
         } else { document.getElementById('login-modal').style.display='flex'; }
     });
 
-    // ADMIN APPS LIST
-    window.loadAdminData = async () => {
-        const al = document.getElementById('admin-apps-list'); al.innerHTML = '';
-        const s = await getDocs(collection(db, "apps"));
-        let count = 0;
-        s.forEach(d => {
-            const a = d.data();
-            if(a.status === 'pending' || !a.status) {
-                count++;
-                al.innerHTML += `<div class="card border-purple-500">
-                    <div class="flex justify-between font-bold mb-2"><span>${a.nick}</span> <span class="badge bg-gold/10 px-2 rounded text-[10px] text-gold">${a.type.toUpperCase()}</span></div>
-                    <p class="text-xs mb-4 italic">"${a.text || a.reason}"</p>
-                    <div class="flex gap-2">
-                        <button onclick="decideApp('${d.id}','${a.uid}','${a.targetRole||''}','${a.gameId||''}',true)" class="btn btn-green flex-1 text-xs">ACCEPT</button>
-                        <button onclick="decideApp('${d.id}','','','',false)" class="btn btn-red flex-1 text-xs">DENY</button>
-                    </div>
-                </div>`;
-            }
-        });
-        if(count === 0) al.innerHTML = '<p class="opacity-30 italic">No applications available.</p>';
-        const ul = document.getElementById('admin-users'); ul.innerHTML = '';
-        const users = await getDocs(collection(db,"users"));
-        users.forEach(d => ul.innerHTML += `<div onclick="openUser('${d.id}')" class="card cursor-pointer">${d.data().nickname} (${d.data().role})</div>`);
+    // PLAYTIME SYSTEM
+    window.playGame = (gid, name, url) => {
+        activeGameId = gid;
+        startTime = Date.now();
+        document.getElementById('active-game-name').innerText = name;
+        document.getElementById('game-frame').src = url;
+        document.getElementById('game-overlay').style.display = 'flex';
     };
 
-    window.decideApp = async (docId, uid, role, gid, ok) => {
-        if(ok) {
-            if(role) await updateDoc(doc(db,"users",uid), {role:role});
-            if(gid) await updateDoc(doc(db,"users",uid), {library: arrayUnion(gid)});
-            toast("Approved!");
-        } else { toast("Denied"); }
-        if(docId) await deleteDoc(doc(db,"apps",docId)); loadAdminData();
+    window.closeGame = async () => {
+        const elapsed = Math.floor((Date.now() - startTime) / 1000); // в секундах
+        const ref = doc(db, "users", auth.currentUser.uid);
+        const currentPlaytime = user.playtime[activeGameId] || 0;
+        
+        await updateDoc(ref, { [`playtime.${activeGameId}`]: currentPlaytime + elapsed });
+        
+        document.getElementById('game-frame').src = '';
+        document.getElementById('game-overlay').style.display = 'none';
+        toast(`Played: ${elapsed} sec. Time saved!`);
+        location.reload();
     };
 
-    // LOGIC
-    window.sendJobApp = async () => { await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, targetRole:document.getElementById('job-role').value, text:document.getElementById('job-text').value, type:'job', status:'pending', time: Date.now() }); toast("Sent!"); nav('market'); };
-    window.openApply = (gid) => { document.getElementById('apply-modal').style.display='flex'; document.getElementById('apply-confirm-btn').onclick = () => sendBetaApp(gid); };
-    window.sendBetaApp = async (gid) => { await addDoc(collection(db,"apps"), { uid:auth.currentUser.uid, nick:user.nickname, gameId:gid, reason:document.getElementById('apply-reason').value, type:'beta', status:'pending', time: Date.now() }); toast("Sent!"); closeModal('apply-modal'); };
+    // MARKET & BETA (REWRITTEN)
     window.loadMarket = async () => {
         const l = document.getElementById('market-list'); l.innerHTML = '';
         const s = await getDocs(collection(db, "games"));
@@ -224,49 +190,178 @@
             const g = d.data();
             const owned = user.library?.includes(d.id) || user.nickname === 'GOODGAME';
             l.innerHTML += `<div class="card">
-                <div class="flex justify-between font-bold mb-2"><span>${g.name}</span> <span class="text-gold">${g.price}$</span></div>
-                <div class="flex gap-2">${owned ? `<button class="btn bg-blue-600 flex-1">OWNED</button>` : g.isBeta ? `<button onclick="openApply('${d.id}')" class="btn btn-purple flex-1">BETA</button>` : `<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green flex-1">BUY</button>`}</div>
+                <div class="flex justify-between font-bold"><span>${g.name}</span> <span class="text-gold">${g.price}$</span></div>
+                <div class="mt-4 flex gap-2">
+                    ${owned ? `<button class="btn bg-blue-600">OWNED</button>` : g.isBeta ? `<button onclick="applyBeta('${d.id}','${g.ownerId}')" class="btn btn-purple">APPLY BETA</button>` : `<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green">BUY</button>`}
+                </div>
             </div>`;
         });
     };
-    window.openUser = async (uid) => {
-        selectedUid = uid; const s = await getDoc(doc(db,"users",uid)); const u = s.data();
-        document.getElementById('um-email').innerText = u.email; document.getElementById('um-pass').innerText = u.saved_pass; document.getElementById('um-role').value = u.role; document.getElementById('user-modal').style.display = 'flex';
+
+    window.applyBeta = async (gid, devId) => {
+        const reason = prompt("Why you?");
+        if(!reason) return;
+        await addDoc(collection(db,"apps"), { type:'beta', gameId:gid, devId:devId, uid:auth.currentUser.uid, nick:user.nickname, reason:reason, status:'pending' });
+        toast("Applied to Developer!");
     };
-    window.sendTicket = async () => { await addDoc(collection(db,"support"), { uid:auth.currentUser.uid, nick:user.nickname, msg:document.getElementById('supp-msg').value, reply:"", time:Date.now() }); toast("Sent!"); loadTickets(); };
-    window.loadTickets = async () => {
-        const l = document.getElementById('my-tickets'); l.innerHTML = '';
-        const q = query(collection(db,"support"), where("uid","==",auth.currentUser.uid));
+
+    window.loadBetaApps = async () => {
+        const l = document.getElementById('beta-apps-list'); l.innerHTML = '';
+        const q = query(collection(db, "apps"), where("devId", "==", auth.currentUser.uid), where("status", "==", "pending"));
         const s = await getDocs(q);
-        s.forEach(d => l.innerHTML += `<div class="card text-sm"><b>You:</b> ${d.data().msg}<br><b>Admin:</b> ${d.data().reply||'Wait...'}</div>`);
-        if(user.role === 'admin') {
-            const al = document.getElementById('admin-tickets-area'); al.classList.remove('hidden'); al.innerHTML = '<h3 class="font-bold text-gold">Support</h3>';
-            const as = await getDocs(collection(db,"support"));
-            as.forEach(d => { if(!d.data().reply) al.innerHTML += `<div class="card text-xs"><b>${d.data().nick}:</b> ${d.data().msg}<input id="rep-${d.id}" class="mt-2"><button onclick="replyTicket('${d.id}')" class="btn btn-gold w-full mt-2">REPLY</button></div>` });
-        }
+        s.forEach(async d => {
+            const a = d.data();
+            const g = await getDoc(doc(db, "games", a.gameId));
+            l.innerHTML += `<div class="card">
+                <b>${a.nick}</b> for <span class="text-gold">${g.data().name}</span><br><small>${a.reason}</small>
+                <div class="flex gap-2 mt-2">
+                    <button onclick="decideBeta('${d.id}','${a.uid}','${a.gameId}',true)" class="btn btn-green">Accept</button>
+                    <button onclick="decideBeta('${d.id}','','',false)" class="btn btn-red">Deny</button>
+                </div>
+            </div>`;
+        });
     };
-    window.replyTicket = async (id) => { await updateDoc(doc(db,"support",id), {reply: document.getElementById('rep-'+id).value}); loadTickets(); };
-    window.buyGame = async (id,p) => { if(user.balance<p) return toast("No money"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:user.balance-p, library:arrayUnion(id)}); location.reload(); };
+
+    window.decideBeta = async (docId, uid, gid, ok) => {
+        if(ok) await updateDoc(doc(db,"users",uid), { library: arrayUnion(gid) });
+        await deleteDoc(doc(db, "apps", docId));
+        loadBetaApps();
+    };
+
+    // ACHIEVEMENTS
+    window.loadAchievements = async () => {
+        const l = document.getElementById('ach-list'); l.innerHTML = '';
+        const s = await getDocs(collection(db, "games"));
+        s.forEach(d => {
+            const g = d.data();
+            if(g.achievement) {
+                const a = g.achievement;
+                const earned = user.achievements?.some(mine => mine.name === a.name);
+                l.innerHTML += `<div class="card ${earned?'border-gold':''}">
+                    <div class="flex justify-between"><b>${a.name}</b> <span class="text-gold">${a.reward}$</span></div>
+                    <p class="text-xs opacity-50">${a.desc}</p>
+                    <small>Game: ${g.name} | Left: ${a.limit}</small>
+                    ${!earned && user.library.includes(d.id) ? `<button onclick="claimAch('${d.id}')" class="btn btn-gold w-full mt-2">CLAIM REWARD</button>` : earned ? `<div class="text-center font-bold text-gold mt-2">EARNED</div>` : ''}
+                </div>`;
+            }
+        });
+    };
+
+    window.claimAch = async (gid) => {
+        const gSnap = await getDoc(doc(db, "games", gid));
+        const g = gSnap.data();
+        const a = g.achievement;
+        
+        if(a.limit <= 0) return toast("No rewards left!");
+        
+        const devRef = doc(db, "users", g.ownerId);
+        const devSnap = await getDoc(devRef);
+        
+        if(devSnap.data().balance < a.reward) return toast("Developer is out of money!");
+
+        // Процесс: минус у дева, плюс у игрока, минус лимит
+        await updateDoc(devRef, { balance: increment(-a.reward) });
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { 
+            balance: increment(a.reward), 
+            achievements: arrayUnion({ name: a.name, fromGame: g.name }) 
+        });
+        await updateDoc(doc(db, "games", gid), { "achievement.limit": increment(-1) });
+        
+        toast("Achievement Unlocked! $ added.");
+        loadAchievements();
+    };
+
+    // TRADE SYSTEM
+    window.updateTradeList = () => {
+        const s = document.getElementById('trade-ach-id');
+        s.innerHTML = '<option value="">-- No Achievement --</option>';
+        user.achievements?.forEach((a, index) => {
+            s.innerHTML += `<option value="${index}">${a.name} (from ${a.fromGame})</option>`;
+        });
+    };
+
+    window.processTrade = async () => {
+        const targetNick = document.getElementById('trade-target').value;
+        const amount = Number(document.getElementById('trade-money').value) || 0;
+        const achIdx = document.getElementById('trade-ach-id').value;
+
+        if(!targetNick) return toast("Enter Nickname");
+
+        const q = query(collection(db, "users"), where("nickname", "==", targetNick));
+        const targetSnap = await getDocs(q);
+        if(targetSnap.empty) return toast("User not found!");
+        
+        const targetUser = targetSnap.docs[0];
+        const targetRef = doc(db, "users", targetUser.id);
+        const myRef = doc(db, "users", auth.currentUser.uid);
+
+        if(amount > user.balance) return toast("Not enough money!");
+
+        // Если есть достижение
+        if(achIdx !== "") {
+            const achObj = user.achievements[achIdx];
+            await updateDoc(myRef, { achievements: arrayRemove(achObj), balance: increment(-amount) });
+            await updateDoc(targetRef, { achievements: arrayUnion(achObj), balance: increment(amount) });
+        } else {
+            await updateDoc(myRef, { balance: increment(-amount) });
+            await updateDoc(targetRef, { balance: increment(amount) });
+        }
+
+        toast("Trade Successful!");
+        location.reload();
+    };
+
+    // UTILS
+    window.pubGame = async () => {
+        const ach = {
+            name: document.getElementById('p-ach-name').value,
+            desc: document.getElementById('p-ach-desc').value,
+            reward: Number(document.getElementById('p-ach-reward').value),
+            limit: Number(document.getElementById('p-ach-limit').value)
+        };
+        await addDoc(collection(db,"games"), { 
+            name: document.getElementById('p-name').value, 
+            url: document.getElementById('p-url').value, 
+            price: Number(document.getElementById('p-price').value),
+            isBeta: document.getElementById('p-beta').checked,
+            ownerId: auth.currentUser.uid,
+            achievement: ach.name ? ach : null
+        });
+        toast("Game & Ach created!");
+        nav('market');
+    };
+
     window.loadLibrary = async () => {
         const l = document.getElementById('library-list'); l.innerHTML = '';
-        const snap = await getDocs(collection(db, "games"));
-        snap.forEach(d => { if(user.library?.includes(d.id) || user.nickname === 'GOODGAME') l.innerHTML += `<div class="card"><b>${d.data().name}</b><button onclick="playGame('${d.data().url}')" class="btn btn-green w-full mt-2">PLAY</button></div>`; });
+        const s = await getDocs(collection(db, "games"));
+        s.forEach(d => {
+            const g = d.data();
+            if(user.library.includes(d.id) || user.nickname === 'GOODGAME') {
+                const time = user.playtime?.[d.id] || 0;
+                l.innerHTML += `<div class="card">
+                    <b>${g.name}</b>
+                    <div class="text-[10px] opacity-40 mb-4">Played: ${Math.floor(time/60)}m ${time%60}s</div>
+                    <button onclick="playGame('${d.id}','${g.name}','${g.url}')" class="btn btn-green w-full">PLAY</button>
+                </div>`;
+            }
+        });
     };
-    window.pubGame = async () => { await addDoc(collection(db,"games"), { name:document.getElementById('p-name').value, desc:document.getElementById('p-desc').value, url:document.getElementById('p-url').value, price:Number(document.getElementById('p-price').value), isBeta:document.getElementById('p-beta').checked }); nav('market'); loadMarket(); };
-    window.closeGame = () => { document.getElementById('game-frame').src=''; document.getElementById('game-overlay').style.display='none'; };
-    window.playGame = (u) => { document.getElementById('game-frame').src=u; document.getElementById('game-overlay').style.display='flex'; };
-    window.setRole = async () => { await updateDoc(doc(db,"users",selectedUid), {role:document.getElementById('um-role').value}); loadAdminData(); };
-    window.applyBan = async (m) => { await updateDoc(doc(db,"users",selectedUid), {banUntil: m===0?0:Date.now()+(m*60000)}); loadAdminData(); };
+
+    window.buyGame = async (id,p) => { 
+        if(user.balance<p) return toast("No money"); 
+        await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:increment(-p), library:arrayUnion(id)}); 
+        location.reload(); 
+    };
+    
     window.logout = () => signOut(auth).then(()=>location.reload());
-    window.changeNickname = async () => { await updateDoc(doc(db,"users",auth.currentUser.uid), {nickname:document.getElementById('new-nick').value}); location.reload(); };
-    function initChat() { onSnapshot(query(collection(db,"chat"), orderBy("time","desc"), limit(30)), snap => {
+    window.sendChat = async () => { await addDoc(collection(db,"chat"), { nick:user.nickname, msg:document.getElementById('chat-msg').value, time:Date.now() }); document.getElementById('chat-msg').value = ''; };
+    onSnapshot(query(collection(db,"chat"), orderBy("time","desc"), limit(20)), snap => {
         const c = document.getElementById('chat-container'); c.innerHTML = '';
-        snap.forEach(d => c.innerHTML += `<div class="p-2 bg-white/5 rounded"><b>${d.data().nick}:</b> ${d.data().msg}</div>`);
-    });}
-    window.sendChat = async () => { await addDoc(collection(db,"chat"), { uid:auth.currentUser.uid, nick:user.nickname, msg:document.getElementById('chat-msg').value, time:Date.now() }); document.getElementById('chat-msg').value = ''; };
+        snap.forEach(d => c.innerHTML += `<div class="text-xs"><b>${d.data().nick}:</b> ${d.data().msg}</div>`);
+    });
 
     const canvas=document.getElementById('snow'); const ctx=canvas.getContext('2d'); let flakes=[];
-    function initSnow(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; flakes=[]; for(let i=0;i<80;i++) flakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+1, d:Math.random()*1}); }
+    function initSnow(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; flakes=[]; for(let i=0;i<60;i++) flakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+1, d:Math.random()*1}); }
     function drawSnow(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle="white"; ctx.beginPath(); flakes.forEach(f=>{ ctx.moveTo(f.x,f.y); ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true); f.y+=Math.cos(f.d)+1+f.r/2; if(f.y>canvas.height){f.y=-10; f.x=Math.random()*canvas.width;} }); ctx.fill(); requestAnimationFrame(drawSnow); }
     window.onresize=initSnow; initSnow(); drawSnow();
 </script>
