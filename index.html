@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | THE ULTIMATE ELITE UPDATE</title>
+    <title>GOODGAME | THE FINAL ULTIMATE GOD-MODE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -15,61 +15,74 @@
 
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: 0.3s; margin: 0; overflow-x: hidden; }
         #snow { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
-        
-        /* FRAMES */
-        .avatar-box { width: 110px; height: 110px; border-radius: 50%; position: relative; margin: 0 auto 15px; z-index: 10; }
-        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); }
-        .frame-gold { box-shadow: 0 0 0 4px #fbbf24, 0 0 20px #fbbf24; }
-        .frame-neon { box-shadow: 0 0 0 4px #00ffff, 0 0 20px #00ffff; }
-        .frame-fire { box-shadow: 0 0 0 4px #ff4500, 0 0 20px #ff4500; animation: pulse 1s infinite; }
-        .frame-immortal { box-shadow: 0 0 0 5px #fff; background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); padding: 5px; animation: rotateHue 3s linear infinite; }
-        
-        @keyframes rotateHue { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
-
-        /* ELITE FX */
-        .elite-glow { position: absolute; inset: -30px; background: radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%); z-index: -1; animation: pulse 2s infinite; }
+        .garland { height: 3px; background: linear-gradient(90deg, #f00, #0f0, #ff0, #00f); background-size: 40px 100%; animation: move 2s linear infinite; position: fixed; top: 0; width: 100%; z-index: 2001; }
+        @keyframes move { from { background-position: 0 0; } to { background-position: 40px 0; } }
 
         .sidebar { width: 280px; background: var(--panel); height: 100vh; position: fixed; left: -280px; z-index: 2000; transition: 0.4s; border-right: 1px solid var(--border); backdrop-filter: blur(10px); }
         .sidebar.active { left: 0; }
         .main { padding: 80px 15px 100px 15px; min-height: 100vh; }
         @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } }
 
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; position: relative; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); position: relative; }
         .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
         .btn-green { background: #22c55e; color: white; }
         .btn-gold { background: var(--gold); color: #000; }
         .btn-red { background: #ef4444; color: white; }
+
         input, select, textarea { background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; }
+
+        /* AVATARS & ELITE FRAMES */
+        .avatar-box { width: 120px; height: 120px; border-radius: 50%; position: relative; margin: 0 auto 15px; z-index: 10; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); }
+        
+        .frame-gold { box-shadow: 0 0 0 4px #fbbf24, 0 0 25px #fbbf24; }
+        .frame-neon { box-shadow: 0 0 0 4px #00ffff, 0 0 25px #00ffff; }
+        .frame-fire { box-shadow: 0 0 0 4px #ff4500, 0 0 25px #ff4500; animation: pulse 1s infinite; }
+        .frame-immortal { 
+            box-shadow: 0 0 0 5px #fff; 
+            background: linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); 
+            padding: 6px; animation: rotateHue 3s linear infinite; 
+        }
+        
+        @keyframes rotateHue { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+        .elite-glow { position: absolute; inset: -30px; background: radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%); z-index: -1; animation: pulse 2s infinite; }
+
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; z-index: 9999; transition: 0.4s; font-weight: bold; }
         #toast.active { transform: translate(-50%, 0); }
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; }
+        #game-overlay { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
     </style>
 </head>
 <body id="app-body">
 
 <canvas id="snow"></canvas>
+<div class="garland"></div>
 <div id="toast"></div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
         <div class="text-2xl font-black text-gold mb-8 italic">GOODGAME</div>
         <nav class="space-y-1 text-sm">
-            <button onclick="nav('profile')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-circle"></i> Profile</button>
-            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Market</button>
-            <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-shopping-cart text-pink-400"></i> Cosmetic Shop</button>
-            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Library</button>
-            <button onclick="nav('trade')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-exchange-alt"></i> Trade</button>
-            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> Chat</button>
-            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings & Inv</button>
+            <button onclick="nav('profile')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-circle"></i> <span data-i18n="nav_profile">Profile</span></button>
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> <span data-i18n="nav_market">Market</span></button>
+            <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gem text-pink-400"></i> <span data-i18n="nav_shop">Cosmetic Shop</span></button>
+            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> <span data-i18n="nav_library">Library</span></button>
+            <button onclick="nav('achievements')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-trophy text-gold"></i> <span data-i18n="nav_ach">Achievements</span></button>
+            <button onclick="nav('trade')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-exchange-alt"></i> <span data-i18n="nav_trade">Trade</span></button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> <span data-i18n="nav_chat">Chat</span></button>
+            <button onclick="nav('support')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-headset"></i> <span data-i18n="nav_support">Support</span></button>
+            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> <span data-i18n="nav_settings">Settings & Inv</span></button>
             
             <div id="dev-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
-                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> Publish</button>
-                <button onclick="nav('beta-manage')" class="w-full text-left p-3 text-purple-400 flex items-center gap-3"><i class="fas fa-vial"></i> Beta Apps</button>
+                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> <span data-i18n="nav_pub">Publish</span></button>
+                <button onclick="nav('beta-manage')" class="w-full text-left p-3 text-purple-400 flex items-center gap-3"><i class="fas fa-vial"></i> <span data-i18n="nav_beta">Beta Apps</span></button>
             </div>
             <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
-                <button onclick="nav('job-manage')" class="w-full text-left p-3 text-red-500 flex items-center gap-3 font-bold"><i class="fas fa-briefcase"></i> Job Apps</button>
-                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3 font-bold"><i class="fas fa-users-cog"></i> Admin Panel</button>
+                <button onclick="nav('job-manage')" class="w-full text-left p-3 text-red-500 flex items-center gap-3 font-bold"><i class="fas fa-briefcase"></i> <span data-i18n="nav_job">Job Apps</span></button>
+                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3 font-bold"><i class="fas fa-users-cog"></i> <span data-i18n="nav_admin">Admin Panel</span></button>
             </div>
         </nav>
     </div>
@@ -78,38 +91,44 @@
 
 <main class="main">
     <section id="profile">
+        <h2 class="text-3xl font-black mb-6 italic" data-i18n="nav_profile">PROFILE</h2>
         <div class="card text-center">
             <div id="elite-fx"></div>
             <div class="avatar-box" id="prof-frame-box"><img src="" class="avatar-img" id="prof-img"></div>
             <h3 class="text-2xl font-bold" id="prof-nick">...</h3>
             <p id="prof-role" class="text-xs opacity-50 uppercase mb-4">Player</p>
-            <label class="btn btn-gold text-xs cursor-pointer max-w-[150px] mx-auto">Upload Photo<input type="file" id="avatar-input" class="hidden" accept="image/*"></label>
-            <div class="grid grid-cols-2 gap-4 mt-6">
-                <div class="bg-black/20 p-3 rounded-xl"><b>Balance:</b> <span id="prof-bal">0$</span></div>
-                <div class="bg-black/20 p-3 rounded-xl"><b>Time:</b> <span id="prof-time">0m</span></div>
+            <label class="btn btn-gold text-xs cursor-pointer max-w-[150px] mx-auto"><span data-i18n="prof_upload">Upload Photo</span><input type="file" id="avatar-input" class="hidden" accept="image/*"></label>
+            <div class="grid grid-cols-2 gap-4 mt-6 text-sm">
+                <div class="bg-black/20 p-3 rounded-xl"><b data-i18n="prof_bal">Balance</b>: <span id="prof-bal">0$</span></div>
+                <div class="bg-black/20 p-3 rounded-xl"><b data-i18n="prof_time">Time</b>: <span id="prof-time">0m</span></div>
             </div>
         </div>
     </section>
 
     <section id="shop" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic text-pink-400">COSMETIC SHOP</h2>
+        <h2 class="text-3xl font-black mb-6 italic text-pink-400" data-i18n="nav_shop">COSMETIC SHOP</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="card"><h3 class="font-bold mb-4 text-gold">Frames</h3>
+            <div class="card"><h3 class="font-bold mb-4 text-gold" data-i18n="shop_frames">Frames</h3>
                 <button onclick="buyCosmetic('frame-gold', 500)" class="btn bg-black/40 w-full mb-2">Gold Frame - 500$</button>
                 <button onclick="buyCosmetic('frame-neon', 1000)" class="btn bg-black/40 w-full mb-2">Neon Shadow - 1000$</button>
                 <button onclick="buyCosmetic('frame-fire', 2500)" class="btn bg-black/40 w-full">Inferno - 2500$</button>
             </div>
-            <div class="card"><h3 class="font-bold mb-4 text-gold">Themes</h3>
+            <div class="card"><h3 class="font-bold mb-4 text-gold" data-i18n="shop_themes">Themes</h3>
                 <button onclick="buyCosmetic('theme-cyber', 1500)" class="btn bg-black/40 w-full mb-2">Cyberpunk - 1500$</button>
-                <button onclick="buyCosmetic('theme-winter', 1000)" class="btn bg-black/40 w-full">Winter - 1000$</button>
+                <button onclick="buyCosmetic('theme-winter', 1000)" class="btn bg-black/40 w-full">Winter Night - 1000$</button>
             </div>
         </div>
     </section>
 
     <section id="settings" class="hidden">
-        <h2 class="text-3xl font-black mb-6 italic">SETTINGS</h2>
+        <h2 class="text-3xl font-black mb-6 italic" data-i18n="nav_settings">SETTINGS</h2>
         <div class="card">
-            <h3 class="font-bold mb-4 text-gold">Language</h3>
+            <h3 class="font-bold mb-4 text-gold">My Inventory (Инвентарь)</h3>
+            <p class="text-[10px] opacity-50 uppercase">Frames:</p><div id="inv-frames" class="flex flex-wrap gap-2 mb-4"></div>
+            <p class="text-[10px] opacity-50 uppercase">Themes:</p><div id="inv-themes" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div class="card">
+            <h3 class="font-bold mb-4" data-i18n="set_lang">Language</h3>
             <div class="grid grid-cols-5 gap-1">
                 <button onclick="setLang('ru')" class="btn bg-slate-700 text-[10px]">RU</button>
                 <button onclick="setLang('ua')" class="btn bg-blue-700 text-[10px]">UA</button>
@@ -118,36 +137,53 @@
                 <button onclick="setLang('es')" class="btn bg-red-700 text-[10px]">ES</button>
             </div>
         </div>
-        <div class="card">
-            <h3 class="font-bold mb-4 text-gold">Inventory</h3>
-            <p class="text-[10px] opacity-50 uppercase">Frames:</p><div id="inv-frames" class="flex flex-wrap gap-2 mb-4"></div>
-            <p class="text-[10px] opacity-50 uppercase">Themes:</p><div id="inv-themes" class="flex flex-wrap gap-2"></div>
-        </div>
-        <button onclick="logout()" class="btn btn-red w-full mt-4">LOGOUT</button>
+        <button onclick="logout()" class="btn btn-red w-full mt-4" data-i18n="logout">LOGOUT</button>
     </section>
 
-    <section id="admin-center" class="hidden"><h2 class="text-2xl font-black mb-6 text-red-500">ADMIN PANEL</h2><div id="admin-users" class="space-y-2"></div></section>
+    <section id="market" class="hidden"><h2 class="text-3xl font-black mb-6 italic" data-i18n="nav_market">MARKET</h2><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-green-500" data-i18n="nav_library">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="achievements" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-gold" data-i18n="nav_ach">ACHIEVEMENTS</h2><div id="ach-list" class="space-y-4"></div></section>
+    <section id="trade" class="hidden"><div class="card max-w-sm mx-auto"><input id="tr-nick" placeholder="Recipient Nick"><input id="tr-money" type="number" placeholder="Money $"><button onclick="processTrade()" class="btn btn-gold w-full mt-4" data-i18n="nav_trade">Send</button></div></section>
     
-    <section id="market" class="hidden"><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    <section id="library" class="hidden"><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    <section id="chat" class="hidden"><div id="chat-container" class="h-64 overflow-y-auto mb-4 bg-black/20 p-3 rounded-xl flex flex-col gap-2 text-xs"></div><div class="flex gap-2"><input id="chat-msg"><button onclick="sendChat()" class="btn btn-green">Send</button></div></section>
+    <section id="admin-center" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-red-500">ADMIN PANEL</h2><div id="admin-users" class="space-y-2"></div></section>
+    <section id="beta-manage" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-purple-400">BETA APPS</h2><div id="beta-apps-list" class="space-y-4"></div></section>
+    <section id="job-manage" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-red-400">JOB APPS</h2><div id="job-apps-list" class="space-y-4"></div></section>
+    
+    <section id="publish" class="hidden">
+        <h2 class="text-3xl font-black mb-6 text-green-500">PUBLISH</h2>
+        <div class="card max-w-lg mx-auto">
+            <input id="p-name" placeholder="Game Name"><textarea id="p-desc" placeholder="Game Description"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price $"><label class="flex items-center gap-2 mb-4"><input type="checkbox" id="p-beta"> Beta</label>
+            <div class="border-t border-white/10 pt-4 mt-2">
+                <input id="p-ach-name" placeholder="Ach Name"><input id="p-ach-desc" placeholder="Ach Description"><input id="p-ach-reward" type="number" placeholder="Reward $"><input id="p-ach-limit" type="number" placeholder="Limit">
+            </div>
+            <button onclick="pubGame()" class="btn btn-green w-full mt-4">CREATE GAME</button>
+        </div>
+    </section>
+
+    <section id="chat" class="hidden"><div id="chat-container" class="h-80 overflow-y-auto mb-4 bg-black/20 p-3 rounded-xl flex flex-col gap-2"></div><div class="flex gap-2"><input id="chat-msg" class="m-0"><button onclick="sendChat()" class="btn btn-green"><i class="fas fa-paper-plane"></i></button></div></section>
+    <section id="support" class="hidden"><div class="card"><textarea id="supp-msg" placeholder="Problem..."></textarea><button onclick="sendTicket()" class="btn btn-green w-full">Send Ticket</button></div><div id="my-tickets" class="mt-4 space-y-2"></div></section>
 </main>
 
 <div id="user-modal" class="modal-overlay"><div class="modal-box">
-    <h2 id="um-nick" class="text-2xl font-bold mb-4">Dossier</h2>
+    <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold">Dossier</h2>
     <div id="um-data" class="text-xs font-mono bg-black/50 p-4 rounded mb-4"></div>
     <div class="space-y-3">
         <div><label class="text-[10px] uppercase opacity-50">Grant Item</label>
-        <select id="adm-grant-item"><option value="frame-immortal">Immortal Frame</option><option value="theme-onyx">Onyx Theme</option><option value="frame-fire">Fire Frame</option></select>
-        <button onclick="adminGrantItem()" class="btn btn-green w-full mt-1">Grant</button></div>
+            <select id="adm-grant-item"><option value="frame-immortal">Immortal Frame</option><option value="theme-onyx">Onyx Theme</option><option value="frame-fire">Fire Frame</option></select>
+            <button onclick="adminGrantItem()" class="btn btn-green w-full mt-1">Grant</button>
+        </div>
         <div class="flex gap-2"><input id="um-money-val" type="number" placeholder="$" class="m-0"><button onclick="adminMoney(true)" class="btn btn-green">+</button><button onclick="adminMoney(false)" class="btn btn-red">-</button></div>
-        <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="admin">Admin</option></select>
+        <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="mod">Mod</option><option value="admin">Admin</option></select>
         <button onclick="saveAdminRole()" class="btn btn-gold w-full">Save Role</button>
-        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full">Close</button>
+        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full mt-2">Close</button>
     </div>
 </div></div>
 
-<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center"><h2 class="text-4xl font-black text-red-500 mb-6 italic">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
+<div id="apply-modal" class="modal-overlay"><div class="card w-full max-w-md"><h2 class="text-xl font-bold mb-4 text-purple-400">Beta Application</h2><input id="apply-name" placeholder="Real Name"><textarea id="apply-reason" placeholder="Why you?"></textarea><button id="apply-confirm-btn" class="btn btn-green w-full">SEND</button><button onclick="closeModal('apply-modal')" class="btn bg-gray-700 w-full mt-2">CANCEL</button></div></div>
+
+<div id="game-overlay"><div class="p-4 flex justify-between bg-gray-900 border-b border-white/10"><span id="active-game-name" class="font-bold"></span><button onclick="closeGame()" class="btn btn-red">EXIT & SAVE TIME</button></div><iframe id="game-frame"></iframe></div>
+
+<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black text-red-500 mb-6 italic">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -158,24 +194,42 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    let user = null, selectedUid = null;
+    let user = null, selectedUid = null, startTime = 0, activeGameId = null, currentLang = localStorage.getItem('gg_lang') || 'ru';
+
+    // --- TRANSLATION DATA ---
+    const i18n = {
+        ru: { nav_profile: "Профиль", nav_market: "Магазин", nav_library: "Библиотека", nav_ach: "Достижения", nav_shop: "Косметика", nav_trade: "Трейд", nav_chat: "Чат", nav_support: "Поддержка", nav_settings: "Настройки", nav_pub: "Издать", nav_beta: "Беты", nav_job: "Вакансии", nav_admin: "Админ-панель", prof_upload: "Загрузить фото", prof_bal: "Баланс", prof_time: "Время", shop_frames: "Рамки", shop_themes: "Темы", set_lang: "Язык", logout: "ВЫЙТИ" },
+        ua: { nav_profile: "Профіль", nav_market: "Крамниця", nav_library: "Бібліотека", nav_ach: "Досягнення", nav_shop: "Косметика", nav_trade: "Трейд", nav_chat: "Чат", nav_support: "Підтримка", nav_settings: "Налаштування", nav_pub: "Видати", nav_beta: "Бети", nav_job: "Вакансії", nav_admin: "Адмін-панель", prof_upload: "Завантажити фото", prof_bal: "Баланс", prof_time: "Час", shop_frames: "Рамки", shop_themes: "Теми", set_lang: "Мова", logout: "ВИЙТИ" },
+        en: { nav_profile: "Profile", nav_market: "Market", nav_library: "Library", nav_ach: "Achievements", nav_shop: "Shop", nav_trade: "Trade", nav_chat: "Chat", nav_support: "Support", nav_settings: "Settings", nav_pub: "Publish", nav_beta: "Beta Apps", nav_job: "Jobs", nav_admin: "Admin", prof_upload: "Upload Photo", prof_bal: "Balance", prof_time: "Time", shop_frames: "Frames", shop_themes: "Themes", set_lang: "Language", logout: "LOGOUT" }
+    };
 
     window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'),3000); };
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
+    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
+    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-    window.setLang = (l) => { localStorage.setItem('gg_lang', l); location.reload(); };
+    window.setLang = (l) => { currentLang = l; localStorage.setItem('gg_lang', l); applyI18n(); toast("Language changed!"); };
+    function applyI18n() { const t = i18n[currentLang] || i18n.en; document.querySelectorAll('[data-i18n]').forEach(el => { const k = el.getAttribute('data-i18n'); if(t[k]) el.innerText = t[k]; }); }
 
+    // --- AUTH & INITIALIZATION ---
     onAuthStateChanged(auth, async (u) => {
         if(u) {
             const s = await getDoc(doc(db, "users", u.uid)); user = s.data();
             if(user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
             document.getElementById('login-modal').style.display = 'none';
             updateUI();
-            if(['admin','developer','mod'].includes(user.role)) document.getElementById('dev-tools').classList.remove('hidden');
-            if(user.role === 'admin') { document.getElementById('admin-tools').classList.remove('hidden'); loadAdminUsers(); }
-            loadMarket(); loadLibrary(); initChat();
+            if(['admin','mod','developer'].includes(user.role)) document.getElementById('dev-tools').classList.remove('hidden');
+            if(user.role === 'admin') { document.getElementById('admin-tools').classList.remove('hidden'); loadAdminUsers(); loadJobApps(); }
+            loadMarket(); loadLibrary(); loadAchievements(); initChat(); loadTickets(); loadBetaApps(); applyI18n();
         } else { document.getElementById('login-modal').style.display='flex'; }
     });
+
+    window.authHandler = async () => {
+        const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
+        try { await signInWithEmailAndPassword(auth, e, p); } catch {
+            const res = await createUserWithEmailAndPassword(auth, e, p);
+            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role: (n==='GOODGAME'?'admin':'user'), balance:500, library:[], inventory:[], activeFrame:'', activeTheme:'', avatar:'', playtime:{} });
+        }
+    };
 
     function updateUI() {
         document.getElementById('prof-nick').innerText = user.nickname;
@@ -195,43 +249,67 @@
         });
     }
 
+    // --- PHOTO UPLOAD ---
+    document.getElementById('avatar-input').onchange = (e) => {
+        const reader = new FileReader(); reader.readAsDataURL(e.target.files[0]);
+        reader.onload = async () => {
+            await updateDoc(doc(db,"users",auth.currentUser.uid), {avatar: reader.result});
+            user.avatar = reader.result; updateUI(); toast("Photo Updated!");
+        };
+    };
+
+    // --- CORE STEAM FEATURES ---
+    window.playGame = (gid, n, u) => { activeGameId = gid; startTime = Date.now(); document.getElementById('active-game-name').innerText = n; document.getElementById('game-frame').src = u; document.getElementById('game-overlay').style.display = 'flex'; };
+    window.closeGame = async () => {
+        const el = Math.floor((Date.now() - startTime) / 1000);
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { [`playtime.${activeGameId}`]: increment(el) });
+        document.getElementById('game-frame').src = ''; document.getElementById('game-overlay').style.display = 'none'; location.reload();
+    };
+
+    window.loadMarket = async () => {
+        const l = document.getElementById('market-list'); l.innerHTML = '';
+        (await getDocs(collection(db, "games"))).forEach(d => {
+            const g = d.data(); const owned = user.library?.includes(d.id);
+            l.innerHTML += `<div class="card"><b>${g.name}</b><p class="text-xs opacity-50 my-2">${g.desc || ''}</p><div class="flex gap-2">${owned ? `<button class="btn bg-blue-600">OWNED</button>` : g.isBeta ? `<button onclick="openApply('${d.id}')" class="btn btn-purple flex-1">BETA APPLY</button>` : `<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green flex-1">BUY ${g.price}$</button>`}</div></div>`;
+        });
+    };
+
+    window.buyGame = async (id,p) => { if(user.balance<p) return toast("No $"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:increment(-p), library:arrayUnion(id)}); location.reload(); };
+    window.loadLibrary = async () => {
+        const l = document.getElementById('library-list'); l.innerHTML = '';
+        (await getDocs(collection(db, "games"))).forEach(d => { if(user.library.includes(d.id)) l.innerHTML += `<div class="card"><b>${d.data().name}</b><button onclick="playGame('${d.id}','${d.data().name}','${d.data().url}')" class="btn btn-green w-full mt-2">PLAY</button></div>`; });
+    };
+
     window.buyCosmetic = async (id, p) => {
         if(user.balance < p) return toast("No $");
-        if(user.inventory?.includes(id)) return toast("Already owned");
         await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(-p), inventory: arrayUnion(id) });
-        toast("Bought! Check Inventory."); location.reload();
+        location.reload();
     };
-
     window.applyCosmetic = async (type, id) => { await updateDoc(doc(db, "users", auth.currentUser.uid), { [type]: id }); location.reload(); };
 
-    window.adminGrantItem = async () => {
-        const item = document.getElementById('adm-grant-item').value;
-        await updateDoc(doc(db, selectedUid), { inventory: arrayUnion(item) }); toast("Granted!");
-    };
+    // --- CHAT & TICKETS ---
+    window.initChat = () => { onSnapshot(query(collection(db,"chat"), orderBy("time","asc"), limit(30)), s => { const c=document.getElementById('chat-container'); c.innerHTML=''; s.forEach(d=>c.innerHTML+=`<div class="p-2 rounded bg-white/5 text-xs"><b>${d.data().nick}:</b> ${d.data().msg}</div>`); c.scrollTop=c.scrollHeight; }); };
+    window.sendChat = async () => { const m=document.getElementById('chat-msg').value; await addDoc(collection(db,"chat"),{nick:user.nickname, msg:m, time:Date.now()}); document.getElementById('chat-msg').value=''; };
+    window.loadTickets = async () => { (await getDocs(query(collection(db,"support"), where("uid","==",auth.currentUser.uid)))).forEach(d => document.getElementById('my-tickets').innerHTML += `<div class="card text-xs"><b>You:</b> ${d.data().msg}<br><b>Admin:</b> ${d.data().reply||'Wait...'}</div>`); };
 
-    window.adminMoney = async (add) => {
-        const v = Number(document.getElementById('um-money-val').value);
-        await updateDoc(doc(db, "users", selectedUid), { balance: increment(add?v:-v) }); toast("Done!");
-    };
-
-    window.authHandler = async () => {
-        const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
-        try { await signInWithEmailAndPassword(auth, e, p); } catch {
-            const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role: (n==='GOODGAME'?'admin':'user'), balance:500, library:[], inventory:[], activeFrame:'', activeTheme:'' });
-        }
-    };
-
-    // REST OF LOGIC (CHAT, MARKET, ADMIN LIST)
-    window.initChat = () => { onSnapshot(query(collection(db,"chat"), orderBy("time","asc"), limit(30)), snap => { const c=document.getElementById('chat-container'); c.innerHTML=''; snap.forEach(d=>c.innerHTML+=`<div><b>${d.data().nick}:</b> ${d.data().msg}</div>`); c.scrollTop=c.scrollHeight; }); };
-    window.sendChat = async () => { const m=document.getElementById('chat-msg').value; await addDoc(collection(db,"chat"), {nick:user.nickname, msg:m, time:Date.now()}); document.getElementById('chat-msg').value=''; };
+    // --- ADMIN TOOLS ---
     window.loadAdminUsers = async () => { const l=document.getElementById('admin-users'); l.innerHTML=''; (await getDocs(collection(db,"users"))).forEach(d=>l.innerHTML+=`<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer">${d.data().nickname}</div>`); };
     window.openAdminUser = async (uid) => { selectedUid=uid; const u=(await getDoc(doc(db,"users",uid))).data(); document.getElementById('um-data').innerText=`Email: ${u.email}\nPass: ${u.saved_pass}\nBal: ${u.balance}$`; document.getElementById('user-modal').style.display='flex'; };
-    window.saveAdminRole = async () => { await updateDoc(doc(db,"users",selectedUid), {role: document.getElementById('um-role').value}); toast("Saved!"); };
+    window.adminGrantItem = async () => { await updateDoc(doc(db,"users",selectedUid), { inventory: arrayUnion(document.getElementById('adm-grant-item').value)}); toast("Granted!"); };
+    window.adminMoney = async (add) => { await updateDoc(doc(db,"users",selectedUid), { balance: increment(add?Number(document.getElementById('um-money-val').value):-Number(document.getElementById('um-money-val').value)) }); toast("Done!"); };
+    
+    // BETA LOGIC
+    window.loadBetaApps = async () => {
+        const q = query(collection(db,"apps"), where("devId","==",auth.currentUser.uid), where("status","==","pending"));
+        (await getDocs(q)).forEach(async d => { const a=d.data(); const g=await getDoc(doc(db,"games",a.gameId)); document.getElementById('beta-apps-list').innerHTML += `<div class="card"><b>${a.nick}</b> for <b>${g.data().name}</b><div class="flex gap-2 mt-2"><button onclick="decideApp('${d.id}','${a.uid}','${a.gameId}',true)" class="btn btn-green flex-1">Accept</button></div></div>`; });
+    };
+
     window.logout = () => signOut(auth).then(()=>location.reload());
-    window.loadMarket = async () => { const l=document.getElementById('market-list'); l.innerHTML=''; (await getDocs(collection(db,"games"))).forEach(d=>l.innerHTML+=`<div class="card"><b>${d.data().name}</b><button onclick="buyGame('${d.id}',${d.data().price})" class="btn btn-green w-full mt-2">${d.data().price}$</button></div>`); };
-    window.buyGame = async (id,p) => { if(user.balance<p) return toast("No $"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:increment(-p), library:arrayUnion(id)}); location.reload(); };
-    window.loadLibrary = async () => { /* Logic */ };
+    
+    const canvas=document.getElementById('snow'); const ctx=canvas.getContext('2d'); let flakes=[];
+    function initSnow(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; flakes=[]; for(let i=0;i<60;i++) flakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+1, d:Math.random()*1}); }
+    function drawSnow(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle="white"; ctx.beginPath(); flakes.forEach(f=>{ ctx.moveTo(f.x,f.y); ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true); f.y+=Math.cos(f.d)+1+f.r/2; if(f.y>canvas.height){f.y=-10; f.x=Math.random()*canvas.width;} }); ctx.fill(); requestAnimationFrame(drawSnow); }
+    window.onresize=initSnow; initSnow(); drawSnow();
 </script>
 </body>
 </html>
