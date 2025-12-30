@@ -3,256 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | STEAM & ADMIN FULL UPDATE</title>
+    <title>GOODGAME | PROFILE & SHOP UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        :root { --bg: #050a18; --panel: #0b1426; --accent: #e63946; --text: #e0f2fe; --border: #1e293b; --gold: #fbbf24; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; overflow-x: hidden; background-image: radial-gradient(circle at top, #1e3a8a 0%, #050a18 100%); touch-action: manipulation; }
-        #snow { position: fixed; inset: 0; pointer-events: none; z-index: 999; }
-        .garland { height: 3px; background: linear-gradient(90deg, #f00, #0f0, #ff0, #00f); background-size: 40px 100%; animation: move 2s linear infinite; position: fixed; top: 0; width: 100%; z-index: 2001; }
-        @keyframes move { from { background-position: 0 0; } to { background-position: 40px 0; } }
-        
-        .sidebar { width: 280px; background: rgba(11, 20, 38, 0.98); height: 100vh; position: fixed; top: 0; left: -280px; border-right: 1px solid var(--border); z-index: 2000; transition: 0.4s; backdrop-filter: blur(15px); }
-        .sidebar.active { left: 0; }
-        .mobile-nav { display: flex; position: fixed; top: 0; width: 100%; height: 60px; background: var(--panel); border-bottom: 1px solid var(--border); z-index: 1500; align-items: center; padding: 0 15px; justify-content: space-between; }
-        .main { padding: 80px 15px 100px 15px; min-height: 100vh; }
-        @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } .mobile-nav { display: none; } }
-        
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
-        .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
-        .btn-green { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; }
-        .btn-gold { background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; }
-        .btn-red { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
-        
-        input, select, textarea { background: #0f172a; border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; }
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; font-weight: bold; transition: 0.4s; z-index: 9999; }
-        #toast.active { transform: translate(-50%, 0); }
-        
-        #game-overlay { position: fixed; inset: 0; background: #000; z-index: 5000; display: none; flex-direction: column; }
-        iframe { width: 100%; height: 100%; border: none; }
-        .desc-text { font-size: 12px; opacity: 0.6; margin: 8px 0; line-height: 1.4; }
+        :root { 
+            --bg: #050a18; --panel: #0b1426; --accent: #e63946; --text: #e0f2fe; --border: #1e293b; --gold: #fbbf24; 
+        }
+        /* THEMES */
+        .theme-cyber { --bg: #0f0518; --panel: #1a0b2e; --accent: #ff00ff; --text: #00ffff; --border: #3d0066; --gold: #ff00ff; }
+        .theme-winter { --bg: #f0f9ff; --panel: #ffffff; --accent: #0ea5e9; --text: #0c4a6e; --border: #bae6fd; --gold: #0284c7; }
+        .theme-gold { --bg: #1a1405; --panel: #2a210a; --accent: #fbbf24; --text: #fef3c7; --border: #453610; --gold: #f59e0b; }
 
-        /* ADMIN SPECIFIC */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; display: none; align-items: center; justify-content: center; padding: 20px; }
-        .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 450px; overflow-y: auto; max-height: 90vh; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: 0.3s; }
+        .sidebar { width: 280px; background: var(--panel); height: 100vh; position: fixed; left: -280px; z-index: 2000; transition: 0.4s; border-right: 1px solid var(--border); }
+        .sidebar.active { left: 0; }
+        .main { padding: 80px 15px 100px 15px; min-height: 100vh; }
+        @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } }
+        
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; }
+        .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn-green { background: #22c55e; color: white; }
+        .btn-gold { background: var(--gold); color: #000; }
+        
+        /* PROFILE */
+        .avatar-container { width: 100px; height: 100px; border-radius: 50%; position: relative; margin: 0 auto 15px; }
+        .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); }
+        .frame-gold { outline: 5px solid #fbbf24; outline-offset: 3px; }
+        .frame-neon { outline: 5px solid #00ffff; outline-offset: 3px; box-shadow: 0 0 15px #00ffff; }
+        .frame-fire { outline: 5px solid #ff4500; outline-offset: 3px; }
+
+        #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; z-index: 9999; transition: 0.4s; }
+        #toast.active { transform: translate(-50%, 0); }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; display: none; align-items: center; justify-content: center; }
+        iframe { width: 100%; height: 100%; border: none; }
     </style>
 </head>
-<body>
+<body id="app-body">
 
-<canvas id="snow"></canvas>
-<div class="garland"></div>
+<canvas id="snow" style="position:fixed; inset:0; pointer-events:none; z-index:999;"></canvas>
 <div id="toast"></div>
 
-<div class="mobile-nav">
+<div class="mobile-nav lg:hidden fixed top-0 w-full h-16 bg-slate-900 flex items-center px-4 justify-between z-[1500]">
     <button onclick="toggleMenu()"><i class="fas fa-bars"></i></button>
-    <div class="font-black italic text-gold">GOODGAME ❄️</div>
-    <div id="mob-bal" class="text-yellow-400 font-bold">0$</div>
+    <div class="font-bold text-gold">GOODGAME</div>
+    <div id="mob-bal">0$</div>
 </div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
-        <div class="font-black text-2xl italic text-gold mb-8">GOODGAME</div>
+        <div class="text-2xl font-black text-gold mb-8">GOODGAME</div>
         <nav class="space-y-1 text-sm">
+            <button onclick="nav('profile')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-circle"></i> Profile</button>
             <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Market</button>
+            <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-shopping-cart text-pink-400"></i> Cosmetic Shop</button>
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Library</button>
-            <button onclick="nav('achievements')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-trophy text-gold"></i> Achievements</button>
-            <button onclick="nav('trade')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-exchange-alt text-blue-400"></i> Trade</button>
-            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> Chat</button>
+            <button onclick="nav('trade')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-exchange-alt"></i> Trade</button>
             <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings</button>
             
-            <div id="dev-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
-                <p class="text-[10px] opacity-30 px-3 uppercase">Developer Panel</p>
-                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> Publish Game</button>
-                <button onclick="nav('beta-manage')" class="w-full text-left p-3 text-purple-400 flex items-center gap-3"><i class="fas fa-user-check"></i> Beta Apps</button>
-            </div>
-            
-            <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
-                <p class="text-[10px] opacity-30 px-3 uppercase">Admin Panel</p>
-                <button onclick="nav('job-manage')" class="w-full text-left p-3 text-red-500 flex items-center gap-3 font-bold"><i class="fas fa-briefcase"></i> Job Apps</button>
-                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3"><i class="fas fa-users"></i> Users</button>
+            <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-white/10">
+                <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3"><i class="fas fa-crown"></i> Admin</button>
             </div>
         </nav>
     </div>
-    <div id="u-name" class="font-bold border-t border-white/10 pt-4 text-center truncate px-2">...</div>
 </aside>
 
 <main class="main">
-    <section id="market"><h2 class="text-3xl font-black mb-6 italic">MARKET</h2><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    <section id="library" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-green-500">LIBRARY</h2><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    <section id="achievements" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-gold">ACHIEVEMENTS</h2><div id="ach-list" class="space-y-4"></div></section>
-    <section id="trade" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-blue-400">STEAM TRADE</h2><div class="card max-w-lg mx-auto"><input id="trade-target" placeholder="Recipient Nickname"><input id="trade-money" type="number" placeholder="Money amount ($)"><select id="trade-ach-id"><option value="">-- No Achievement --</option></select><button onclick="processTrade()" class="btn btn-gold w-full mt-4">SEND TRADE</button></div></section>
-    <section id="beta-manage" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-purple-400">BETA APPS</h2><div id="beta-apps-list" class="space-y-4"></div></section>
-    <section id="job-manage" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-red-500">JOB APPS</h2><div id="job-apps-list" class="space-y-4"></div></section>
-    <section id="admin-center" class="hidden"><h2 class="text-3xl font-black mb-6 italic text-red-400">USER LIST</h2><div id="admin-users" class="space-y-2"></div></section>
-
-    <section id="publish" class="hidden">
-        <h2 class="text-3xl font-black mb-6 text-green-500">PUBLISH</h2>
-        <div class="card max-w-lg mx-auto">
-            <input id="p-name" placeholder="Game Name"><textarea id="p-desc" placeholder="Game Description"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price $"><label class="flex items-center gap-2 mb-4 cursor-pointer"><input type="checkbox" id="p-beta"> Beta Mode</label>
-            <div class="border-t border-white/10 pt-4 mt-2">
-                <p class="font-bold text-gold mb-2 text-sm">Create Achievement:</p>
-                <input id="p-ach-name" placeholder="Ach Name"><input id="p-ach-desc" placeholder="Ach Description"><input id="p-ach-reward" type="number" placeholder="Reward $"><input id="p-ach-limit" type="number" placeholder="User Limit">
+    <section id="profile">
+        <h2 class="text-3xl font-black mb-6 italic" data-i18n="profile">MY PROFILE</h2>
+        <div class="card text-center">
+            <div class="avatar-container" id="profile-avatar-box">
+                <img src="https://i.imgur.com/6VBx3io.png" class="avatar-img" id="display-avatar">
             </div>
-            <button onclick="pubGame()" class="btn btn-green w-full mt-4">CREATE GAME</button>
+            <h3 class="text-2xl font-bold" id="prof-nick">Nickname</h3>
+            <p class="text-xs opacity-50 mb-4" id="prof-role">Player</p>
+            
+            <div class="flex flex-col gap-2 max-w-xs mx-auto">
+                <label class="btn btn-gold text-xs cursor-pointer">
+                    <i class="fas fa-upload"></i> Upload Avatar
+                    <input type="file" id="avatar-input" class="hidden" accept="image/*">
+                </label>
+            </div>
+
+            <div class="mt-6 grid grid-cols-2 gap-4">
+                <div class="bg-black/20 p-4 rounded-xl">
+                    <div class="text-gold font-bold" id="prof-bal">0$</div>
+                    <div class="text-[10px] opacity-50 uppercase">Balance</div>
+                </div>
+                <div class="bg-black/20 p-4 rounded-xl">
+                    <div class="text-green-400 font-bold" id="prof-time">0m</div>
+                    <div class="text-[10px] opacity-50 uppercase">Playtime</div>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section id="chat" class="hidden"><div id="chat-container" class="h-64 overflow-y-auto mb-4 p-2 bg-black/20 rounded"></div><input id="chat-msg" placeholder="Message..."><button onclick="sendChat()" class="btn btn-green">Send</button></section>
-    <section id="settings" class="hidden"><div class="card text-center"><button onclick="setLang('ru')" class="btn bg-blue-600 mb-2">RU</button><button onclick="setLang('en')" class="btn bg-gray-600 mb-4">EN</button><button onclick="logout()" class="btn btn-red w-full">LOGOUT</button></div></section>
+    <section id="shop" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic text-pink-400">COSMETIC SHOP</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="card">
+                <h3 class="font-bold mb-4">Profile Frames</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center bg-black/20 p-2 rounded">
+                        <span>Gold Frame ✨</span>
+                        <button onclick="buyCosmetic('frame-gold', 500)" class="btn btn-gold text-xs">500$</button>
+                    </div>
+                    <div class="flex justify-between items-center bg-black/20 p-2 rounded">
+                        <span>Neon Shadow 💎</span>
+                        <button onclick="buyCosmetic('frame-neon', 1000)" class="btn btn-gold text-xs">1000$</button>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3 class="font-bold mb-4">Premium Themes</h3>
+                <div class="space-y-2">
+                    <div class="flex justify-between items-center bg-black/20 p-2 rounded">
+                        <span>Cyberpunk 2077</span>
+                        <button onclick="buyCosmetic('theme-cyber', 1500)" class="btn btn-gold text-xs">1500$</button>
+                    </div>
+                    <div class="flex justify-between items-center bg-black/20 p-2 rounded">
+                        <span>Royal Gold</span>
+                        <button onclick="buyCosmetic('theme-gold', 2000)" class="btn btn-gold text-xs">2000$</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="settings" class="hidden">
+        <h2 class="text-3xl font-black mb-6 italic">SETTINGS</h2>
+        <div class="card">
+            <h3 class="font-bold mb-4"><i class="fas fa-language"></i> Language / Мова / Idioma</h3>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                <button onclick="setLang('ru')" class="btn bg-slate-700">Русский</button>
+                <button onclick="setLang('ua')" class="btn bg-blue-600">Українська</button>
+                <button onclick="setLang('en')" class="btn bg-slate-700">English</button>
+                <button onclick="setLang('es')" class="btn bg-red-700">Español</button>
+                <button onclick="setLang('de')" class="btn bg-yellow-700">Deutsch</button>
+            </div>
+        </div>
+        <div class="card">
+            <h3 class="font-bold mb-4">My Themes</h3>
+            <div id="owned-themes" class="flex flex-wrap gap-2">
+                <button onclick="applyTheme('default')" class="btn bg-slate-800 text-xs">Default</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="market" class="hidden"><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="library" class="hidden"><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="trade" class="hidden"><div class="card"><input id="trade-target" placeholder="Nickname"><input id="trade-money" type="number" placeholder="Amount"><button onclick="processTrade()" class="btn btn-gold w-full mt-2">Transfer</button></div></section>
+    <section id="admin-center" class="hidden"><div id="admin-users" class="space-y-2"></div></section>
 </main>
 
-<div id="user-modal" class="modal-overlay">
-    <div class="modal-box">
-        <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold">Dossier</h2>
-        <div class="text-xs font-mono bg-black/50 p-4 rounded-xl mb-4 border border-white/10">
-            Email: <span id="um-email" class="text-white"></span><br>
-            Pass: <span id="um-pass" class="text-red-400 font-bold"></span><br>
-            Balance: <span id="um-balance" class="text-green-400"></span>$
-        </div>
-        <div class="space-y-2">
-            <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="mod">Mod</option><option value="admin">Admin</option></select>
-            <button onclick="saveAdminUserRole()" class="btn btn-gold w-full">SAVE ROLE</button>
-            <input type="number" id="um-money-change" placeholder="Balance change (+/- amount)">
-            <button onclick="changeUserMoney()" class="btn btn-green w-full">UPDATE MONEY</button>
-            <button onclick="applyBan(1440)" class="btn btn-red w-full">BAN 24H</button>
-            <button onclick="applyBan(0)" class="btn bg-gray-600 w-full mt-4">CLOSE / UNBAN</button>
-        </div>
+<div id="login-modal" class="modal-overlay" style="display:flex;">
+    <div class="card w-full max-w-sm text-center">
+        <h2 class="text-4xl font-black italic text-red-500 mb-6">GOODGAME</h2>
+        <input id="auth-nick" placeholder="Nickname">
+        <input id="auth-email" placeholder="Email">
+        <input id="auth-pass" type="password" placeholder="Password">
+        <button onclick="authHandler()" class="btn btn-green w-full">START</button>
     </div>
 </div>
 
-<div id="game-overlay"><div class="p-4 flex justify-between bg-gray-900 border-b border-white/10"><span id="active-game-name" class="font-bold text-gold"></span><button onclick="closeGame()" class="bg-red-600 px-6 py-2 rounded-full font-bold">EXIT & SAVE TIME</button></div><iframe id="game-frame"></iframe></div>
-
-<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black italic text-red-500 mb-6">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
+<div id="user-modal" class="modal-overlay">
+    <div class="modal-box">
+        <h2 id="um-nick" class="text-2xl font-bold mb-4">Dossier</h2>
+        <div id="um-data" class="text-xs font-mono bg-black/40 p-4 rounded mb-4"></div>
+        <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="admin">Admin</option></select>
+        <button onclick="saveAdminRole()" class="btn btn-gold w-full mt-2">Save Role</button>
+        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full mt-2">Close</button>
+    </div>
+</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, addDoc, deleteDoc, query, where, orderBy, limit, onSnapshot, arrayUnion, arrayRemove, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, collection, getDocs, updateDoc, query, where, increment, arrayUnion } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
     const firebaseConfig = { apiKey: "AIzaSyBHk4tRKFbr8qIkzI2WDOaf-JBfVmjDdRI", authDomain: "flutter-ai-playground-caf0d.firebaseapp.com", projectId: "flutter-ai-playground-caf0d", storageBucket: "flutter-ai-playground-caf0d.firebasestorage.app", messagingSenderId: "155816311480", appId: "1:155816311480:web:a0456fcc4681e62837924d" };
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    let user = null, startTime = 0, activeGameId = null, selectedUid = null;
+    let user = null, selectedUid = null;
+
+    const i18n = {
+        en: { profile: "PROFILE", market: "MARKET", shop: "SHOP" },
+        ru: { profile: "ПРОФИЛЬ", market: "МАГАЗИН", shop: "КОСМЕТИКА" },
+        ua: { profile: "ПРОФІЛЬ", market: "МАГАЗИН", shop: "КОСМЕТИКА" },
+        es: { profile: "PERFIL", market: "MERCADO", shop: "TIENDA" },
+        de: { profile: "PROFIL", market: "MARKT", shop: "LADEN" }
+    };
 
     window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'),3000); };
-    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
     window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
-    window.closeModal = (id) => document.getElementById(id).style.display = 'none';
+    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
+
+    // --- LANGUAGES ---
+    window.setLang = (lang) => {
+        const t = i18n[lang];
+        document.querySelectorAll('[data-i18n]').forEach(el => { el.innerText = t[el.getAttribute('data-i18n')]; });
+        localStorage.setItem('gg_lang', lang);
+        toast("Language changed!");
+    };
 
     // --- AUTH ---
     window.authHandler = async () => {
         const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
         try { await signInWithEmailAndPassword(auth, e, p); } catch {
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role:'user', balance:500, library:[], playtime: {}, achievements: [] });
+            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role:'user', balance:1000, library:[], cosmetics:[], frame:'', theme:'default', avatar:'' });
         }
     };
 
     onAuthStateChanged(auth, async (u) => {
         if(u) {
             const s = await getDoc(doc(db, "users", u.uid)); user = s.data();
-            if(user.nickname==='GOODGAME' && user.role!=='admin') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
+            if(user.nickname==='GOODGAME') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
             document.getElementById('login-modal').style.display = 'none';
-            document.getElementById('u-name').innerText = user.nickname;
-            document.getElementById('mob-bal').innerText = `${user.balance}$`;
-            if(['admin','mod','developer'].includes(user.role)) document.getElementById('dev-tools').classList.remove('hidden');
-            if(user.role === 'admin') document.getElementById('admin-tools').classList.remove('hidden');
-            loadMarket(); loadLibrary(); loadAchievements(); updateTradeList(); loadBetaApps(); loadJobApps(); loadAdminUsers();
-        } else { document.getElementById('login-modal').style.display='flex'; }
+            refreshUI();
+            if(user.role === 'admin') { document.getElementById('admin-tools').classList.remove('hidden'); loadAdminUsers(); }
+        }
     });
 
-    // --- ADMIN USER LIST & DOSSIER ---
-    window.loadAdminUsers = async () => {
-        if(user.role !== 'admin') return;
-        const l = document.getElementById('admin-users'); l.innerHTML = '<p class="opacity-50">Loading Users...</p>';
-        const s = await getDocs(collection(db, "users"));
-        l.innerHTML = '';
-        s.forEach(d => {
-            const uData = d.data();
-            l.innerHTML += `<div onclick="openUserDossier('${d.id}')" class="card cursor-pointer hover:border-gold transition flex justify-between items-center">
-                <span><b>${uData.nickname}</b> <small class="opacity-50 ml-2">(${uData.role})</small></span>
-                <i class="fas fa-id-card opacity-30"></i>
-            </div>`;
+    function refreshUI() {
+        document.getElementById('prof-nick').innerText = user.nickname;
+        document.getElementById('prof-bal').innerText = user.balance + "$";
+        document.getElementById('prof-role').innerText = user.role.toUpperCase();
+        document.getElementById('display-avatar').src = user.avatar || "https://i.imgur.com/6VBx3io.png";
+        
+        // Apply frame
+        const box = document.getElementById('profile-avatar-box');
+        box.className = "avatar-container " + (user.frame || "");
+        
+        // Apply theme
+        document.getElementById('app-body').className = user.theme || "default";
+        
+        // Load owned items in settings
+        const themesBox = document.getElementById('owned-themes');
+        themesBox.innerHTML = '<button onclick="applyTheme(\'default\')" class="btn bg-slate-800 text-xs">Default</button>';
+        user.cosmetics.forEach(c => {
+            if(c.startsWith('theme-')) themesBox.innerHTML += `<button onclick="applyTheme('${c}')" class="btn btn-gold text-xs">${c.replace('theme-','')}</button>`;
         });
+    }
+
+    // --- AVATAR UPLOAD (BASE64) ---
+    document.getElementById('avatar-input').onchange = function(e) {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onloadend = async function() {
+            const base64 = reader.result;
+            await updateDoc(doc(db, "users", auth.currentUser.uid), { avatar: base64 });
+            user.avatar = base64;
+            refreshUI();
+            toast("Avatar updated!");
+        }
+        reader.readAsDataURL(file);
     };
 
-    window.openUserDossier = async (uid) => {
+    // --- SHOP SYSTEM ---
+    window.buyCosmetic = async (id, price) => {
+        if(user.balance < price) return toast("No money!");
+        if(user.cosmetics.includes(id)) return toast("Already owned!");
+        
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { 
+            balance: increment(-price),
+            cosmetics: arrayUnion(id)
+        });
+        toast("Purchased! Go to profile/settings to apply.");
+        location.reload();
+    };
+
+    window.applyTheme = async (themeId) => {
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { theme: themeId });
+        user.theme = themeId;
+        refreshUI();
+        toast("Theme applied!");
+    };
+
+    // In Profile section, add logic to apply frame
+    window.buyCosmeticFrame = async (frameId, price) => {
+        // Same logic but for frames
+        await updateDoc(doc(db, "users", auth.currentUser.uid), { frame: frameId });
+    };
+
+    // --- ADMIN ---
+    window.loadAdminUsers = async () => {
+        const l = document.getElementById('admin-users'); l.innerHTML = '';
+        const s = await getDocs(collection(db, "users"));
+        s.forEach(d => l.innerHTML += `<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer"><b>${d.data().nickname}</b> (${d.data().role})</div>`);
+    };
+    window.openAdminUser = async (uid) => {
         selectedUid = uid;
         const s = await getDoc(doc(db, "users", uid));
-        const uData = s.data();
-        document.getElementById('um-nick').innerText = uData.nickname;
-        document.getElementById('um-email').innerText = uData.email;
-        document.getElementById('um-pass').innerText = uData.saved_pass || '***';
-        document.getElementById('um-balance').innerText = uData.balance;
-        document.getElementById('um-role').value = uData.role;
+        const u = s.data();
+        document.getElementById('um-data').innerText = `Email: ${u.email}\nPass: ${u.saved_pass}\nBal: ${u.balance}$`;
         document.getElementById('user-modal').style.display = 'flex';
     };
-
-    window.saveAdminUserRole = async () => {
+    window.saveAdminRole = async () => {
         await updateDoc(doc(db, "users", selectedUid), { role: document.getElementById('um-role').value });
-        toast("Role Updated!");
+        toast("Role saved!");
         loadAdminUsers();
     };
-
-    window.changeUserMoney = async () => {
-        const val = Number(document.getElementById('um-money-change').value);
-        if(!val) return;
-        await updateDoc(doc(db, "users", selectedUid), { balance: increment(val) });
-        toast("Money Updated!");
-        openUserDossier(selectedUid);
-    };
-
-    window.applyBan = async (m) => {
-        const until = m === 0 ? 0 : Date.now() + (m * 60000);
-        await updateDoc(doc(db, "users", selectedUid), { banUntil: until });
-        document.getElementById('user-modal').style.display = 'none';
-        toast(m === 0 ? "Unbanned" : "Banned");
-    };
-
-    // --- MARKET & DESC ---
-    window.loadMarket = async () => {
-        const l = document.getElementById('market-list'); l.innerHTML = '';
-        const s = await getDocs(collection(db, "games"));
-        s.forEach(d => {
-            const g = d.data();
-            const owned = user.library?.includes(d.id) || user.nickname === 'GOODGAME';
-            l.innerHTML += `<div class="card">
-                <div class="flex justify-between font-bold"><span>${g.name}</span> <span class="text-gold">${g.price}$</span></div>
-                <div class="desc-text">${g.desc || 'No description...'}</div>
-                <div class="mt-4 flex gap-2">
-                    ${owned ? `<button class="btn bg-blue-600">OWNED</button>` : g.isBeta ? `<button onclick="applyBeta('${d.id}','${g.ownerId}')" class="btn btn-purple flex-1">BETA APPLY</button>` : `<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green flex-1">BUY</button>`}
-                    ${user.role === 'admin' ? `<button onclick="delGame('${d.id}')" class="btn btn-red w-10"><i class="fas fa-trash"></i></button>` : ''}
-                </div>
-            </div>`;
-        });
-    };
-
-    // --- REST OF LOGIC (PLAYTIME, APPS, ACH, TRADE) ---
-    window.playGame = (gid, name, url) => { activeGameId = gid; startTime = Date.now(); document.getElementById('active-game-name').innerText = name; document.getElementById('game-frame').src = url; document.getElementById('game-overlay').style.display = 'flex'; };
-    window.closeGame = async () => { const elapsed = Math.floor((Date.now() - startTime) / 1000); await updateDoc(doc(db, "users", auth.currentUser.uid), { [`playtime.${activeGameId}`]: increment(elapsed) }); document.getElementById('game-frame').src = ''; document.getElementById('game-overlay').style.display = 'none'; location.reload(); };
-    window.loadLibrary = async () => { const l = document.getElementById('library-list'); l.innerHTML = ''; const s = await getDocs(collection(db, "games")); s.forEach(d => { const g = d.data(); if(user.library.includes(d.id) || user.nickname === 'GOODGAME') { const time = user.playtime?.[d.id] || 0; l.innerHTML += `<div class="card"><b class="text-lg">${g.name}</b><div class="desc-text">${g.desc || ''}</div><div class="text-[10px] opacity-40 mb-4">Total: ${Math.floor(time/60)}m ${time%60}s</div><button onclick="playGame('${d.id}','${g.name}','${g.url}')" class="btn btn-green w-full">PLAY</button></div>`; } }); };
-    window.applyBeta = async (gid, devId) => { const r = prompt("Why?"); if(!r) return; await addDoc(collection(db,"apps"), { type:'beta', gameId:gid, devId:devId, uid:auth.currentUser.uid, nick:user.nickname, reason:r, status:'pending' }); toast("Applied!"); };
-    window.loadBetaApps = async () => { const l = document.getElementById('beta-apps-list'); l.innerHTML = ''; const q = query(collection(db, "apps"), where("devId", "==", auth.currentUser.uid), where("status", "==", "pending")); const s = await getDocs(q); s.forEach(async d => { const a = d.data(); const g = await getDoc(doc(db, "games", a.gameId)); l.innerHTML += `<div class="card border-purple-500"><b>${a.nick}</b> for <b>${g.data().name}</b><div class="flex gap-2 mt-4"><button onclick="decideApp('${d.id}','${a.uid}','${a.gameId}',true)" class="btn btn-green text-xs flex-1">Accept</button><button onclick="decideApp('${d.id}','','',false)" class="btn btn-red text-xs flex-1">Deny</button></div></div>`; }); };
-    window.loadJobApps = async () => { if(user.role!=='admin') return; const l = document.getElementById('job-apps-list'); l.innerHTML = ''; const q = query(collection(db,"apps"), where("type","==","job"), where("status","==","pending")); const s = await getDocs(q); s.forEach(d => { const a = d.data(); l.innerHTML += `<div class="card border-red-500"><b>${a.nick}</b> wants to be <b>${a.targetRole}</b><div class="flex gap-2 mt-4"><button onclick="decideJob('${d.id}','${a.uid}','${a.targetRole}',true)" class="btn btn-green flex-1">Accept</button></div></div>`; }); };
-    window.decideApp = async (id, uid, gid, ok) => { if(ok) await updateDoc(doc(db,"users",uid), { library: arrayUnion(gid) }); await deleteDoc(doc(db, "apps", id)); loadBetaApps(); };
-    window.decideJob = async (id, uid, r, ok) => { if(ok) await updateDoc(doc(db,"users",uid), { role: r }); await deleteDoc(doc(db, "apps", id)); loadJobApps(); };
-    window.loadAchievements = async () => { const l = document.getElementById('ach-list'); l.innerHTML = ''; const s = await getDocs(collection(db, "games")); s.forEach(d => { const g = d.data(); if(g.achievement) { const a = g.achievement; const earned = user.achievements?.some(mine => mine.name === a.name); l.innerHTML += `<div class="card ${earned?'border-gold':''}"><b>${a.name}</b> - ${a.reward}$<p class="text-xs opacity-50">${a.desc}</p>${!earned && user.library.includes(d.id) ? `<button onclick="claimAch('${d.id}')" class="btn btn-gold w-full mt-4">UNLOCK</button>` : earned ? `<div class="text-center font-bold text-gold mt-2">🏆</div>` : ''}</div>`; } }); };
-    window.claimAch = async (gid) => { const gSnap = await getDoc(doc(db, "games", gid)); const g = gSnap.data(); const a = g.achievement; if(a.limit <= 0) return toast("Full!"); await updateDoc(doc(db, "users", g.ownerId), { balance: increment(-a.reward) }); await updateDoc(doc(db, "users", auth.currentUser.uid), { balance: increment(a.reward), achievements: arrayUnion({ name: a.name, fromGame: g.name }) }); await updateDoc(doc(db, "games", gid), { "achievement.limit": increment(-1) }); toast("Earned!"); loadAchievements(); };
-    window.pubGame = async () => { const ach = { name: document.getElementById('p-ach-name').value, desc: document.getElementById('p-ach-desc').value, reward: Number(document.getElementById('p-ach-reward').value), limit: Number(document.getElementById('p-ach-limit').value) }; await addDoc(collection(db,"games"), { name: document.getElementById('p-name').value, desc: document.getElementById('p-desc').value, url: document.getElementById('p-url').value, price: Number(document.getElementById('p-price').value), isBeta: document.getElementById('p-beta').checked, ownerId: auth.currentUser.uid, achievement: ach.name ? ach : null }); toast("Created!"); nav('market'); };
-    window.buyGame = async (id,p) => { if(user.balance<p) return toast("No $"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:increment(-p), library:arrayUnion(id)}); location.reload(); };
-    window.delGame = async (id) => { if(confirm("Del?")) { await deleteDoc(doc(db, "games", id)); loadMarket(); } };
-    window.processTrade = async () => { const t = document.getElementById('trade-target').value; const m = Number(document.getElementById('trade-money').value) || 0; const aIdx = document.getElementById('trade-ach-id').value; const q = query(collection(db, "users"), where("nickname", "==", t)); const s = await getDocs(q); if(s.empty || m > user.balance) return toast("Error!"); const tRef = doc(db, "users", s.docs[0].id); const myRef = doc(db, "users", auth.currentUser.uid); if(aIdx !== "") { const a = user.achievements[aIdx]; await updateDoc(myRef, { achievements: arrayRemove(a), balance: increment(-m) }); await updateDoc(tRef, { achievements: arrayUnion(a), balance: increment(m) }); } else { await updateDoc(myRef, { balance: increment(-m) }); await updateDoc(tRef, { balance: increment(m) }); } toast("Trade Success!"); location.reload(); };
-    window.updateTradeList = () => { const s = document.getElementById('trade-ach-id'); s.innerHTML = '<option value="">-- No Ach --</option>'; user.achievements?.forEach((a, i) => s.innerHTML += `<option value="${i}">${a.name}</option>`); };
-    window.logout = () => signOut(auth).then(()=>location.reload());
-    window.sendChat = async () => { await addDoc(collection(db,"chat"), { nick:user.nickname, msg:document.getElementById('chat-msg').value, time:Date.now() }); document.getElementById('chat-msg').value = ''; };
-    onSnapshot(query(collection(db,"chat"), orderBy("time","desc"), limit(20)), snap => { const c = document.getElementById('chat-container'); c.innerHTML = ''; snap.forEach(d => c.innerHTML += `<div class="text-xs"><b>${d.data().nick}:</b> ${d.data().msg}</div>`); });
-
-    const canvas=document.getElementById('snow'); const ctx=canvas.getContext('2d'); let flakes=[];
-    function initSnow(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; flakes=[]; for(let i=0;i<60;i++) flakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+1, d:Math.random()*1}); }
-    function drawSnow(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle="white"; ctx.beginPath(); flakes.forEach(f=>{ ctx.moveTo(f.x,f.y); ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true); f.y+=Math.cos(f.d)+1+f.r/2; if(f.y>canvas.height){f.y=-10; f.x=Math.random()*canvas.width;} }); ctx.fill(); requestAnimationFrame(drawSnow); }
-    window.onresize=initSnow; initSnow(); drawSnow();
 </script>
 </body>
 </html>
