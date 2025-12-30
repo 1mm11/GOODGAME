@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | FULL ACCESS UPDATE</title>
+    <title>GOODGAME | TOTAL RECOVERY</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --bg: #050a18; --panel: #0b1426; --accent: #e63946; --text: #e0f2fe; --border: #1e293b; --gold: #fbbf24; }
         .theme-cyber { --bg: #0f0518; --panel: #1a0b2e; --accent: #ff00ff; --text: #00ffff; --border: #3d0066; --gold: #ff00ff; }
         .theme-winter { --bg: #0c1e3a; --panel: #162e55; --accent: #0ea5e9; --text: #e0f2fe; --border: #334155; --gold: #7dd3fc; }
+        .theme-gold { --bg: #1a1405; --panel: #2a210a; --accent: #fbbf24; --text: #fef3c7; --border: #453610; --gold: #f59e0b; }
         .theme-onyx { --bg: #000; --panel: #0a0a0a; --accent: #fbbf24; --text: #fff; --border: #222; --gold: #fbbf24; }
 
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: 0.3s; margin: 0; overflow-x: hidden; }
@@ -20,22 +21,18 @@
         .main { padding: 80px 15px 100px 15px; min-height: 100vh; }
         @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } }
 
-        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); position: relative; }
+        .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
         .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
         .btn-green { background: #22c55e; color: white; }
         .btn-gold { background: var(--gold); color: #000; }
         .btn-red { background: #ef4444; color: white; }
-        
+
         input, select, textarea { background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; }
 
-        /* CHAT BOXES */
-        .chat-msg { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; margin-bottom: 8px; max-width: 80%; border: 1px solid rgba(255,255,255,0.1); }
-        .chat-msg-me { align-self: flex-end; background: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.4); }
-
-        /* AVATARS */
         .avatar-box { width: 120px; height: 120px; border-radius: 50%; position: relative; margin: 0 auto 15px; z-index: 10; }
         .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); }
         .frame-immortal { box-shadow: 0 0 0 5px #fff; background: linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); padding: 6px; animation: rotateHue 3s linear infinite; }
+        .frame-fire { box-shadow: 0 0 0 4px #ff4500, 0 0 25px #ff4500; }
         @keyframes rotateHue { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
         .elite-glow { position: absolute; inset: -30px; background: radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%); z-index: -1; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
@@ -47,7 +44,7 @@
 <body id="app-body">
 
 <canvas id="snow"></canvas>
-<div id="toast" style="position:fixed; bottom:20px; left:50%; transform:translate(-50%, 200%); background:var(--gold); color:#000; padding:10px 20px; border-radius:50px; z-index:9999; transition:0.4s; font-weight:bold;"></div>
+<div id="toast" style="position:fixed; bottom:20px; left:50%; transform:translate(-50%, 250%); background:var(--gold); color:#000; padding:10px 25px; border-radius:50px; z-index:9999; transition:0.4s; font-weight:bold;"></div>
 
 <aside id="sidebar" class="sidebar p-6 flex flex-col justify-between">
     <div>
@@ -58,17 +55,12 @@
             <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gem text-pink-400"></i> Shop</button>
             <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Library</button>
             <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> Chat</button>
-            <button onclick="nav('career')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-tie text-purple-400"></i> Jobs</button>
-            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings</button>
+            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings & Inv</button>
             
             <div id="dev-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
-                <p class="text-[10px] opacity-30 px-3 uppercase">Developer</p>
-                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> Publish Game</button>
-                <button onclick="nav('beta-manage')" class="w-full text-left p-3 text-purple-400 flex items-center gap-3"><i class="fas fa-vial"></i> Beta Apps</button>
+                <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> Publish</button>
             </div>
             <div id="admin-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
-                <p class="text-[10px] opacity-30 px-3 uppercase">Admin</p>
-                <button onclick="nav('job-manage')" class="w-full text-left p-3 text-red-500 flex items-center gap-3 font-bold"><i class="fas fa-briefcase"></i> Job Apps</button>
                 <button onclick="nav('admin-center')" class="w-full text-left p-3 text-red-400 flex items-center gap-3 font-bold"><i class="fas fa-users-cog"></i> Admin Panel</button>
             </div>
         </nav>
@@ -91,42 +83,71 @@
         </div>
     </section>
 
-    <section id="admin-center" class="hidden">
-        <h2 class="text-2xl font-black mb-6 text-red-500 italic">ADMIN CONTROL</h2>
-        <div id="admin-users" class="space-y-2"></div>
+    <section id="market" class="hidden">
+        <h2 class="text-2xl font-black mb-6 italic">MARKET</h2>
+        <div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
     </section>
 
-    <section id="chat" class="hidden">
-        <div class="card h-[65vh] flex flex-col p-4">
-            <div id="chat-container" class="flex-1 overflow-y-auto flex flex-col pr-2"></div>
-            <div class="flex gap-2 mt-4">
-                <input id="chat-msg" placeholder="Write message..." class="m-0">
-                <button onclick="sendChat()" class="btn btn-green px-6"><i class="fas fa-paper-plane"></i></button>
+    <section id="shop" class="hidden">
+        <h2 class="text-2xl font-black mb-6 italic text-pink-400">LUXURY SHOP</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="card">
+                <h3 class="font-bold mb-4">Frames</h3>
+                <button onclick="buyCosmetic('frame-gold', 500)" class="btn btn-gold w-full mb-2">Gold Frame - 500$</button>
+                <button onclick="buyCosmetic('frame-fire', 2500)" class="btn btn-gold w-full">Fire Frame - 2500$</button>
+            </div>
+            <div class="card">
+                <h3 class="font-bold mb-4">Themes</h3>
+                <button onclick="buyCosmetic('theme-cyber', 1500)" class="btn btn-gold w-full mb-2">Cyberpunk - 1500$</button>
+                <button onclick="buyCosmetic('theme-onyx', 5000)" class="btn btn-gold w-full">Onyx Theme - 5000$</button>
             </div>
         </div>
     </section>
 
-    <section id="publish" class="hidden"><div class="card max-w-lg mx-auto"><h3 class="text-green-500 font-bold mb-4">Publish New Game</h3><input id="p-name" placeholder="Game Name"><textarea id="p-desc" placeholder="Description"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price $"><button onclick="pubGame()" class="btn btn-green w-full">PUBLISH</button></div></section>
-    <section id="market" class="hidden"><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="settings" class="hidden">
+        <h2 class="text-2xl font-black mb-6 italic">SETTINGS</h2>
+        <div class="card">
+            <h3 class="font-bold mb-4 text-gold">My Inventory</h3>
+            <p class="text-[10px] opacity-50 uppercase mb-2">Frames:</p>
+            <div id="inv-frames" class="flex flex-wrap gap-2 mb-4"></div>
+            <p class="text-[10px] opacity-50 uppercase mb-2">Themes:</p>
+            <div id="inv-themes" class="flex flex-wrap gap-2"></div>
+        </div>
+        <div class="card">
+            <h3 class="font-bold mb-4">Languages</h3>
+            <div class="grid grid-cols-3 gap-2">
+                <button onclick="setLang('ru')" class="btn bg-slate-700">RU</button>
+                <button onclick="setLang('en')" class="btn bg-slate-700">EN</button>
+                <button onclick="logout()" class="btn btn-red">LOGOUT</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="admin-center" class="hidden">
+        <h2 class="text-2xl font-black mb-6 text-red-500 italic">ADMIN PANEL</h2>
+        <div id="admin-users" class="space-y-2"></div>
+    </section>
+
+    <section id="chat" class="hidden">
+        <div class="card h-[60vh] flex flex-col">
+            <div id="chat-container" class="flex-1 overflow-y-auto mb-4 text-sm flex flex-col gap-2"></div>
+            <div class="flex gap-2"><input id="chat-msg" class="m-0"><button onclick="sendChat()" class="btn btn-green">Send</button></div>
+        </div>
+    </section>
+
     <section id="library" class="hidden"><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    <section id="beta-manage" class="hidden"><div id="beta-apps-list" class="space-y-4"></div></section>
-    <section id="job-manage" class="hidden"><div id="job-apps-list" class="space-y-4"></div></section>
-    <section id="career" class="hidden"><div class="card"><h3 class="text-purple-400 font-bold mb-4">Apply for Job</h3><select id="job-role"><option value="developer">Developer</option><option value="mod">Moderator</option></select><textarea id="job-text" placeholder="Tell us about yourself"></textarea><button onclick="sendJobApp()" class="btn btn-gold w-full">SUBMIT</button></div></section>
-    <section id="settings" class="hidden"><div class="card"><h3>Inventory</h3><div id="inv-frames" class="flex flex-wrap gap-2 mt-2"></div></div><button onclick="logout()" class="btn btn-red w-full mt-4">LOGOUT</button></section>
+    
+    <section id="publish" class="hidden"><div class="card max-w-lg mx-auto"><h3 class="font-bold mb-4 text-green-500">Publish Game</h3><input id="p-name" placeholder="Game Name"><textarea id="p-desc" placeholder="Description"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="Price $"><button onclick="pubGame()" class="btn btn-green w-full">PUBLISH</button></div></section>
 </main>
 
 <div id="user-modal" class="modal-overlay"><div class="modal-box">
-    <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold text-center">User Control</h2>
+    <h2 id="um-nick" class="text-2xl font-bold mb-4">User Info</h2>
     <div id="um-data" class="text-xs font-mono bg-black/50 p-4 rounded mb-4"></div>
     <div class="space-y-4">
-        <div class="flex gap-2"><input id="um-money-val" type="number" placeholder="Amount" class="m-0"><button onclick="adminMoney(true)" class="btn btn-green">+</button><button onclick="adminMoney(false)" class="btn btn-red">-</button></div>
-        <div class="grid grid-cols-2 gap-2">
-            <div><label class="text-[10px]">Ban (Min)</label><select id="um-ban-time"><option value="0">Unban</option><option value="60">1 Hour</option><option value="1440">1 Day</option></select><button onclick="adminAction('ban')" class="btn btn-red w-full mt-1">APPLY</button></div>
-            <div><label class="text-[10px]">Mute (Min)</label><select id="um-mute-time"><option value="0">Unmute</option><option value="60">1 Hour</option></select><button onclick="adminAction('mute')" class="btn btn-gold w-full mt-1">APPLY</button></div>
-        </div>
-        <select id="um-role"><option value="user">User</option><option value="developer">Dev</option><option value="admin">Admin</option></select>
-        <button onclick="saveAdminRole()" class="btn btn-gold w-full">SAVE ROLE</button>
-        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full">CLOSE</button>
+        <div class="flex gap-2"><input id="um-money-val" type="number" class="m-0"><button onclick="adminMoney(true)" class="btn btn-green">+</button><button onclick="adminMoney(false)" class="btn btn-red">-</button></div>
+        <select id="adm-grant-item"><option value="frame-immortal">Immortal Frame</option><option value="theme-onyx">Onyx Theme</option></select>
+        <button onclick="adminGrantItem()" class="btn btn-gold w-full">GRANT ITEM</button>
+        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full mt-4">CLOSE</button>
     </div>
 </div></div>
 
@@ -143,35 +164,22 @@
     const db = getFirestore(app);
     let user = null, selectedUid = null;
 
-    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.style.transform='translate(-50%, 0)'; setTimeout(()=>t.style.transform='translate(-50%, 200%)',3000); };
-    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
+    window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.style.transform='translate(-50%, 0)'; setTimeout(()=>t.style.transform='translate(-50%, 250%)',3000); };
+    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
 
     onAuthStateChanged(auth, async (u) => {
         if(u) {
             const s = await getDoc(doc(db, "users", u.uid)); user = s.data();
-            
-            // ПРИНУДИТЕЛЬНАЯ ПРОВЕРКА АДМИНА
-            if(user.nickname === 'GOODGAME' && user.role !== 'admin') {
-                await updateDoc(doc(db, "users", u.uid), { role: 'admin' });
-                user.role = 'admin';
-            }
-
-            if(user.banUntil && user.banUntil > Date.now()) { await signOut(auth); return alert("BANNED"); }
-            
-            document.getElementById('login-modal').style.display = 'none';
+            if(user.nickname === 'GOODGAME' && user.role !== 'admin') { await updateDoc(doc(db,"users",u.uid),{role:'admin'}); user.role='admin'; }
+            document.getElementById('login-modal').style.display='none';
             updateUI();
-            
-            // ПОКАЗ ВНУТРЕННИХ ВКЛАДОК
-            if(['admin','developer','mod'].includes(user.role)) document.getElementById('dev-tools').classList.remove('hidden');
             if(user.role === 'admin') {
                 document.getElementById('admin-tools').classList.remove('hidden');
+                document.getElementById('dev-tools').classList.remove('hidden');
                 loadAdminUsers();
-                loadJobApps();
             }
-
-            initChat(); loadMarket(); loadLibrary(); loadBetaApps();
+            loadMarket(); loadLibrary(); initChat();
         } else { document.getElementById('login-modal').style.display='flex'; }
     });
 
@@ -179,7 +187,7 @@
         const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
         try { await signInWithEmailAndPassword(auth, e, p); } catch {
             const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db, "users", res.user.uid), { nickname:n, email:e, saved_pass:p, role: (n==='GOODGAME'?'admin':'user'), balance:500, library:[], inventory:[], activeFrame:'', activeTheme:'', avatar:'', playtime:{}, banUntil:0, muteUntil:0 });
+            await setDoc(doc(db,"users",res.user.uid), { nickname:n, email:e, saved_pass:p, role:(n==='GOODGAME'?'admin':'user'), balance:500, library:[], inventory:[], activeFrame:'', activeTheme:'', avatar:'' });
         }
     };
 
@@ -187,76 +195,63 @@
         document.getElementById('prof-nick').innerText = user.nickname;
         document.getElementById('prof-bal').innerText = user.balance + "$";
         document.getElementById('prof-img').src = user.avatar || "https://i.imgur.com/6VBx3io.png";
-        document.getElementById('u-name-side').innerText = user.nickname;
         document.getElementById('prof-frame-box').className = "avatar-box " + (user.activeFrame || "");
         document.getElementById('app-body').className = user.activeTheme || "default";
-        if(user.nickname === 'GOODGAME' || user.role === 'admin') document.getElementById('elite-fx').innerHTML = '<div class="elite-glow"></div>';
+        if(user.role === 'admin') document.getElementById('elite-fx').innerHTML = '<div class="elite-glow"></div>';
+        
+        // Inventory
+        const fInv = document.getElementById('inv-frames'); fInv.innerHTML = '<button onclick="applyCos(\'activeFrame\',\'\')" class="btn bg-white/5 text-[10px]">None</button>';
+        const tInv = document.getElementById('inv-themes'); tInv.innerHTML = '<button onclick="applyCos(\'activeTheme\',\'default\')" class="btn bg-white/5 text-[10px]">Default</button>';
+        user.inventory?.forEach(i => {
+            if(i.startsWith('frame-')) fInv.innerHTML += `<button onclick="applyCos('activeFrame','${i}')" class="btn btn-gold text-[10px]">${i}</button>`;
+            if(i.startsWith('theme-')) tInv.innerHTML += `<button onclick="applyCos('activeTheme','${i}')" class="btn btn-gold text-[10px]">${i}</button>`;
+        });
     }
 
-    // CHAT SYSTEM
-    window.initChat = () => {
-        const q = query(collection(db, "chat"), orderBy("time", "asc"), limit(50));
-        onSnapshot(q, (snap) => {
-            const c = document.getElementById('chat-container'); c.innerHTML = '';
-            snap.forEach(d => {
-                const m = d.data(); const isMe = m.nick === user.nickname;
-                c.innerHTML += `<div class="chat-msg ${isMe ? 'chat-msg-me' : ''}"><b>${m.nick}:</b><br>${m.msg}</div>`;
-            });
-            c.scrollTop = c.scrollHeight;
-        });
-    };
-    window.sendChat = async () => {
-        if(user.muteUntil > Date.now()) return toast("MUTED");
-        const m = document.getElementById('chat-msg').value; if(!m) return;
-        await addDoc(collection(db, "chat"), { nick: user.nickname, msg: m, time: Date.now() });
-        document.getElementById('chat-msg').value = '';
-    };
-
-    // ADMIN ACTIONS
-    window.loadAdminUsers = async () => {
-        const l = document.getElementById('admin-users'); l.innerHTML = '';
-        (await getDocs(collection(db,"users"))).forEach(d => {
-            l.innerHTML += `<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer flex justify-between"><b>${d.data().nickname}</b> <span>${d.data().balance}$</span></div>`;
-        });
-    };
-    window.openAdminUser = async (uid) => {
-        selectedUid = uid; const u = (await getDoc(doc(db,"users",uid))).data();
-        document.getElementById('um-data').innerText = `Email: ${u.email}\nPass: ${u.saved_pass}\nRole: ${u.role}`;
-        document.getElementById('user-modal').style.display='flex';
-    };
-    window.adminMoney = async (add) => {
-        const val = Number(document.getElementById('um-money-val').value);
-        await updateDoc(doc(db,"users",selectedUid), { balance: increment(add?val:-val) });
-        toast("Updated!"); openAdminUser(selectedUid); loadAdminUsers();
-    };
-    window.adminAction = async (type) => {
-        const time = Number(document.getElementById(type==='ban'?'um-ban-time':'um-mute-time').value);
-        await updateDoc(doc(db,"users",selectedUid), { [type==='ban'?'banUntil':'muteUntil']: Date.now()+(time*60000) });
-        toast("Action Applied!");
-    };
-    window.saveAdminRole = async () => {
-        await updateDoc(doc(db,"users",selectedUid), { role: document.getElementById('um-role').value });
-        toast("Role Saved!"); loadAdminUsers();
-    };
-
-    // PHOTO UPLOAD
+    // PHOTO
     document.getElementById('avatar-input').onchange = (e) => {
         const reader = new FileReader(); reader.readAsDataURL(e.target.files[0]);
-        reader.onload = async () => {
-            await updateDoc(doc(db, "users", auth.currentUser.uid), { avatar: reader.result });
-            location.reload();
-        };
+        reader.onload = async () => { await updateDoc(doc(db,"users",auth.currentUser.uid), {avatar: reader.result}); location.reload(); };
     };
 
     // MARKET & PUBLISH
     window.pubGame = async () => {
         await addDoc(collection(db,"games"), { name:document.getElementById('p-name').value, desc:document.getElementById('p-desc').value, url:document.getElementById('p-url').value, price:Number(document.getElementById('p-price').value), ownerId:auth.currentUser.uid });
-        toast("Game Published!"); nav('market');
+        toast("Game Created!"); nav('market');
     };
-    window.loadMarket = async () => { /* Logic */ };
+    window.loadMarket = async () => {
+        const l = document.getElementById('market-list'); l.innerHTML = '';
+        (await getDocs(collection(db,"games"))).forEach(d => {
+            l.innerHTML += `<div class="card"><b>${d.data().name}</b><p class="text-[10px] opacity-50 my-2">${d.data().desc}</p><button onclick="buyGame('${d.id}',${d.data().price})" class="btn btn-green w-full mt-2">${d.data().price}$</button></div>`;
+        });
+    };
+    window.buyGame = async (id,p) => { if(user.balance < p) return toast("No money"); await updateDoc(doc(db,"users",auth.currentUser.uid),{balance:increment(-p), library:arrayUnion(id)}); location.reload(); };
+
+    // COSMETIC
+    window.buyCosmetic = async (id,p) => {
+        if(user.balance < p) return toast("No money");
+        await updateDoc(doc(db,"users",auth.currentUser.uid), {balance:increment(-p), inventory:arrayUnion(id)});
+        toast("Purchased!"); location.reload();
+    };
+    window.applyCos = async (type, id) => { await updateDoc(doc(db,"users",auth.currentUser.uid),{[type]:id}); location.reload(); };
+
+    // ADMIN
+    window.loadAdminUsers = async () => {
+        const l = document.getElementById('admin-users'); l.innerHTML = '';
+        (await getDocs(collection(db,"users"))).forEach(d => l.innerHTML += `<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer"><b>${d.data().nickname}</b> (${d.data().balance}$)</div>`);
+    };
+    window.openAdminUser = async (uid) => {
+        selectedUid = uid; const u = (await getDoc(doc(db,"users",uid))).data();
+        document.getElementById('um-data').innerText = `Email: ${u.email}\nBal: ${u.balance}$`;
+        document.getElementById('user-modal').style.display='flex';
+    };
+    window.adminMoney = async (add) => { await updateDoc(doc(db,"users",selectedUid), {balance:increment(add?Number(document.getElementById('um-money-val').value):-Number(document.getElementById('um-money-val').value))}); toast("Done!"); };
+    window.adminGrantItem = async () => { await updateDoc(doc(db,"users",selectedUid), {inventory:arrayUnion(document.getElementById('adm-grant-item').value)}); toast("Granted!"); };
+
+    // CHAT & OTHERS
+    window.initChat = () => { onSnapshot(query(collection(db,"chat"), orderBy("time","asc"), limit(30)), snap => { const c=document.getElementById('chat-container'); c.innerHTML=''; snap.forEach(d=>c.innerHTML+=`<div><b>${d.data().nick}:</b> ${d.data().msg}</div>`); c.scrollTop=c.scrollHeight; }); };
+    window.sendChat = async () => { await addDoc(collection(db,"chat"),{nick:user.nickname, msg:document.getElementById('chat-msg').value, time:Date.now()}); document.getElementById('chat-msg').value=''; };
     window.loadLibrary = async () => { /* Logic */ };
-    window.loadJobApps = async () => { /* Logic */ };
-    window.loadBetaApps = async () => { /* Logic */ };
     window.logout = () => signOut(auth).then(()=>location.reload());
 </script>
 </body>
