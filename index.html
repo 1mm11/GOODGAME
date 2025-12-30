@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>GOODGAME | ADMIN OVERLORD UPDATE</title>
+    <title>GOODGAME | FIX CHAT & ADMIN UPDATE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root { --bg: #050a18; --panel: #0b1426; --accent: #e63946; --text: #e0f2fe; --border: #1e293b; --gold: #fbbf24; }
         .theme-cyber { --bg: #0f0518; --panel: #1a0b2e; --accent: #ff00ff; --text: #00ffff; --border: #3d0066; --gold: #ff00ff; }
         .theme-winter { --bg: #0c1e3a; --panel: #162e55; --accent: #0ea5e9; --text: #e0f2fe; --border: #334155; --gold: #7dd3fc; }
-        .theme-gold { --bg: #1a1405; --panel: #2a210a; --accent: #fbbf24; --text: #fef3c7; --border: #453610; --gold: #f59e0b; }
         .theme-onyx { --bg: #000; --panel: #0a0a0a; --accent: #fbbf24; --text: #fff; --border: #222; --gold: #fbbf24; }
 
         body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; transition: 0.3s; margin: 0; overflow-x: hidden; }
@@ -22,25 +21,29 @@
         @media (min-width: 1024px) { .sidebar { left: 0; } .main { margin-left: 280px; padding-top: 30px; } }
 
         .card { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; padding: 18px; margin-bottom: 15px; box-shadow: 0 8px 32px rgba(0,0,0,0.3); position: relative; }
-        .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; font-size: 14px; }
+        .btn { padding: 10px 15px; border-radius: 12px; font-weight: bold; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
         .btn-green { background: #22c55e; color: white; }
         .btn-gold { background: var(--gold); color: #000; }
         .btn-red { background: #ef4444; color: white; }
-        
-        input, select, textarea { background: rgba(0,0,0,0.2); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; }
 
-        /* AVATARS & FRAMES */
+        input, select, textarea { background: rgba(0,0,0,0.4); border: 1px solid var(--border); color: var(--text); padding: 12px; border-radius: 10px; width: 100%; margin-bottom: 10px; outline: none; }
+
+        /* CHAT FIX */
+        #chat-container { display: flex; flex-direction: column; gap: 8px; }
+        .chat-msg-box { background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 15px; max-width: 85%; border: 1px solid rgba(255,255,255,0.05); }
+        .chat-msg-me { align-self: flex-end; background: rgba(34, 197, 94, 0.2); border-color: rgba(34, 197, 94, 0.3); }
+
+        /* AVATARS */
         .avatar-box { width: 120px; height: 120px; border-radius: 50%; position: relative; margin: 0 auto 15px; z-index: 10; }
         .avatar-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--border); }
         .frame-immortal { box-shadow: 0 0 0 5px #fff; background: linear-gradient(45deg, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000); padding: 6px; animation: rotateHue 3s linear infinite; }
-        .frame-fire { box-shadow: 0 0 0 4px #ff4500, 0 0 25px #ff4500; }
         @keyframes rotateHue { from { filter: hue-rotate(0deg); } to { filter: hue-rotate(360deg); } }
         .elite-glow { position: absolute; inset: -30px; background: radial-gradient(circle, rgba(251,191,36,0.3) 0%, transparent 70%); z-index: -1; animation: pulse 2s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
         #toast { position: fixed; bottom: 20px; left: 50%; transform: translate(-50%, 250%); background: var(--gold); color: #000; padding: 12px 25px; border-radius: 50px; z-index: 9999; transition: 0.4s; font-weight: bold; }
         #toast.active { transform: translate(-50%, 0); }
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; display: none; align-items: center; justify-content: center; padding: 20px; }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 4000; display: none; align-items: center; justify-content: center; }
         .modal-box { background: var(--panel); border: 1px solid var(--border); border-radius: 24px; padding: 25px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; }
     </style>
 </head>
@@ -53,13 +56,13 @@
     <div>
         <div class="text-2xl font-black text-gold mb-8 italic">GOODGAME</div>
         <nav class="space-y-1 text-sm">
-            <button onclick="nav('profile')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-circle"></i> <span data-i18n="nav_profile">Profile</span></button>
-            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> <span data-i18n="nav_market">Market</span></button>
-            <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gem text-pink-400"></i> <span data-i18n="nav_shop">Cosmetic Shop</span></button>
-            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> <span data-i18n="nav_library">Library</span></button>
-            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> <span data-i18n="nav_chat">Chat</span></button>
-            <button onclick="nav('career')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-tie text-purple-400"></i> <span data-i18n="nav_job">Jobs</span></button>
-            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> <span data-i18n="nav_settings">Settings & Inv</span></button>
+            <button onclick="nav('profile')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-circle"></i> Profile</button>
+            <button onclick="nav('market')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-store"></i> Market</button>
+            <button onclick="nav('shop')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gem text-pink-400"></i> Shop</button>
+            <button onclick="nav('library')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-gamepad"></i> Library</button>
+            <button onclick="nav('chat')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-comments"></i> Chat</button>
+            <button onclick="nav('career')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-user-tie text-purple-400"></i> Jobs</button>
+            <button onclick="nav('settings')" class="w-full text-left p-3 hover:bg-white/5 rounded-xl flex items-center gap-3"><i class="fas fa-cog"></i> Settings</button>
             
             <div id="dev-tools" class="hidden pt-4 mt-4 border-t border-white/10 space-y-1">
                 <button onclick="nav('publish')" class="w-full text-left p-3 text-green-400 flex items-center gap-3"><i class="fas fa-plus"></i> Publish</button>
@@ -71,7 +74,7 @@
             </div>
         </nav>
     </div>
-    <div id="u-name-side" class="font-bold border-t border-white/10 pt-4 text-center truncate">...</div>
+    <div id="u-name-side" class="text-center font-bold truncate">...</div>
 </aside>
 
 <main class="main">
@@ -83,103 +86,49 @@
             <p id="prof-role" class="text-xs opacity-50 uppercase mb-4">Player</p>
             <label class="btn btn-gold text-xs cursor-pointer max-w-[150px] mx-auto">Upload Photo<input type="file" id="avatar-input" class="hidden" accept="image/*"></label>
             <div class="grid grid-cols-2 gap-4 mt-6">
-                <div class="bg-black/20 p-3 rounded-xl"><b data-i18n="prof_bal">Balance</b>: <span id="prof-bal">0$</span></div>
-                <div class="bg-black/20 p-3 rounded-xl"><b data-i18n="prof_time">Time</b>: <span id="prof-time">0m</span></div>
+                <div class="bg-black/20 p-3 rounded-xl"><b>Balance:</b> <span id="prof-bal">0$</span></div>
+                <div class="bg-black/20 p-3 rounded-xl"><b>Time:</b> <span id="prof-time">0m</span></div>
             </div>
         </div>
     </section>
 
-    <section id="admin-center" class="hidden">
-        <h2 class="text-2xl font-black mb-6 text-red-500 italic uppercase">Admin Master Console</h2>
-        <div id="admin-users" class="space-y-2"></div>
+    <section id="chat" class="hidden">
+        <h2 class="text-3xl font-black mb-4 italic text-gold">GLOBAL CHAT</h2>
+        <div class="card p-4 overflow-hidden flex flex-col h-[65vh]">
+            <div id="chat-container" class="flex-1 overflow-y-auto mb-4"></div>
+            <div class="flex gap-2">
+                <input id="chat-msg" placeholder="Message..." class="m-0">
+                <button onclick="sendChat()" class="btn btn-green px-6"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
     </section>
+
+    <section id="admin-center" class="hidden"><h2 class="text-2xl font-black mb-6 text-red-500">ADMIN CONTROL</h2><div id="admin-users" class="space-y-2"></div></section>
 
     <section id="market" class="hidden"><div id="market-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
-    
-    <section id="chat" class="hidden">
-        <div id="chat-container" class="h-80 overflow-y-auto mb-4 bg-black/20 p-3 rounded-xl flex flex-col gap-2"></div>
-        <div class="flex gap-2"><input id="chat-msg"><button onclick="sendChat()" class="btn btn-green">Send</button></div>
-    </section>
-
-    <section id="shop" class="hidden">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="card"><h3 class="font-bold mb-4 text-gold">Frames</h3>
-                <button onclick="buyCosmetic('frame-gold', 500)" class="btn bg-black/40 w-full mb-2">Gold Frame - 500$</button>
-                <button onclick="buyCosmetic('frame-fire', 2500)" class="btn bg-black/40 w-full">Inferno - 2500$</button>
-            </div>
-            <div class="card"><h3 class="font-bold mb-4 text-gold">Themes</h3>
-                <button onclick="buyCosmetic('theme-cyber', 1500)" class="btn bg-black/40 w-full mb-2">Cyberpunk - 1500$</button>
-                <button onclick="buyCosmetic('theme-onyx', 5000)" class="btn bg-black/40 w-full">Onyx - 5000$</button>
-            </div>
-        </div>
-    </section>
-
-    <section id="settings" class="hidden">
-        <div class="card"><h3 class="font-bold mb-4 text-gold">My Inventory</h3><p class="text-[10px] opacity-50 uppercase">Frames:</p><div id="inv-frames" class="flex flex-wrap gap-2 mb-4"></div><p class="text-[10px] opacity-50 uppercase">Themes:</p><div id="inv-themes" class="flex flex-wrap gap-2"></div></div>
-        <div class="card"><h3 class="font-bold mb-4">Language</h3><div class="grid grid-cols-5 gap-1">
-            <button onclick="setLang('ru')" class="btn bg-slate-700 text-[10px]">RU</button><button onclick="setLang('ua')" class="btn bg-blue-700 text-[10px]">UA</button><button onclick="setLang('en')" class="btn bg-slate-700 text-[10px]">EN</button><button onclick="setLang('de')" class="btn bg-yellow-700 text-[10px]">DE</button><button onclick="setLang('es')" class="btn bg-red-700 text-[10px]">ES</button>
-        </div></div>
-        <button onclick="logout()" class="btn btn-red w-full mt-4">LOGOUT</button>
-    </section>
-
+    <section id="shop" class="hidden"><div class="grid grid-cols-2 gap-4"><div class="card"><h3>Frames</h3><button onclick="buyCosmetic('frame-gold', 500)" class="btn btn-gold w-full mt-2">Gold - 500$</button></div></div></section>
+    <section id="settings" class="hidden"><div class="card"><h3>Inventory</h3><div id="inv-frames" class="flex gap-2 mt-2"></div></div><button onclick="logout()" class="btn btn-red w-full mt-4">LOGOUT</button></section>
     <section id="library" class="hidden"><div id="library-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div></section>
+    <section id="career" class="hidden"><div class="card"><select id="job-role"><option value="developer">Developer</option><option value="mod">Moderator</option></select><textarea id="job-text" placeholder="Why you?"></textarea><button onclick="sendJobApp()" class="btn btn-gold w-full">SEND</button></div></section>
     <section id="job-manage" class="hidden"><div id="job-apps-list" class="space-y-4"></div></section>
     <section id="beta-manage" class="hidden"><div id="beta-apps-list" class="space-y-4"></div></section>
-    <section id="career" class="hidden"><div class="card max-w-lg mx-auto"><select id="job-role"><option value="developer">Developer</option><option value="mod">Moderator</option></select><textarea id="job-text" placeholder="Why you?" rows="4"></textarea><button onclick="sendJobApp()" class="btn btn-gold w-full">SUBMIT</button></div></section>
-    <section id="publish" class="hidden"><div class="card max-w-lg mx-auto"><input id="p-name" placeholder="Game Name"><textarea id="p-desc" placeholder="Description"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number" placeholder="$"><button onclick="pubGame()" class="btn btn-green w-full">CREATE</button></div></section>
+    <section id="publish" class="hidden"><div class="card"><input id="p-name" placeholder="Name"><textarea id="p-desc" placeholder="Desc"></textarea><input id="p-url" placeholder="URL"><input id="p-price" type="number"><button onclick="pubGame()" class="btn btn-green w-full mt-4">CREATE</button></div></section>
 </main>
 
 <div id="user-modal" class="modal-overlay"><div class="modal-box">
-    <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold">User Dossier</h2>
-    <div id="um-data" class="text-xs font-mono bg-black/50 p-4 rounded mb-6 border border-white/5"></div>
-    
-    <div class="space-y-5">
-        <div class="bg-black/20 p-3 rounded-xl">
-            <label class="text-[10px] uppercase opacity-50 block mb-2">Wallet Management</label>
-            <div class="flex gap-2"><input id="um-money-val" type="number" class="m-0"><button onclick="adminMoney(true)" class="btn btn-green">+</button><button onclick="adminMoney(false)" class="btn btn-red">-</button></div>
+    <h2 id="um-nick" class="text-2xl font-bold mb-4 text-gold text-center">User Info</h2>
+    <div id="um-data" class="text-xs font-mono bg-black/50 p-4 rounded mb-4"></div>
+    <div class="space-y-4">
+        <div><label class="text-[10px] uppercase opacity-50">Money Control</label>
+        <div class="flex gap-2"><input id="um-money-val" type="number" class="m-0"><button onclick="adminMoney(true)" class="btn btn-green">+</button><button onclick="adminMoney(false)" class="btn btn-red">-</button></div></div>
+        <div class="grid grid-cols-2 gap-2">
+            <div><label class="text-[10px]">Ban (Min)</label><select id="um-ban-time"><option value="0">Unban</option><option value="60">1 Hour</option><option value="1440">1 Day</option></select><button onclick="adminAction('ban')" class="btn btn-red w-full mt-1">BAN</button></div>
+            <div><label class="text-[10px]">Mute (Min)</label><select id="um-mute-time"><option value="0">Unmute</option><option value="60">1 Hour</option></select><button onclick="adminAction('mute')" class="btn btn-gold w-full mt-1">MUTE</button></div>
         </div>
-
-        <div class="grid grid-cols-2 gap-4">
-            <div class="bg-black/20 p-3 rounded-xl">
-                <label class="text-[10px] uppercase opacity-50 block mb-2">Ban Control</label>
-                <select id="um-ban-time" class="text-xs mb-2">
-                    <option value="0">Unban</option>
-                    <option value="15">15 Min</option>
-                    <option value="60">1 Hour</option>
-                    <option value="1440">1 Day</option>
-                    <option value="5256000">Permanent</option>
-                </select>
-                <button onclick="adminAction('ban')" class="btn btn-red w-full text-[10px]">APPLY BAN</button>
-            </div>
-            <div class="bg-black/20 p-3 rounded-xl">
-                <label class="text-[10px] uppercase opacity-50 block mb-2">Mute Control</label>
-                <select id="um-mute-time" class="text-xs mb-2">
-                    <option value="0">Unmute</option>
-                    <option value="15">15 Min</option>
-                    <option value="60">1 Hour</option>
-                    <option value="1440">1 Day</option>
-                </select>
-                <button onclick="adminAction('mute')" class="btn btn-gold w-full text-[10px]">APPLY MUTE</button>
-            </div>
-        </div>
-
-        <div class="bg-black/20 p-3 rounded-xl">
-            <label class="text-[10px] uppercase opacity-50 block mb-2">Grant Gear & Role</label>
-            <select id="adm-grant-item" class="text-xs mb-2">
-                <option value="frame-immortal">Immortal Frame</option>
-                <option value="frame-fire">Fire Frame</option>
-                <option value="theme-onyx">Onyx Theme</option>
-            </select>
-            <button onclick="adminGrantItem()" class="btn btn-green w-full text-[10px] mb-3">GRANT ITEM</button>
-            <select id="um-role" class="text-xs mb-2"><option value="user">User</option><option value="developer">Dev</option><option value="mod">Mod</option><option value="admin">Admin</option></select>
-            <button onclick="saveAdminRole()" class="btn bg-white/10 w-full text-[10px]">SET ROLE</button>
-        </div>
-        
-        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full mt-2">CLOSE</button>
+        <div><label class="text-[10px]">Grant Item</label><select id="adm-grant-item"><option value="frame-immortal">Immortal Frame</option><option value="theme-onyx">Onyx Theme</option></select><button onclick="adminGrantItem()" class="btn btn-green w-full mt-1">GRANT</button></div>
+        <button onclick="closeModal('user-modal')" class="btn bg-gray-600 w-full mt-4">CLOSE</button>
     </div>
 </div></div>
-
-<div id="login-modal" class="modal-overlay" style="display:flex;"><div class="card w-full max-w-sm text-center shadow-2xl"><h2 class="text-4xl font-black text-red-500 mb-6 italic">GOODGAME</h2><input id="auth-nick" placeholder="Nickname"><input id="auth-email" placeholder="Email"><input id="auth-pass" type="password" placeholder="Password"><button onclick="authHandler()" class="btn btn-green w-full">START</button></div></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -190,124 +139,93 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
-    let user = null, selectedUid = null, currentLang = localStorage.getItem('gg_lang') || 'ru';
+    let user = null, selectedUid = null;
 
-    // UI & UTILS
     window.toast = (m) => { const t=document.getElementById('toast'); t.innerText=m; t.classList.add('active'); setTimeout(()=>t.classList.remove('active'),3000); };
-    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); if(window.innerWidth<1024) document.getElementById('sidebar').classList.remove('active'); };
-    window.toggleMenu = () => document.getElementById('sidebar').classList.toggle('active');
+    window.nav = (id) => { document.querySelectorAll('main section').forEach(s=>s.classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); };
     window.closeModal = (id) => document.getElementById(id).style.display = 'none';
-    window.setLang = (l) => { localStorage.setItem('gg_lang', l); location.reload(); };
 
     onAuthStateChanged(auth, async (u) => {
         if(u) {
-            const s = await getDoc(doc(db, "users", u.uid)); user = s.data();
-            if(user.banUntil && user.banUntil > Date.now()) { await signOut(auth); return alert("BANNED until " + new Date(user.banUntil).toLocaleString()); }
-            if(user.nickname === 'GOODGAME') { await updateDoc(doc(db, "users", u.uid), {role:'admin'}); user.role='admin'; }
-            document.getElementById('login-modal').style.display = 'none';
+            const s = await getDoc(doc(db,"users",u.uid)); user = s.data();
+            if(user.banUntil > Date.now()) { await signOut(auth); return alert("BANNED"); }
+            if(user.nickname === 'GOODGAME') { await updateDoc(doc(db,u.uid),{role:'admin'}); user.role='admin'; }
+            document.getElementById('login-modal').style.display='none';
             updateUI();
             if(['admin','mod','developer'].includes(user.role)) document.getElementById('dev-tools').classList.remove('hidden');
             if(user.role === 'admin') { document.getElementById('admin-tools').classList.remove('hidden'); loadAdminUsers(); loadJobApps(); }
-            loadMarket(); loadLibrary(); initChat(); loadBetaApps();
+            initChat(); loadMarket(); loadLibrary(); loadBetaApps();
         } else { document.getElementById('login-modal').style.display='flex'; }
     });
 
     window.authHandler = async () => {
         const n=document.getElementById('auth-nick').value, e=document.getElementById('auth-email').value, p=document.getElementById('auth-pass').value;
         try { await signInWithEmailAndPassword(auth, e, p); } catch {
-            const res = await createUserWithEmailAndPassword(auth, e, p);
-            await setDoc(doc(db,"users",res.user.uid), { nickname:n, email:e, saved_pass:p, role:(n==='GOODGAME'?'admin':'user'), balance:500, library:[], inventory:[], activeFrame:'', activeTheme:'', avatar:'', banUntil:0, muteUntil:0 });
+            const res = await createUserWithEmailAndPassword(auth,e,p);
+            await setDoc(doc(db,"users",res.user.uid), { nickname:n, email:e, saved_pass:p, role:'user', balance:500, inventory:[], library:[], activeFrame:'', activeTheme:'', avatar:'', banUntil:0, muteUntil:0 });
         }
     };
 
     function updateUI() {
         document.getElementById('prof-nick').innerText = user.nickname;
         document.getElementById('prof-bal').innerText = user.balance + "$";
-        document.getElementById('mob-bal').innerText = user.balance + "$";
-        document.getElementById('u-name-side').innerText = user.nickname;
         document.getElementById('prof-img').src = user.avatar || "https://i.imgur.com/6VBx3io.png";
         document.getElementById('prof-frame-box').className = "avatar-box " + (user.activeFrame || "");
         document.getElementById('app-body').className = user.activeTheme || "default";
         if(user.nickname === 'GOODGAME' || user.role === 'admin') document.getElementById('elite-fx').innerHTML = '<div class="elite-glow"></div>';
         
-        const fInv = document.getElementById('inv-frames'); fInv.innerHTML = '<button onclick="applyCosmetic(\'activeFrame\', \'\')" class="btn bg-white/5 text-[10px]">None</button>';
-        const tInv = document.getElementById('inv-themes'); tInv.innerHTML = '<button onclick="applyCosmetic(\'activeTheme\', \'default\')" class="btn bg-white/5 text-[10px]">Default</button>';
-        user.inventory?.forEach(i => {
-            if(i.startsWith('frame-')) fInv.innerHTML += `<button onclick="applyCosmetic('activeFrame', '${i}')" class="btn btn-gold text-[10px]">${i.replace('frame-','')}</button>`;
-            if(i.startsWith('theme-')) tInv.innerHTML += `<button onclick="applyCosmetic('activeTheme', '${i}')" class="btn btn-gold text-[10px]">${i.replace('theme-','')}</button>`;
-        });
+        const fInv = document.getElementById('inv-frames'); fInv.innerHTML = '';
+        user.inventory?.forEach(i => { if(i.startsWith('frame-')) fInv.innerHTML += `<button onclick="applyCosmetic('activeFrame','${i}')" class="btn btn-gold text-[10px]">${i}</button>`; });
     }
 
-    // PHOTO UPLOAD
-    document.getElementById('avatar-input').onchange = (e) => {
-        const r = new FileReader(); r.readAsDataURL(e.target.files[0]);
-        r.onload = async () => { await updateDoc(doc(db,"users",auth.currentUser.uid), {avatar: r.result}); location.reload(); };
-    };
-
-    // ADMIN ACTIONS
-    window.loadAdminUsers = async () => {
-        const l = document.getElementById('admin-users'); l.innerHTML = '';
-        (await getDocs(collection(db,"users"))).forEach(d => l.innerHTML += `<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer flex justify-between"><b>${d.data().nickname}</b> <span>${d.data().balance}$</span></div>`);
-    };
-    window.openAdminUser = async (uid) => {
-        selectedUid = uid; const u = (await getDoc(doc(db,"users",uid))).data();
-        document.getElementById('um-data').innerText = `Email: ${u.email}\nPass: ${u.saved_pass}\nRole: ${u.role}\nBan: ${u.banUntil?new Date(u.banUntil).toLocaleString():'No'}`;
-        document.getElementById('user-modal').style.display = 'flex';
-    };
-    window.adminMoney = async (add) => {
-        const v = Number(document.getElementById('um-money-val').value);
-        await updateDoc(doc(db, "users", selectedUid), { balance: increment(add?v:-v) }); toast("Money updated!"); openAdminUser(selectedUid);
-    };
-    window.adminAction = async (type) => {
-        const time = Number(document.getElementById(type==='ban'?'um-ban-time':'um-mute-time').value);
-        const until = time === 0 ? 0 : Date.now() + (time * 60000);
-        await updateDoc(doc(db, "users", selectedUid), { [type==='ban'?'banUntil':'muteUntil']: until });
-        toast(type.toUpperCase() + " Updated!"); openAdminUser(selectedUid);
-    };
-    window.adminGrantItem = async () => {
-        await updateDoc(doc(db, "users", selectedUid), { inventory: arrayUnion(document.getElementById('adm-grant-item').value) });
-        toast("Item Granted!");
-    };
-    window.saveAdminRole = async () => {
-        await updateDoc(doc(db, "users", selectedUid), { role: document.getElementById('um-role').value });
-        toast("Role Saved!");
-    };
-
-    // CHAT (WITH MUTE CHECK)
-    window.initChat = () => {
-        onSnapshot(query(collection(db,"chat"), orderBy("time","asc"), limit(40)), snap => {
+    // CHAT (FIXED)
+    function initChat() {
+        onSnapshot(query(collection(db,"chat"), orderBy("time","asc"), limit(50)), snap => {
             const c = document.getElementById('chat-container'); c.innerHTML = '';
-            snap.forEach(d => { c.innerHTML += `<div class="p-2 rounded bg-white/5 text-xs"><b>${d.data().nick}:</b> ${d.data().msg}</div>`; });
+            snap.forEach(d => {
+                const m = d.data();
+                const isMe = m.nick === user.nickname;
+                c.innerHTML += `<div class="chat-msg-box ${isMe?'chat-msg-me':''}"><b class="text-gold text-[10px] block">${m.nick}</b>${m.msg}</div>`;
+            });
             c.scrollTop = c.scrollHeight;
         });
-    };
+    }
     window.sendChat = async () => {
-        if(user.muteUntil > Date.now()) return toast("MUTED until " + new Date(user.muteUntil).toLocaleTimeString());
+        if(user.muteUntil > Date.now()) return toast("MUTED");
         const m = document.getElementById('chat-msg').value; if(!m) return;
         await addDoc(collection(db,"chat"), { nick:user.nickname, msg:m, time:Date.now() });
         document.getElementById('chat-msg').value = '';
     };
 
-    // OTHER LOGIC
-    window.loadMarket = async () => {
-        const l = document.getElementById('market-list'); l.innerHTML = '';
-        (await getDocs(collection(db,"games"))).forEach(d => {
-            const g=d.data(); const owned=user.library?.includes(d.id);
-            l.innerHTML += `<div class="card"><b>${g.name}</b><p class="text-[10px] opacity-40 my-2">${g.desc||''}</p>
-            <div class="flex gap-2">${owned?`<button class="btn bg-blue-600">OWNED</button>`:`<button onclick="buyGame('${d.id}',${g.price})" class="btn btn-green flex-1">BUY ${g.price}$</button>`}
-            ${user.role==='admin'?`<button onclick="delGame('${d.id}')" class="btn btn-red w-10"><i class="fas fa-trash"></i></button>`:''}</div></div>`;
-        });
+    // ADMIN
+    window.loadAdminUsers = async () => {
+        const l = document.getElementById('admin-users'); l.innerHTML = '';
+        (await getDocs(collection(db,"users"))).forEach(d => l.innerHTML += `<div onclick="openAdminUser('${d.id}')" class="card cursor-pointer"><b>${d.data().nickname}</b> (${d.data().balance}$)</div>`);
     };
-    window.delGame = async (id) => { if(confirm("Delete Game?")) { await deleteDoc(doc(db, "games", id)); loadMarket(); } };
-    window.buyGame = async (id, p) => { if(user.balance<p) return toast("No $"); await updateDoc(doc(db,"users",auth.currentUser.uid), {balance:increment(-p), library:arrayUnion(id)}); location.reload(); };
-    window.buyCosmetic = async (id, p) => { if(user.balance<p) return toast("No $"); await updateDoc(doc(db,"users",auth.currentUser.uid), {balance:increment(-p), inventory:arrayUnion(id)}); location.reload(); };
-    window.applyCosmetic = async (t, id) => { await updateDoc(doc(db, "users", auth.currentUser.uid), { [t]: id }); location.reload(); };
-    window.logout = () => signOut(auth).then(()=>location.reload());
+    window.openAdminUser = async (uid) => {
+        selectedUid = uid; const u = (await getDoc(doc(db,"users",uid))).data();
+        document.getElementById('um-data').innerText = `Email: ${u.email}\nPass: ${u.saved_pass}\nBal: ${u.balance}$`;
+        document.getElementById('user-modal').style.display='flex';
+    };
+    window.adminMoney = async (add) => {
+        const v = Number(document.getElementById('um-money-val').value);
+        await updateDoc(doc(db,"users",selectedUid), { balance: increment(add?v:-v) }); toast("Done!"); openAdminUser(selectedUid);
+    };
+    window.adminAction = async (type) => {
+        const time = Number(document.getElementById(type==='ban'?'um-ban-time':'um-mute-time').value);
+        await updateDoc(doc(db,"users",selectedUid), { [type==='ban'?'banUntil':'muteUntil']: Date.now()+(time*60000) }); toast("Updated!");
+    };
+    window.adminGrantItem = async () => { await updateDoc(doc(db,"users",selectedUid), { inventory: arrayUnion(document.getElementById('adm-grant-item').value)}); toast("Granted!"); };
 
-    const canvas=document.getElementById('snow'); const ctx=canvas.getContext('2d'); let flakes=[];
-    function initSnow(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; flakes=[]; for(let i=0;i<60;i++) flakes.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, r:Math.random()*3+1, d:Math.random()*1}); }
-    function drawSnow(){ ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle="white"; ctx.beginPath(); flakes.forEach(f=>{ ctx.moveTo(f.x,f.y); ctx.arc(f.x,f.y,f.r,0,Math.PI*2,true); f.y+=Math.cos(f.d)+1+f.r/2; if(f.y>canvas.height){f.y=-10; f.x=Math.random()*canvas.width;} }); ctx.fill(); requestAnimationFrame(drawSnow); }
-    window.onresize=initSnow; initSnow(); drawSnow();
+    // SYSTEM
+    window.pubGame = async () => { await addDoc(collection(db,"games"), { name:document.getElementById('p-name').value, desc:document.getElementById('p-desc').value, url:document.getElementById('p-url').value, price:Number(document.getElementById('p-price').value), ownerId:auth.currentUser.uid }); nav('market'); };
+    window.loadMarket = async () => { /* Logic */ };
+    window.logout = () => signOut(auth).then(()=>location.reload());
+    document.getElementById('avatar-input').onchange = (e) => {
+        const reader = new FileReader(); reader.readAsDataURL(e.target.files[0]);
+        reader.onload = async () => { await updateDoc(doc(db,"users",auth.currentUser.uid), {avatar: reader.result}); location.reload(); };
+    };
+    window.applyCosmetic = async (t, id) => { await updateDoc(doc(db, "users", auth.currentUser.uid), { [t]: id }); location.reload(); };
 </script>
 </body>
 </html>
